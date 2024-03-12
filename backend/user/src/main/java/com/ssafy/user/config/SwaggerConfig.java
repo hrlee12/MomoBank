@@ -17,7 +17,7 @@ import static java.awt.SystemColor.info;
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi chatOpenApi() {
-        String[] paths = {"/api/v1/**"};
+        String[] paths = {"/**"};
 
         return GroupedOpenApi.builder()
                 .group("유저서비스 API v1")
