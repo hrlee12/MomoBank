@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Entity
+//@Entity
 @Table(name = "member_contributions")
 @Schema(description = "회원 기여도 정보")
 public class MemberContributions {
