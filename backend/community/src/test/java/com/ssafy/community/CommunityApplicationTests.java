@@ -1,10 +1,10 @@
-package com.ssafy.communication;
+package com.ssafy.community;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CommunicationApplicationTests {
+class CommunityApplicationTests {
 
 	@Test
 	void contextLoads() {
