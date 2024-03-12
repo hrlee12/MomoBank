@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("account")
+@RequestMapping("accounts")
 @Tag(name = "계좌", description = "계좌 생성 및 조회")
 public class AccountController {
 
     @Operation(summary = "당행 계좌 상품 목록", description = "모모뱅크의 계좌 상품 목록을 조회합니다.")
-    @GetMapping("/get-account-product")
+    @GetMapping("/account-products")
     public ResponseEntity<?> getAccountProduct() {
         return ResponseEntity.ok().build();
     }
@@ -38,8 +38,14 @@ public class AccountController {
     }
 
     @Operation(summary = "본인 계좌 조회", description = "사용자의 계좌를 조회합니다.")
-    @GetMapping("/get-my-account")
+    @GetMapping("/my-accounts")
     public ResponseEntity<?> getMyAccount() {
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "계좌 상세 조회", description = "특정 계좌 상세를 조회합니다.")
+    @GetMapping("/account-detail")
+    public ResponseEntity<?> getAccountDetail() {
         return ResponseEntity.ok().build();
     }
 
