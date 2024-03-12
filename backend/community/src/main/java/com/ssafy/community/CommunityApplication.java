@@ -1,13 +1,13 @@
-package com.ssafy.communication;
+package com.ssafy.community;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CommunicationApplication {
+public class CommunityApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CommunicationApplication.class, args);
+		SpringApplication.run(CommunityApplication.class, args);
 	}
 
 }
