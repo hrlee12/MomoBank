@@ -56,7 +56,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "로그인", responses = {
+    @Operation(summary = "로그인",
+            description = "초대링크로 접속해서 비로그인 시, 로그인하는 경우에만 inviteLink에 값 넣기",
+            responses = {
             @ApiResponse(responseCode = "200", description = "로그인 성공",
                     content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BankHomeResponse.class))}),

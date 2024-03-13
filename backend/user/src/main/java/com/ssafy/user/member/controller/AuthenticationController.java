@@ -1,12 +1,14 @@
 package com.ssafy.user.member.controller;
 
 
+import com.ssafy.user.member.dto.request.RegenerateTokenRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +21,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "200", description = "재발급 성공")
     })
     @PostMapping("/regenerate")
-    public ResponseEntity regenerateToken() {
+    public ResponseEntity regenerateToken(@RequestBody RegenerateTokenRequest request) {
 // 로직 구현
         return ResponseEntity.ok().build();
     }
