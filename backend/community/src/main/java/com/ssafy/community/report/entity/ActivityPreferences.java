@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-//@Entity
+@Entity
 @Table(name = "activity_preferences")
 @Schema(description = "활동 선호도 정보")
 public class ActivityPreferences {

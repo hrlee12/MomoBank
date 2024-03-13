@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-//@Entity
+@Entity
 @Table(name = "recommendations")
 @Schema(description = "추천 정보")
 public class Recommendations {

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-//@Entity
+@Entity
 @Table(name = "reports")
 @Schema(description = "리포트 정보")
 public class Reports {
@@ -29,10 +29,10 @@ public class Reports {
     private String reportType;
 
     @Schema(description = "년도", example = "2023")
-    private Integer year;
+    private Integer reportYear;
 
     @Schema(description = "월", example = "3")
-    private Integer month;
+    private Integer reportMonth;
 
     @Schema(description = "내용", example = "3월 모임 리포트")
     private String content;
