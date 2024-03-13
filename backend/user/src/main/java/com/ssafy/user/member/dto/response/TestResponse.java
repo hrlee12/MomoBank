@@ -1,4 +1,4 @@
-package com.ssafy.user.member.dto;
+package com.ssafy.user.member.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

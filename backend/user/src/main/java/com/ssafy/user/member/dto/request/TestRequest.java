@@ -1,4 +1,4 @@
-package com.ssafy.user.member.dto;
+package com.ssafy.user.member.dto.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,4 +10,5 @@ public class TestRequest {
     private String name;
     @Schema(description = "나이", defaultValue = "1")
     private int age;
+
 }
