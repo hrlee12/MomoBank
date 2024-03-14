@@ -2,11 +2,8 @@ package com.ssafy.user.member.controller;
 
 
 import com.ssafy.user.member.dto.request.TestRequest;
-import com.ssafy.user.member.dto.response.BankHomeResponse;
-import com.ssafy.user.member.dto.response.TestResponse;
+import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
-import com.ssafy.user.member.dto.response.MemberResponse;
-import com.ssafy.user.member.dto.response.MypageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@Tag(name = "멤버 관련 api")
+@Tag(name = "멤버 api")
 @RestController
 @RequestMapping("/member")
 public class UserController {
@@ -37,7 +34,8 @@ public class UserController {
     @PostMapping("/phone-verification/verify")
     @Operation(summary = "휴대폰 인증번호 검증")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증번호 일치"),
+            @ApiResponse(responseCode = "200", description = "인증번호 일치",
+                    content = {@Content(schema = @Schema(implementation=VerifyCodeResponse.class))}),
             @ApiResponse(responseCode = "400", description = "인증번호 불일치")
     })
     public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "인증 관련 api")
+@Tag(name = "인증 api")
 @RestController
 @RequestMapping("/authentication")
 public class AuthenticationController {
