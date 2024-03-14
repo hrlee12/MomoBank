@@ -24,12 +24,12 @@ import lombok.Getter;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-	@Column(name = "created_time", updatable = false, nullable = false)
+	@Column(name = "created_at", updatable = false, nullable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@CreatedDate
 	private LocalDateTime createdAt;
 
-	@Column(name = "updated_time", nullable = false)
+	@Column(name = "updated_at", nullable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
