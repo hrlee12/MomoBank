@@ -4,8 +4,8 @@ import java.sql.Date;
 
 public record budgetResponseDto(
     String name,
-    Date monthlyFee,
-    int monthlyDueDate,
+    long monthlyFee,
+    Date monthlyDueDate,
     long finalFee,
     long currentFee
 ){ }
