@@ -1,5 +1,7 @@
 package com.ssafy.community.report.controller;
 
+import com.ssafy.community.report.dto.ActivityPreferencesDto;
+import com.ssafy.community.report.entity.Recommendations;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
-@RequestMapping("/api/community/reports")
+@RequestMapping("/reports")
 public class ReportController {
-    @Operation(summary = "월간 리포트 데이터 수집", description = "지정된 월의 리포트 데이터를 수집합니다.", responses = {
-            @ApiResponse(description = "성공", responseCode = "200")
-    })
+    @Operation(summary = "월간 리포트 데이터 수집",
+            description = "지정된 월의 리포트 데이터를 수집합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "데이터 수집 성공",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ActivityPreferencesDto.class))),
+                    @ApiResponse(responseCode = "400",
+                            description = "잘못된 요청 형식"),
+                    @ApiResponse(responseCode = "500",
+                            description = "서버 내부 오류")
+            })
     @PostMapping("/collect-monthly-data")
     public ResponseEntity<?> collectMonthlyReportData(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) {
