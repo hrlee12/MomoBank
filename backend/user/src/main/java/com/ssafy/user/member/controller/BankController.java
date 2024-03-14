@@ -19,7 +19,7 @@ import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "은행 관련 api")
+@Tag(name = "은행 api")
 @RestController
 @RequestMapping("/bank")
 public class BankController {

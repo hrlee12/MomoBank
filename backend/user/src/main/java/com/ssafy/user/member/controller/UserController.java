@@ -2,11 +2,8 @@ package com.ssafy.user.member.controller;
 
 
 import com.ssafy.user.member.dto.request.TestRequest;
-import com.ssafy.user.member.dto.response.BankHomeResponse;
-import com.ssafy.user.member.dto.response.TestResponse;
+import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
-import com.ssafy.user.member.dto.response.MemberResponse;
-import com.ssafy.user.member.dto.response.MypageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@Tag(name = "멤버 관련 api")
+@Tag(name = "멤버 api")
 @RestController
 @RequestMapping("/member")
 public class UserController {
@@ -37,7 +34,8 @@ public class UserController {
     @PostMapping("/phone-verification/verify")
     @Operation(summary = "휴대폰 인증번호 검증")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증번호 일치"),
+            @ApiResponse(responseCode = "200", description = "인증번호 일치",
+                    content = {@Content(schema = @Schema(implementation=VerifyCodeResponse.class))}),
             @ApiResponse(responseCode = "400", description = "인증번호 불일치")
     })
     public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) {
@@ -56,9 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "로그인",
-            description = "초대링크로 접속해서 비로그인 시, 로그인하는 경우에만 inviteLink에 값 넣기",
-            responses = {
+    @Operation(summary = "로그인", responses = {
             @ApiResponse(responseCode = "200", description = "로그인 성공",
                     content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BankHomeResponse.class))}),
