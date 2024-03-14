@@ -1,4 +1,4 @@
-package com.ssafy.bank.presentation;
+package com.ssafy.bank.account.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,12 +21,6 @@ public class AccountController {
     @Operation(summary = "당행 계좌 상품 목록", description = "모모뱅크의 계좌 상품 목록을 조회합니다.")
     @GetMapping("/account-products")
     public ResponseEntity<?> getAccountProduct() {
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "신분증 진위 여부 확인", description = "신분증 진위 여부를 확인합니다.")
-    @PostMapping("/lisence-check")
-    public ResponseEntity<?> lisenceCheck() {
         return ResponseEntity.ok().build();
     }
 
