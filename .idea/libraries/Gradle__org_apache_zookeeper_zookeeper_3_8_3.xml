@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.zookeeper:zookeeper:3.8.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.apache.zookeeper" artifactId="zookeeper" version="3.8.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.zookeeper/zookeeper/3.8.3/97bb82af5b529ec14e9c2d44b96884544f0db743/zookeeper-3.8.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.zookeeper/zookeeper/3.8.3/b0bffd8b39588b35d306857b83c1a71b5e758304/zookeeper-3.8.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

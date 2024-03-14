@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bank.iml" filepath="$PROJECT_DIR$/.idea/modules/bank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bank.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bank.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bank.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bank.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/community.iml" filepath="$PROJECT_DIR$/.idea/modules/community.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/community.main.iml" filepath="$PROJECT_DIR$/.idea/modules/community.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/community.test.iml" filepath="$PROJECT_DIR$/.idea/modules/community.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user.iml" filepath="$PROJECT_DIR$/.idea/modules/user.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user.test.iml" filepath="$PROJECT_DIR$/.idea/modules/user.test.iml" />
+    </modules>
+  </component>
+</project>

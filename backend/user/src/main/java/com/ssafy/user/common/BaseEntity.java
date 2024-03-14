@@ -26,12 +26,12 @@ public abstract class BaseEntity {
     @Column(name = "created_time", updatable = false, nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedDate
-    private LocalDateTime createdTime;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_time", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @LastModifiedDate
-    private LocalDateTime updatedTime;
+    private LocalDateTime updatedAt;
 
     @Column(name = "is_deleted", columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("0")

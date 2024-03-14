@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.kafka:kafka_2.13:3.6.1" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.apache.kafka" artifactId="kafka_2.13" version="3.6.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.kafka/kafka_2.13/3.6.1/109ac985e655662107b3bcd9c1a18f94cbabae4f/kafka_2.13-3.6.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.kafka/kafka_2.13/3.6.1/d4df28c6fc51eb03693e4b8f6cbe669df3905c36/kafka_2.13-3.6.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

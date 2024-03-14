@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.slf4j:jcl-over-slf4j:2.0.12" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.slf4j" artifactId="jcl-over-slf4j" version="2.0.12" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/2.0.12/4462ddec70c0126e580dd0a637cb105a3c7a99ab/jcl-over-slf4j-2.0.12.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/2.0.12/99a3b223eeece9c205bcbc1822a8b9681344b184/jcl-over-slf4j-2.0.12-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
