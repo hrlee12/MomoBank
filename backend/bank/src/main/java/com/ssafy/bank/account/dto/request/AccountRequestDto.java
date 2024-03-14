@@ -1,6 +1,6 @@
 package com.ssafy.bank.account.dto.request;
 
-public record accountRequestDto(
+public record AccountRequestDto(
     int productId
 ) {
 
