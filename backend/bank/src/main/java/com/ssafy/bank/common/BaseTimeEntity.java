@@ -26,4 +26,7 @@ public class BaseTimeEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(name="is_deleted", nullable = false)
+    private boolean isDeleteed = false;
 }
