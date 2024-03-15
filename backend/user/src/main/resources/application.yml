@@ -1,3 +1,6 @@
+
+
+
 springdoc:
   api-docs:
     enabled: true
@@ -8,3 +11,5 @@ springdoc:
 
 server:
   port: 8082
+  servlet:
+    contextPath: "/api/user"
