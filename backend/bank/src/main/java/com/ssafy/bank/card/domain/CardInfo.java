@@ -1,8 +1,7 @@
-package com.ssafy.bank.account.domain;
+package com.ssafy.bank.card.domain;
 
-import com.ssafy.bank.card.domain.CardInfo;
+import com.ssafy.bank.account.domain.Account;
 import com.ssafy.bank.common.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,36 +9,32 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "account")
+@Table(name = "card_info")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account extends BaseTimeEntity {
-
+public class CardInfo extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account_id")
-    private int accountId;
+    @Column(name = "card_info_id")
+    private int cardInfoId;
 
-    @Column(name = "balance")
-    private long balance;
+    @Column(name = "card_num")
+    private String cardNum;
 
     @ManyToOne
-    @JoinColumn(name = "account_product_id")
-    private AccountProduct accountProduct;
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.REFRESH)
-    private List<CardInfo> cardInfos;
-
-    // member
+    @ManyToOne
+    @JoinColumn(name = "card_product_id", nullable = false)
+    private CardProduct cardProduct;
 }
