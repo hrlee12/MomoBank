@@ -2,6 +2,7 @@ package com.ssafy.bank.account.domain;
 
 import com.ssafy.bank.card.domain.CardInfo;
 import com.ssafy.bank.common.BaseTimeEntity;
+import com.ssafy.bank.transfer.domain.Transfer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,12 @@ public class Account extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.REFRESH)
     private List<CardInfo> cardInfos;
+
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.REFRESH)
+    private List<Transfer> fromTransfers;
+
+    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.REFRESH)
+    private List<Transfer> toTransfers;
 
     // member
 }
