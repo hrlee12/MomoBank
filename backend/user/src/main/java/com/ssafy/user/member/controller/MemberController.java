@@ -7,6 +7,7 @@ import com.ssafy.user.member.dto.request.*;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.repository.MemberRepository;
 import com.ssafy.user.common.util.RedisUtil;
+import com.ssafy.user.member.repository.querydsl.MemberRepositoryCustom;
 import com.ssafy.user.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +31,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 
@@ -40,7 +42,7 @@ import java.util.Random;
 public class MemberController {
 
     private final MemberService memberService;
-
+    private final MemberRepositoryCustom memberRepositoryCustom;
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청")
     @ApiResponses(value = {
@@ -89,8 +91,17 @@ public class MemberController {
             @ApiResponse(responseCode = "409", description = "아이디 또는 비밀번호 불일치")
     })
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        List<Member> members = memberRepositoryCustom.findMembers();
 
+        for (Member member: members) {
+            System.out.println(member.getMemberId());
+        }
 
+        List<MemberDTO> memberDTOs = memberRepositoryCustom.findMembersDTO();
+
+        for (MemberDTO member : memberDTOs) {
+            System.out.println(member);
+        }
 // 로직 구현
         return ResponseEntity.ok().build();
     }
