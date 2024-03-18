@@ -1,4 +1,4 @@
-package com.ssafy.community.common;
+package com.ssafy.user.common;
 
 
 
@@ -11,7 +11,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import ch.qos.logback.core.spi.ErrorCodes;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -24,24 +23,24 @@ import lombok.Getter;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-	@Column(name = "created_at", updatable = false, nullable = false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@CreatedDate
-	private LocalDateTime createdAt;
+    @Column(name = "created_at", updatable = false, nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-	@Column(name = "updated_at", nullable = false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@LastModifiedDate
-	private LocalDateTime updatedAt;
+    @Column(name = "updated_at", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
-	@Column(name = "is_deleted", columnDefinition = "TINYINT", length = 1)
-	@ColumnDefault("0")
-	private boolean isDeleted = false;
+    @Column(name = "is_deleted", columnDefinition = "TINYINT", length = 1)
+    @ColumnDefault("0")
+    private boolean isDeleted = false;
 
-	public boolean softDelete() {
-		if (isDeleted)
-			throw new IllegalStateException(ErrorCode.ALREADY_DELETED.getMessage());
-		this.isDeleted = true;
-		return true;
-	}
+    public boolean softDelete() {
+        if (isDeleted)
+            throw new IllegalStateException(ErrorCode.ALREADY_DELETED.getMessage());
+        this.isDeleted = true;
+        return true;
+    }
 }
