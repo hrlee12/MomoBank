@@ -1,9 +1,12 @@
 package com.ssafy.community.report.controller;
 
 import com.ssafy.community.report.dto.ActivityPreferencesDto;
+import com.ssafy.community.report.dto.MonthlyReportDto;
 import com.ssafy.community.report.entity.Recommendations;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +37,12 @@ public class ReportController {
     @PostMapping("/collect-monthly-data")
     public ResponseEntity<?> collectMonthlyReportData(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) {
-        return ResponseEntity.ok().build();
+        MonthlyReportDto monthlyReportDto = MonthlyReportDto.createExample();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8); // Deprecated 대신 MediaType.APPLICATION_JSON으로 설정 후 .charset(StandardCharsets.UTF_8) 추가
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(monthlyReportDto);
     }
     @Operation(summary = "월간 리포트 조회", description = "지정된 월의 월간 리포트를 조회합니다.", responses = {
             @ApiResponse(description = "성공", responseCode = "200")
