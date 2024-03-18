@@ -4,6 +4,8 @@ import com.ssafy.bank.common.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,7 +42,8 @@ public class AccountProduct extends BaseTimeEntity {
     private float interestRate;
 
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
 
     @ManyToOne
     @JoinColumn(name = "bank_id")
@@ -48,4 +51,8 @@ public class AccountProduct extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "accountProduct", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
+
+    public enum AccountType{
+        입출금자유예금, 정기예금, 적금
+    }
 }

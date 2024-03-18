@@ -5,6 +5,8 @@ import com.ssafy.bank.common.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,7 +39,8 @@ public class CardProduct extends BaseTimeEntity {
     private String description;
 
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private CardType type;
 
     @ManyToOne
     @JoinColumn(name = "bank_id")
@@ -49,4 +52,8 @@ public class CardProduct extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "cardProduct", cascade = CascadeType.REFRESH)
     private List<CardInfo> cardInfos;
+
+    public enum CardType{
+        체크, 신용
+    }
 }
