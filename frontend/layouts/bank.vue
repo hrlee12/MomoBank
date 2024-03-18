@@ -53,7 +53,7 @@ h1 {
 
 header {
   width: 100%;
-  padding: 1.5vh;
+  padding: 2vh;
 
   nav {
     display: flex;
