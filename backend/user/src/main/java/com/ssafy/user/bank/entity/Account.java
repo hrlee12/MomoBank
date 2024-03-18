@@ -31,13 +31,13 @@ public class Account extends BaseEntity {
     @Column(name = "account_id")
     private int accountId;
 
-    @Column(name = "account_number")
+    @Column(length = 255, name = "account_number")
     private String accountNumber;
 
-    @Column(name = "account_product_name")
+    @Column(length = 255, name = "account_product_name")
     private String accountProductName;
 
-    @Column(name = "bank_name")
+    @Column(length = 255, name = "bank_name")
     private String bankName;
 
     @Column(name = "interest_rate")
