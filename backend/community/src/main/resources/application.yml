@@ -1,3 +1,6 @@
+spring:
+  profiles:
+    active: local
 springdoc:
   api-docs:
     enabled: true

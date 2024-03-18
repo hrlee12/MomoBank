@@ -8,7 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,9 +20,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 
-@ExtendWith(MockitoExtension.class)
-@WebMvcTest(ReportController.class)
+//@ExtendWith(MockitoExtension.class)
+//@WebMvcTest(ReportController.class)
 class ReportControllerTest {
 
     @Autowired
@@ -39,7 +43,7 @@ class ReportControllerTest {
 
         String responseBody = result.getResponse().getContentAsString();
 
-        System.out.println("결과!!!");
+
         System.out.println(responseBody);
     }
 
@@ -101,5 +105,24 @@ class ReportControllerTest {
 //                        .content("{\"monthlyData\":\"Some data\"}"))
 //                .andExpect(status().isOk())
 //                .andExpect(content().string("여기에 다음 활동 추천 결과"));
+    }
+
+    @Test
+    void makeReport() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/reports/make")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"yearMonth\":\"2023.03\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().encoding("UTF-8"))
+                .andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+
+
+        System.out.println(responseBody);
+
+
     }
 }
