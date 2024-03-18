@@ -43,6 +43,6 @@ public class AccountProduct extends BaseTimeEntity {
     @JoinColumn(name = "bank_id")
     private Bank bank;
 
-    @OneToMany(mappedBy = "account_product", cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "accountProduct", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
 }

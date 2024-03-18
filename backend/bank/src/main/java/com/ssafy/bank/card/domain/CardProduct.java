@@ -47,6 +47,6 @@ public class CardProduct extends BaseTimeEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    @OneToMany(mappedBy = "card_product", cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "cardProduct", cascade = CascadeType.REFRESH)
     private List<CardInfo> cardInfos;
 }
