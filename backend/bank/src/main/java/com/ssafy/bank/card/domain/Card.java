@@ -27,7 +27,7 @@ public class Card extends BaseTimeEntity {
     @Column(name = "card_id")
     private int cardId;
 
-    @Column(name = "card_name")
+    @Column(length = 255, name = "card_name")
     private String cardName;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REFRESH)

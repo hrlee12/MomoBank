@@ -30,8 +30,11 @@ public class AccountProduct extends BaseTimeEntity {
     @Column(name = "account_product_id")
     private int accountProductId;
 
-    @Column(name = "name")
+    @Column(length = 255, name = "name")
     private String name;
+
+    @Column(length = 500, name = "description")
+    private String description;
 
     @Column(name = "interest_rate")
     private float interestRate;

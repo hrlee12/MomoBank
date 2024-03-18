@@ -29,7 +29,7 @@ public class Bank extends BaseTimeEntity {
     @Column(name = "bank_id")
     private int bankId;
 
-    @Column(name = "bank_name")
+    @Column(length = 255, name = "bank_name")
     private String bankName;
 
     @OneToMany(mappedBy = "bank", cascade = CascadeType.REFRESH)

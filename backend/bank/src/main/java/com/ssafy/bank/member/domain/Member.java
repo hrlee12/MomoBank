@@ -30,19 +30,19 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private int memberId;
 
-    @Column(name = "id")
+    @Column(length = 255, name = "id")
     private String id;
 
-    @Column(name = "email")
+    @Column(length = 255, name = "email")
     private String email;
 
-    @Column(name = "password")
+    @Column(length = 255, name = "password")
     private String password;
 
-    @Column(name = "name")
+    @Column(length = 20, name = "name")
     private String name;
 
-    @Column(name = "phoneNumber")
+    @Column(length = 50, name = "phoneNumber")
     private String phoneNumber;
 
     @Column(name = "birth_date")

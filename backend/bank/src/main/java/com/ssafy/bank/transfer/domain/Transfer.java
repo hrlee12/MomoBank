@@ -31,7 +31,7 @@ public class Transfer extends BaseTimeEntity {
     @Column(name = "amount")
     private long amount;
 
-    @Column(name = "description")
+    @Column(length = 255, name = "description")
     private String description;
 
     @Column(name = "from_balance")

@@ -27,7 +27,7 @@ public class CardInfo extends BaseTimeEntity {
     @Column(name = "card_info_id")
     private int cardInfoId;
 
-    @Column(name = "card_num")
+    @Column(length = 255, name = "card_num")
     private String cardNum;
 
     @ManyToOne

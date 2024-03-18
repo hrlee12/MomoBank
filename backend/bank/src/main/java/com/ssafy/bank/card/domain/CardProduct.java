@@ -30,10 +30,10 @@ public class CardProduct extends BaseTimeEntity {
     @Column(name = "card_product_id")
     private int cardProductId;
 
-    @Column(name = "name")
+    @Column(length = 255, name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(length = 500, name = "description")
     private String description;
 
     @Column(name = "type")
