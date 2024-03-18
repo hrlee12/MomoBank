@@ -24,5 +24,7 @@ sms:
   from-number: 01045786827
 
 
-validation-token:
-  key: dbxcfwde
+verification:
+  secret-key: dbxcfwde
+  algorithm : HmacSHA256
+

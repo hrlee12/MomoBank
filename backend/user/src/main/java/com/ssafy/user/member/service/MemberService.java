@@ -11,11 +11,20 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ssafy.user.common.ErrorCode.*;
 
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -24,6 +33,10 @@ public class MemberService {
     private final DefaultMessageService messageService;
     private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
+
+
+    private String alg = "HmacSHA256";
+
 
     @Value("${sms.from-number}")
     private String fromNumber;
@@ -91,6 +104,55 @@ public class MemberService {
         redisUtil.setValues(phoneNumber, verificationNumber, Duration.ofSeconds(60*3));
 
         return;
+    }
+
+
+    public String verifyCode(String code, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
+
+        String correctCode = redisUtil.getValues(phoneNumber);
+
+        if (correctCode == null)
+            throw new CustomException(ErrorCode.EXPIRED_CODE);
+
+        if (!correctCode.equals(code))
+            throw new CustomException(ErrorCode.INCORRECT_VERIFICATION_CODE);
+
+        redisUtil.deleteValues(phoneNumber);
+
+        String secretKey = getRandomKey();
+
+        redisUtil.setValues(phoneNumber, secretKey, Duration.ofSeconds(30*60));
+
+        return encrypt(phoneNumber, secretKey);
+
+    }
+
+
+
+    private String getRandomKey() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(10);
+
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(chars.length());
+            sb.append(chars.charAt(index));
+        }
+
+        return sb.toString();
+    }
+
+
+    private String encrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
+        SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), alg);
+
+        Mac hasher = Mac.getInstance(alg);
+        hasher.init(secretKey);
+        byte[] hash = hasher.doFinal(word.getBytes());
+        String hashed = HexUtils.toHexString(hash);
+
+        return hashed;
     }
 
 }

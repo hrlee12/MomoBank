@@ -26,6 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -37,7 +39,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberSerivce;
+    private final MemberService memberService;
 
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청")
@@ -48,7 +50,7 @@ public class MemberController {
     })
     public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) {
 
-        memberSerivce.makeVerificationCode(request.getPhoneNumber());
+        memberService.makeVerificationCode(request.getPhoneNumber());
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 생성 성공", null);
     }
@@ -60,8 +62,11 @@ public class MemberController {
                     content = {@Content(schema = @Schema(implementation=VerifyCodeResponse.class))}),
             @ApiResponse(responseCode = "400", description = "인증번호 불일치")
     })
-    public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+
+        String token = memberService.verifyCode(request.getCode(), request.getPhoneNumber());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "인증번호 일치", new VerifyCodeResponse(token));
     }
 
     @PostMapping("/join")
