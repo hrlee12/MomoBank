@@ -8,7 +8,6 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-
 server:
   port: 8083
   servlet:
