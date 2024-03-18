@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MemberController {
 
+
     private MemberRepository memberRepository;
 
     @PostMapping("/phone-verification/code")
@@ -58,6 +59,16 @@ public class MemberController {
     })
     public ResponseEntity join(@RequestBody JoinRequest request) {
 // 로직 구현
+        Member member = Member.builder()
+                .id("ssafy")
+                .fcmToken("123")
+                .birthDate(LocalDateTime.now())
+                .password("1234")
+                .phoneNumber("010-1234-5678")
+                .name("싸피")
+                .build();
+
+        memberRepository.save(member);
         return ResponseEntity.ok().build();
     }
 
@@ -70,16 +81,7 @@ public class MemberController {
     })
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
 
-        Member member = Member.builder()
-                .id("ssafy")
-                .fcmToken("123")
-                .birthDate(LocalDateTime.now())
-                .password("1234")
-                .phoneNumber("010-1234-5678")
-                .name("싸피")
-                .build();
 
-        memberRepository.save(member);
 // 로직 구현
         return ResponseEntity.ok().build();
     }
