@@ -1,4 +1,4 @@
-package com.ssafy.user.util;
+package com.ssafy.user.common.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

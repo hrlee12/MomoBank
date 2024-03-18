@@ -2,12 +2,12 @@ package com.ssafy.user.member.controller;
 
 
 import com.ssafy.user.common.CommonResponse;
-import com.ssafy.user.member.dto.request.TestRequest;
 import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.repository.MemberRepository;
-import com.ssafy.user.util.RedisUtil;
+import com.ssafy.user.common.util.RedisUtil;
+import com.ssafy.user.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
@@ -28,31 +28,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 
 @Tag(name = "멤버 api")
 @RestController
 @RequestMapping("/member")
+@RequiredArgsConstructor
 public class MemberController {
 
-    private final DefaultMessageService messageService;
-    private final MemberRepository memberRepository;
-    private final RedisUtil redisUtil;
-
-    @Value("${sms.from-number}")
-    private String fromNumber;
-    public MemberController(MemberRepository memberRepository, RedisUtil redisUtil,
-                            @Value("${sms.api-key}") String apiKey,
-                            @Value("${sms.api-secret-key}") String apiSecretKey,
-                            @Value("${sms.url}") String url) {
-        this.memberRepository = memberRepository;
-        this.redisUtil = redisUtil;
-        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, url);
-    }
-
+    private final MemberService memberSerivce;
 
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청")
@@ -63,32 +48,7 @@ public class MemberController {
     })
     public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) {
 
-        String phoneNumber = request.getPhoneNumber();
-
-        if (redisUtil.existKey(phoneNumber)){
-            redisUtil.deleteValues(phoneNumber);
-        }
-
-        Message message = new Message();
-
-        message.setFrom(fromNumber);
-        message.setTo(request.getPhoneNumber());
-
-        String verificationNumber = "";
-        Random random = new Random();
-
-        for (int idx = 0; idx < 6; idx++) {
-            verificationNumber += random.nextInt(10);
-        }
-
-
-        message.setText("인증번호 [" + verificationNumber + "]를 입력하십시오.");
-
-        SingleMessageSentResponse smsResponse = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-
-        redisUtil.setValues(phoneNumber, verificationNumber, Duration.ofSeconds(60*3));
-
-        System.out.println("레디스에서 꺼내보내기 " + redisUtil.getValues(phoneNumber));
+        memberSerivce.makeVerificationCode(request.getPhoneNumber());
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 생성 성공", null);
     }
@@ -112,16 +72,7 @@ public class MemberController {
     })
     public ResponseEntity join(@RequestBody JoinRequest request) {
 // 로직 구현
-        Member member = Member.builder()
-                .id("ssafy")
-                .fcmToken("123")
-                .birthDate(LocalDateTime.now())
-                .password("1234")
-                .phoneNumber("010-1234-5678")
-                .name("싸피")
-                .build();
 
-        memberRepository.save(member);
         return ResponseEntity.ok().build();
     }
 
