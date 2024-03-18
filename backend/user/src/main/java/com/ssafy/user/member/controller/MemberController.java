@@ -4,6 +4,8 @@ package com.ssafy.user.member.controller;
 import com.ssafy.user.member.dto.request.TestRequest;
 import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
+import com.ssafy.user.member.entity.Member;
+import com.ssafy.user.member.repository.MemberRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,14 +13,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 
 @Tag(name = "멤버 api")
 @RestController
 @RequestMapping("/member")
-public class UserController {
+@AllArgsConstructor
+public class MemberController {
+
+
+    private MemberRepository memberRepository;
 
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청")
@@ -50,6 +59,16 @@ public class UserController {
     })
     public ResponseEntity join(@RequestBody JoinRequest request) {
 // 로직 구현
+        Member member = Member.builder()
+                .id("ssafy")
+                .fcmToken("123")
+                .birthDate(LocalDateTime.now())
+                .password("1234")
+                .phoneNumber("010-1234-5678")
+                .name("싸피")
+                .build();
+
+        memberRepository.save(member);
         return ResponseEntity.ok().build();
     }
 
@@ -61,6 +80,8 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "아이디 또는 비밀번호 불일치")
     })
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+
+
 // 로직 구현
         return ResponseEntity.ok().build();
     }
