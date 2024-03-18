@@ -1,0 +1,19 @@
+$primary-color: #0064e0;
+$secondary-color: #007af5;
+$background-color: #f7fbff;
+$primary-color: #4cb944;
+$negative-color: #dc3039;
+$gray-color: #7c7c7c;
+$deep-gray-color: #757575;
+$light-gray-color: #eae9ee;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.layout-container {
+  min-height: 100vh;
+  background-color: $background-color;
+}
