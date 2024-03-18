@@ -1,7 +1,37 @@
+<script setup>
+const getImageUrl = (imageName) => {
+  return "/icon/" + imageName;
+};
+</script>
+
 <template>
-  <header class="bg-[#50d71e] flex flex-row mt-6 h-11">
-    <div class="basis-1/4 bg-red-100">01</div>
-    <div class="basis-1/4 bg-blue-100">02</div>
-    <div class="basis-1/2 bg-orange-100">03</div>
-  </header>
+  <div class="bg-white h-60 rounded-b-[14px]">
+    <div class="pt-4">
+      <header class="flex flex-row h-11 justify-between">
+        <div>
+          <img
+            class="w-10 h-8 ml-4"
+            :src="getImageUrl('arrow-icon.png')"
+            alt="arrow-icon 화살표 아이콘"
+          />
+        </div>
+        <div class="text-xl font-semibold">5반 5린이들</div>
+        <div>
+          <div class="flex">
+            <img
+              class="w-7 h-7 mr-4"
+              :src="getImageUrl('bell-icon.png')"
+              alt="bell-icon"
+            />
+            <img
+              class="w-7 h-7 mr-4"
+              :src="getImageUrl('home-icon.png')"
+              alt="home-icon"
+            />
+          </div>
+        </div>
+      </header>
+      <NuxtPage />
+    </div>
+  </div>
 </template>
