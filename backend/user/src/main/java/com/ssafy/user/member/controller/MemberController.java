@@ -1,11 +1,13 @@
 package com.ssafy.user.member.controller;
 
 
-import com.ssafy.user.member.dto.request.TestRequest;
+import com.ssafy.user.common.CommonResponse;
 import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.repository.MemberRepository;
+import com.ssafy.user.common.util.RedisUtil;
+import com.ssafy.user.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,21 +15,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 
 @Tag(name = "멤버 api")
 @RestController
 @RequestMapping("/member")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberController {
 
-
-    private MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청")
@@ -37,7 +49,10 @@ public class MemberController {
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
     public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) {
-        return ResponseEntity.ok().build();
+
+        memberService.makeVerificationCode(request.getPhoneNumber());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 생성 성공", null);
     }
 
     @PostMapping("/phone-verification/verify")
@@ -47,8 +62,11 @@ public class MemberController {
                     content = {@Content(schema = @Schema(implementation=VerifyCodeResponse.class))}),
             @ApiResponse(responseCode = "400", description = "인증번호 불일치")
     })
-    public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+
+        String token = memberService.verifyCode(request.getCode(), request.getPhoneNumber());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "인증번호 일치", new VerifyCodeResponse(token));
     }
 
     @PostMapping("/join")
@@ -59,16 +77,7 @@ public class MemberController {
     })
     public ResponseEntity join(@RequestBody JoinRequest request) {
 // 로직 구현
-        Member member = Member.builder()
-                .id("ssafy")
-                .fcmToken("123")
-                .birthDate(LocalDateTime.now())
-                .password("1234")
-                .phoneNumber("010-1234-5678")
-                .name("싸피")
-                .build();
 
-        memberRepository.save(member);
         return ResponseEntity.ok().build();
     }
 
