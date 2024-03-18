@@ -83,7 +83,9 @@ definePageMeta({
         </div>
       </div>
 
-      <div class="club-item"><NuxtLink to="/bank/club-list"></NuxtLink></div>
+      <div class="center club-item">
+        <NuxtLink to="/bank/club-list">모임 더보기 ></NuxtLink>
+      </div>
     </div>
   </div>
 </template>
@@ -146,6 +148,7 @@ img {
         background-color: $light-gray-color;
         border-radius: 20px;
         min-width: 40px;
+        color: $gray-color;
       }
     }
 
@@ -174,6 +177,10 @@ img {
     padding: 1vh;
     background-color: white;
 
+    .center {
+      align-self: center;
+      color: $gray-color;
+    }
     .club-item {
       display: flex;
       justify-content: space-between;
