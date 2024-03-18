@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Schema(description = "회원 랭킹 정보")
 public class MemberRankingsDto {
 
-    @Schema(description = "랭킹 ID", example = "1")
+    @Schema(description = "랭킹 ID", example = "100")
     private Integer rankingId;
 
     @Schema(description = "사용자 ID", example = "1")
