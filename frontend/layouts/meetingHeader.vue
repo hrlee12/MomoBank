@@ -5,16 +5,33 @@ const getImageUrl = (imageName) => {
 </script>
 
 <template>
-  <header class="flex flex-row mt-6 h-11 justify-between">
-    <div class="basis-1/4">
-      <img class="w-10 h-8 ml-4" :src="getImageUrl('arrow-icon.png')" alt="" />
+  <div class="bg-white h-60 rounded-b-[14px]">
+    <div class="pt-4">
+      <header class="flex flex-row h-11 justify-between">
+        <div>
+          <img
+            class="w-10 h-8 ml-4"
+            :src="getImageUrl('arrow-icon.png')"
+            alt="arrow-icon 화살표 아이콘"
+          />
+        </div>
+        <div class="text-xl font-semibold">5반 5린이들</div>
+        <div>
+          <div class="flex">
+            <img
+              class="w-7 h-7 mr-4"
+              :src="getImageUrl('bell-icon.png')"
+              alt="bell-icon"
+            />
+            <img
+              class="w-7 h-7 mr-4"
+              :src="getImageUrl('home-icon.png')"
+              alt="home-icon"
+            />
+          </div>
+        </div>
+      </header>
+      <NuxtPage />
     </div>
-    <div class="items-center text-xl font-semibold">5반 5린이들</div>
-    <div>
-      <div class="flex">
-        <img class="w-7 h-7 mr-4" :src="getImageUrl('bell-icon.png')" alt="" />
-        <img class="w-7 h-7 mr-4" :src="getImageUrl('home-icon.png')" alt="" />
-      </div>
-    </div>
-  </header>
+  </div>
 </template>
