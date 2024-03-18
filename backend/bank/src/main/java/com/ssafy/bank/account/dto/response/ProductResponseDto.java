@@ -1,11 +1,10 @@
 package com.ssafy.bank.account.dto.response;
 
-public record accountResponseDto(
+public record ProductResponseDto(
     String productType,
     String productName,
-    String accountNum,
-    long balance
-
-) {
+    float interestRate,
+    String productDiscript
+    ) {
 
 }
