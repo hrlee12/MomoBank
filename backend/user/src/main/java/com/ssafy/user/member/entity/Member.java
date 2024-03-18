@@ -1,8 +1,11 @@
 package com.ssafy.user.member.entity;
 
+import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.common.BaseEntity;
+import com.ssafy.user.group.entity.Group;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,6 +61,11 @@ public class Member extends BaseEntity {
     @ColumnDefault("50")
     private int sincerity;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
+    private List<Account> accounts;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
+    private List<Group> groups;
 
     public void addEmail(String email) {
         this.email = email;

@@ -1,4 +1,4 @@
-package com.ssafy.user.budget.presentation;
+package com.ssafy.user.budget.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
