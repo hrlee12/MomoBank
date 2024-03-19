@@ -2,7 +2,7 @@ package com.ssafy.user.member.entity;
 
 import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.common.BaseEntity;
-import com.ssafy.user.group.entity.Group;
+import com.ssafy.user.groupInfo.entity.GroupInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -11,8 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -63,9 +61,6 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
-    private List<Group> groups;
 
     public void addEmail(String email) {
         this.email = email;

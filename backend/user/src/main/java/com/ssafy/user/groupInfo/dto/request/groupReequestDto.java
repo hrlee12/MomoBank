@@ -1,4 +1,4 @@
-package com.ssafy.user.group.dto.request;
+package com.ssafy.user.groupInfo.dto.request;
 
 public record groupReequestDto(
     String name,

@@ -1,4 +1,4 @@
-package com.ssafy.user.group.dto.response;
+package com.ssafy.user.groupInfo.dto.response;
 
 import java.sql.Date;
 
