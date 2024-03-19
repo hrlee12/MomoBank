@@ -8,8 +8,11 @@ definePageMeta({
   layout: "meeting",
 });
 
-const getImageUrl = (imageName) => {
-  return "/icon/" + imageName;
+// Define a method to dynamically require images
+const getImageUrl = (imageName, idx) => {
+  // Note: You might need to adjust the path depending on your project structure
+  if (idx == 0) return "/icon/" + imageName;
+  else return "/images/" + imageName;
 };
 
 // 피드 내용 상세보기(더보기 클릭)
@@ -50,7 +53,7 @@ const toggleText = () => {
         <div class="w-8 h-6 mr-4">
           <img
             class="rotate-90"
-            :src="getImageUrl('arrow-icon.png')"
+            :src="getImageUrl('arrow-icon.png', 0)"
             alt="arrow-icon"
           />
         </div>
@@ -76,12 +79,12 @@ const toggleText = () => {
 
       <!-- 실선, 거래 내역, 예산 -->
       <div class="flex justify-center">
-        <div class="mt-4 border-t-2 border-t-light-gray-color w-80"></div>
+        <div class="mt-4 border-t-[1px] border-t-light-gray-color w-80"></div>
       </div>
       <div class="flex justify-center">
         <div class="flex mt-3 w-80">
           <div
-            class="font-semibold text-[17px] w-40 text-center border-r-2 text-main-color"
+            class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color"
           >
             거래내역
           </div>
@@ -100,7 +103,7 @@ const toggleText = () => {
     class="flex items-center justify-between h-12 mx-auto mt-2 bg-white w-96 rounded-xl"
   >
     <div>
-      <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png')" />
+      <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png', 0)" />
     </div>
     <div class="overflow-hidden text-ellipsis whitespace-nowrap w-52">
       드디어 일본여행! Let's go!!!!!!!!!!!!!!!!!!!
@@ -116,7 +119,7 @@ const toggleText = () => {
         <div>
           <img
             class="w-8 h-8"
-            :src="getImageUrl('user-icon-3.png')"
+            :src="getImageUrl('user-icon-3.png', 0)"
             alt="user-icon"
           />
         </div>
@@ -127,13 +130,13 @@ const toggleText = () => {
       <div class="mt-2">
         <img
           class="w-full h-64"
-          :src="getImageUrl('image-1.png')"
+          :src="getImageUrl('image-1.png', 1)"
           alt="image-1"
         />
       </div>
       <!-- 하트 -->
       <div class="w-6 h-6 mt-2 ml-2">
-        <img :src="getImageUrl('like.png')" alt="like" />
+        <img :src="getImageUrl('like.png', 0)" alt="like" />
       </div>
       <!-- 좋아요 -->
       <div class="ml-2 font-bold text-[13px]">좋아요 5개</div>
@@ -181,7 +184,7 @@ const toggleText = () => {
         <div>
           <img
             class="w-8 h-8"
-            :src="getImageUrl('user-icon-3.png')"
+            :src="getImageUrl('user-icon-3.png', 0)"
             alt="user-icon"
           />
         </div>
@@ -192,13 +195,13 @@ const toggleText = () => {
       <div class="mt-2">
         <img
           class="w-full h-64"
-          :src="getImageUrl('image-2.png')"
+          :src="getImageUrl('image-2.png', 1)"
           alt="image-2"
         />
       </div>
       <!-- 하트 -->
       <div class="w-6 h-6 mt-2 ml-2">
-        <img :src="getImageUrl('like.png')" alt="like" />
+        <img :src="getImageUrl('like.png', 0)" alt="like" />
       </div>
       <!-- 좋아요 -->
       <div class="ml-2 font-bold text-[13px]">좋아요 100개</div>

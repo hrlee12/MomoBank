@@ -11,10 +11,11 @@ const getImageUrl = (imageName) => {
     <header>
       <nav>
         <div class="menu">
-          <div>
-            <img :src="getImageUrl('user-icon.png')" alt="" />
-            <NuxtLink to="/" class="font-bold"><h1>엄세현</h1></NuxtLink>
-          </div>
+          <NuxtLink to="/" class="font-bold"
+            ><img :src="getImageUrl('user-icon.png')" alt="" />
+            <h1>엄세현</h1></NuxtLink
+          >
+
           <NuxtLink to="/bank/account-list" class="list-link"
             >전체계좌</NuxtLink
           >
@@ -32,6 +33,8 @@ const getImageUrl = (imageName) => {
       <ul class="menu">
         <li><NuxtLink to="/">Home</NuxtLink></li>
         <li><NuxtLink to="/bank">Bank</NuxtLink></li>
+        <li><NuxtLink to="/products">Products</NuxtLink></li>
+        <li><NuxtLink to="/products">Products</NuxtLink></li>
         <li><NuxtLink to="/products">Products</NuxtLink></li>
       </ul>
     </footer>
@@ -67,20 +70,22 @@ header {
       display: flex;
       min-width: 80%;
 
-      div {
+      a {
         display: flex;
         margin-right: 4%;
+        justify-content: center;
       }
 
       .list-link {
-        border-radius: 20px;
+        border-radius: 30px;
         border: 1px solid $gray-color;
         font-size: 1vw 2vh;
         color: $gray-color;
         margin-top: 0.5vh;
-        padding-top: 0.5vh;
         min-width: 80px;
         width: 11vw;
+        padding-top: 0.7vh;
+        font-size: 2vh;
         height: 4.5vh;
         text-align: center;
       }
@@ -91,21 +96,22 @@ header {
 .container {
   display: flex;
   justify-content: center;
-  margin-bottom: 15%;
+  min-height: 90vh;
 }
 
 footer {
   position: fixed;
   width: 100%;
-  bottom: 0%;
+  bottom: 0;
   background-color: white;
+  display: block;
 
   .menu {
     display: flex;
     width: 100%;
     height: 10%;
     justify-content: space-evenly;
-    padding: 4%;
+    padding: 2.5vh;
   }
 }
 </style>

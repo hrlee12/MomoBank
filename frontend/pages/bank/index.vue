@@ -2,9 +2,11 @@
 import KebabMenuSample from "@/components/KebabMenuSample.vue";
 
 // Define a method to dynamically require images
-const getImageUrl = (imageName) => {
-  // Note: You might need to adjust the path depending on your project structure
-  return "/icon/" + imageName;
+const getImageUrl = (imageName, idx) => {
+  if (idx == 0)
+    // Note: You might need to adjust the path depending on your project structure
+    return "/icon/" + imageName;
+  else return "/images/" + imageName;
 };
 
 definePageMeta({
@@ -34,8 +36,8 @@ definePageMeta({
       </div>
 
       <div class="link-content">
-        <NuxtLink to="/bank/history">거래내역</NuxtLink>
-        <NuxtLink to="/bank/remit">송금하기</NuxtLink>
+        <NuxtLink to="/momo/bank/history">거래내역</NuxtLink>
+        <NuxtLink to="/momo/bank/remit">송금하기</NuxtLink>
       </div>
     </div>
 
@@ -51,7 +53,7 @@ definePageMeta({
         <div class="club-item">
           <p>5반 5린이들과 함께하는 모임</p>
           <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png')" alt="" />
+            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
             <p>6명</p>
           </div>
         </div>
@@ -64,7 +66,7 @@ definePageMeta({
         <div class="club-item">
           <p>자전거 스프린터들의 모임</p>
           <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png')" alt="" />
+            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
             <p>6명</p>
           </div>
         </div>
@@ -77,14 +79,14 @@ definePageMeta({
         <div class="club-item">
           <p>5반 5린이들과 함께하는 모임</p>
           <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png')" alt="" />
+            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
             <p>6명</p>
           </div>
         </div>
       </div>
 
       <div class="center club-item">
-        <NuxtLink to="/bank/club-list">모임 더보기 ></NuxtLink>
+        <NuxtLink to="/momo/bank/club-list">모임 더보기 ></NuxtLink>
       </div>
     </div>
   </div>
@@ -98,19 +100,19 @@ img {
 }
 
 .bank-container {
-  width: 90%;
-  height: 100%;
+  width: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   .pagination {
     text-align: center;
-    margin: 3%;
+    margin: 2vh;
   }
 
   .account-content {
-    width: 90%;
+    width: 80%;
     min-height: 200px;
     padding: 2vh;
     position: relative;
@@ -168,6 +170,7 @@ img {
   }
 
   .club-container {
+    width: 85%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -176,6 +179,7 @@ img {
     // padding: 2% 5% 1% 5%;
     padding: 1vh;
     background-color: white;
+    align-self: center;
 
     .center {
       align-self: center;
