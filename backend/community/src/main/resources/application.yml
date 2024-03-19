@@ -14,13 +14,12 @@ spring:
   profiles:
     active: local
   config:
-#    import: classpath:application-private.yml
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
+    jpa:
       hibernate:
-        format_sql: true
+        ddl-auto: create
+      properties:
+        hibernate:
+          format_sql: true
 
 
 #logging
