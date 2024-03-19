@@ -14,6 +14,7 @@
       fugiat sit ipsum a earum ad possimus quidem laboriosam?
     </p>
   </div>
+  <NuxtPage />
 </template>
 
 <style lang="scss" scoped>
