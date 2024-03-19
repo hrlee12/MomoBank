@@ -2,9 +2,15 @@ package com.ssafy.user.member.entity;
 
 import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.common.BaseEntity;
-import com.ssafy.user.groupInfo.entity.GroupInfo;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,18 +19,17 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
 
     @Size(min = 0, max = 100)
-    @Column(nullable = false, length=100)
+    @Column(nullable = false, length = 100)
     private String id;
 
     @Size(min = 0, max = 100)
@@ -72,7 +77,8 @@ public class Member extends BaseEntity {
 
 
     @Builder
-    public Member(String id, String name, String password, String phoneNumber, LocalDateTime birthDate, String fcmToken) {
+    public Member(String id, String name, String password, String phoneNumber,
+        LocalDateTime birthDate, String fcmToken) {
         this.id = id;
         this.name = name;
         this.password = password;
