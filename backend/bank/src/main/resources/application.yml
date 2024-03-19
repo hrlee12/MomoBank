@@ -1,3 +1,5 @@
+
+
 springdoc:
   api-docs:
     enabled: true
@@ -10,3 +12,22 @@ server:
   port: 8083
   servlet:
     contextPath: "/api/bank"
+
+spring:
+  config:
+    import: classpath:application.properties
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: trace
+
+
