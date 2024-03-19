@@ -1,6 +1,4 @@
 <script setup>
-import { inject } from "vue";
-
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;
@@ -9,10 +7,10 @@ const getImageUrl = (imageName, idx) => {
 
 const menuItems = [
   { name: "메인", path: "/", icon: "logo-icon.png" },
-  { name: "전체계좌", path: "/bank", icon: "card-icon.png" },
-  { name: "프로필", path: "/products", icon: "user-icon.png" },
+  { name: "전체계좌", path: "/bank/account-list", icon: "card-icon.png" },
+  { name: "프로필", path: "/bank/profile", icon: "user-icon.png" },
   { name: "모임", path: "/meetings", icon: "main2-icon.png" },
-  { name: "계좌 개설", path: "/bank/account-opening", icon: "add-icon.png" },
+  { name: "계좌 개설", path: "/bank", icon: "add-icon.png" },
 ];
 </script>
 
@@ -41,16 +39,16 @@ const menuItems = [
 footer {
   position: fixed;
   width: 100%;
+  min-height: 70px;
   bottom: 0;
   background-color: white;
-  display: block;
+  vertical-align: middle;
+  padding: 1.5vh 1.5vh 0 1.5vh;
 
   .menu {
     display: flex;
     width: 100%;
-    height: 10%;
     justify-content: space-around;
-    padding: 2vh;
 
     li {
       display: flex;
@@ -63,8 +61,8 @@ footer {
         flex-direction: column;
 
         img {
-          width: 5vw;
-          height: 3vh;
+          width: 7vw;
+          height: 4vh;
           object-fit: contain;
           align-self: center;
         }

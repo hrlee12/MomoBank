@@ -15,8 +15,7 @@ const toggleMenu = (event) => {
     <figure></figure>
     <figure></figure>
     <ul class="dropdown" :class="{ active: isVisible }">
-      <li>Art</li>
-      <li>Coding</li>
+      <li>삭제하기</li>
     </ul>
   </div>
 </template>
@@ -74,8 +73,8 @@ h1 {
   li {
     color: darken($grey, 20%);
     text-decoration: none;
-    display: block;
-    width: 100%;
+    display: flex;
+    min-width: 100px;
     padding: 1em 18px;
     cursor: pointer;
     &:hover {

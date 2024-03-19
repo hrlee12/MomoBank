@@ -1,6 +1,4 @@
 <script setup>
-import { inject } from "vue";
-
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;
@@ -31,7 +29,7 @@ const getImageUrl = (imageName, idx) => {
     </header>
 
     <!-- output the page content -->
-    <div class="container">
+    <div class="layout-container">
       <slot />
     </div>
 
@@ -81,7 +79,7 @@ header {
         color: $gray-color;
         margin-top: 0.5vh;
         min-width: 80px;
-        width: 11vw;
+        width: 14vw;
         padding-top: 0.7vh;
         font-size: 2vh;
         height: 4.5vh;

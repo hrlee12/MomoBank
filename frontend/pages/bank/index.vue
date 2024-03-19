@@ -1,7 +1,5 @@
 <script setup>
-import KebabMenu from "@/components/KebabMenu.vue";
-import BankAccount from "@/components/BankAccount.vue";
-
+// 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;
@@ -11,18 +9,47 @@ const getImageUrl = (imageName, idx) => {
 definePageMeta({
   layout: "bank",
 });
+
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from "swiper/vue";
+function onSlideChange(swiper) {
+  // 마지막 슬라이드에 도달했는지 확인
+  isLastSlide.value = swiper.isEnd;
+}
+
+// 슬라이드 데이터
+const accounts = ref([
+  { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
+  { accountName: "효리은행", accountNumber: "123-1234-12346", money: 2000000 },
+  { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
+]);
+const isLastSlide = ref(false);
 </script>
 
 <template>
   <div class="bank-container">
-    <div class="account-container">
-      <!-- 메인 계좌 -->
-      <BankAccount />
-      <BankAccount />
-      <BankAccount />
-    </div>
+    <Swiper
+      :modules="[SwiperPagination]"
+      :spaceBetween="15"
+      :slides-per-view="1"
+      :slidesPerView="1.2"
+      :centeredSlides="true"
+      :pagination="{ clickable: true }"
+      @slideChange="onSlideChange"
+      class="mySwiper"
+    >
+      <SwiperSlide v-for="(account, index) in accounts" :key="index">
+        <BankAccount
+          :accountName="account.accountName"
+          :accountNumber="account.accountNumber"
+          :money="account.money"
+        />
+      </SwiperSlide>
 
-    <div class="pagination">page</div>
+      <SwiperSlide>
+        <BankAccount />
+      </SwiperSlide>
+    </Swiper>
 
     <!-- 메인 모임 리스트 -->
     <div class="club-container">
@@ -76,6 +103,11 @@ definePageMeta({
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
 
+.mySwiper {
+  position: relative;
+  padding-bottom: 5vh;
+}
+
 img {
   height: 3vh;
 }
@@ -87,19 +119,6 @@ img {
   flex-direction: column;
   justify-content: center;
 
-  .pagination {
-    text-align: center;
-    margin: 2vh;
-  }
-
-  .account-container {
-    overflow-x: auto; /* 수평 스크롤 활성화 */
-    scroll-snap-type: x mandatory; /* X축으로 스냅 활성화 */
-    display: flex; /* 슬라이드 항목들을 가로로 배치 */
-    -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤 */
-    gap: 20px; /* 슬라이드 사이 간격 추가 */
-  }
-
   .club-container {
     width: 85%;
     display: flex;
@@ -107,7 +126,6 @@ img {
     justify-content: space-evenly;
     border: 1px solid $light-gray-color;
     border-radius: 20px;
-    // padding: 2% 5% 1% 5%;
     padding: 1vh;
     background-color: white;
     align-self: center;
