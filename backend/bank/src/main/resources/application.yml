@@ -1,3 +1,5 @@
+
+
 springdoc:
   api-docs:
     enabled: true
@@ -7,6 +9,25 @@ springdoc:
     path: /swagger-ui.html
 
 server:
-  port: 8083
+  port: 8082
   servlet:
-    contextPath: "/api/bank"
+    contextPath: "/api/user"
+
+spring:
+  config:
+    import: classpath:application.properties
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: trace
+
+
