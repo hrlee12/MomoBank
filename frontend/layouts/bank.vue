@@ -1,8 +1,10 @@
 <script setup>
-// Define a method to dynamically require images
-const getImageUrl = (imageName) => {
-  // Note: You might need to adjust the path depending on your project structure
-  return "/icon/" + imageName;
+import { inject } from "vue";
+
+const getImageUrl = (imageName, idx) => {
+  if (idx == 0) return "/icon/" + imageName;
+  else if (idx === 1) return "/images/" + imageName;
+  else console.log("Image code error");
 };
 </script>
 
@@ -11,8 +13,12 @@ const getImageUrl = (imageName) => {
     <header>
       <nav>
         <div class="menu">
-          <NuxtLink to="/" class="font-bold"
-            ><img :src="getImageUrl('user-icon.png')" alt="" />
+          <NuxtLink to="/" class="font-bold">
+            <!-- getImageUrl함수가 존재할 때만 동작 -->
+            <img
+              :src="getImageUrl ? getImageUrl('user-icon.png', 0) : ''"
+              alt=""
+            />
             <h1>엄세현</h1></NuxtLink
           >
 
@@ -20,7 +26,7 @@ const getImageUrl = (imageName) => {
             >전체계좌</NuxtLink
           >
         </div>
-        <img :src="getImageUrl('bell-icon.png')" alt="" />
+        <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt="" />
       </nav>
     </header>
 
@@ -29,24 +35,16 @@ const getImageUrl = (imageName) => {
       <slot />
     </div>
 
-    <footer>
-      <ul class="menu">
-        <li><NuxtLink to="/">Home</NuxtLink></li>
-        <li><NuxtLink to="/bank">Bank</NuxtLink></li>
-        <li><NuxtLink to="/products">Products</NuxtLink></li>
-        <li><NuxtLink to="/products">Products</NuxtLink></li>
-        <li><NuxtLink to="/products">Products</NuxtLink></li>
-      </ul>
-    </footer>
+    <BankFooter />
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
 
-.router-link-exact-active {
-  color: #12b488;
-}
+// .router-link-exact-active {
+//   color: $primary-color;
+// }
 
 h1 {
   padding-top: 0.5vh;
@@ -97,21 +95,5 @@ header {
   display: flex;
   justify-content: center;
   min-height: 90vh;
-}
-
-footer {
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  background-color: white;
-  display: block;
-
-  .menu {
-    display: flex;
-    width: 100%;
-    height: 10%;
-    justify-content: space-evenly;
-    padding: 2.5vh;
-  }
 }
 </style>
