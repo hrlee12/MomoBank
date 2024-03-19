@@ -3,8 +3,11 @@ package com.ssafy.user.member.service;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.util.RedisUtil;
+import com.ssafy.user.member.dto.request.JoinRequest;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.repository.MemberRepository;
+import com.ssafy.user.member.repository.querydsl.MemberRepositoryCustom;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -12,6 +15,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ssafy.user.common.ErrorCode.*;
@@ -24,30 +28,36 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class MemberService {
     private final DefaultMessageService messageService;
     private final MemberRepository memberRepository;
+    private final MemberRepositoryCustom memberRepositoryCustom;
     private final RedisUtil redisUtil;
-
 
     private String alg = "HmacSHA256";
 
 
     @Value("${sms.from-number}")
     private String fromNumber;
-    public MemberService(MemberRepository memberRepository, RedisUtil redisUtil,
-                            @Value("${sms.api-key}") String apiKey,
-                            @Value("${sms.api-secret-key}") String apiSecretKey,
-                            @Value("${sms.url}") String url) {
-        this.memberRepository = memberRepository;
-        this.redisUtil = redisUtil;
-        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, url);
-    }
+//    public MemberService(MemberRepository memberRepository, MemberRepositoryCustom memberRepositoryCustom, RedisUtil redisUtil,
+//                            @Value("${sms.api-key}") String apiKey,
+//                            @Value("${sms.api-secret-key}") String apiSecretKey,
+//                            @Value("${sms.url}") String url) {
+//        this.memberRepository = memberRepository;
+//        this.memberRepositoryCustom = memberRepositoryCustom;
+//        this.redisUtil = redisUtil;
+//        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, url);
+//    }
+
+
 
 
     public void makeVerificationCode(String phoneNumber) {
@@ -112,22 +122,53 @@ public class MemberService {
         String correctCode = redisUtil.getValues(phoneNumber);
 
         if (correctCode == null)
-            throw new CustomException(ErrorCode.EXPIRED_CODE);
+            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
 
         if (!correctCode.equals(code))
-            throw new CustomException(ErrorCode.INCORRECT_VERIFICATION_CODE);
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
 
         redisUtil.deleteValues(phoneNumber);
 
         String secretKey = getRandomKey();
 
-        redisUtil.setValues(phoneNumber, secretKey, Duration.ofSeconds(30*60));
+        redisUtil.setValues(phoneNumber, secretKey, Duration.ofSeconds(20*60));
 
         return encrypt(phoneNumber, secretKey);
 
     }
 
+    public void join(JoinRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+        verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
+        if(memberRepositoryCustom.findMemberByID(request.getId()) != null){
+            throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
+        }
+
+
+        Member member = Member.builder()
+                .id(request.getId())
+                .name(request.getName())
+                .phoneNumber(request.getPhoneNumber())
+                .birthDate(toLocalDateTime(request.getBirthdate()))
+                .password(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()))
+                .build();
+
+        memberRepository.save(member);
+    }
+
+
+    private void verifyToken(String token, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
+        String secretKey = redisUtil.getValues(phoneNumber);
+
+        if (secretKey == null) {
+            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+        }
+
+        if (!encrypt(phoneNumber, secretKey).equals(token)){
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+        }
+
+    }
 
     private String getRandomKey() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -155,4 +196,9 @@ public class MemberService {
         return hashed;
     }
 
+
+    private LocalDateTime toLocalDateTime(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date + " 00:00:00", formatter);
+    }
 }

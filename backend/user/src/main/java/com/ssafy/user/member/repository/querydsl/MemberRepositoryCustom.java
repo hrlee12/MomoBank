@@ -37,6 +37,13 @@ public class MemberRepositoryCustom {
     }
 
 
+    public MemberDTO findMemberByID(String id){
+        return queryFactory.select(new QMemberDTO(member.memberId, member.name, member.sincerity))
+                .from(member)
+                .where(member.id.eq(id))
+                .fetchOne();
+    }
+
 
 
 }

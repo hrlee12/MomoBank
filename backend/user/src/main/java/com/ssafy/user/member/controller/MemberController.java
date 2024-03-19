@@ -57,6 +57,8 @@ public class MemberController {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 생성 성공", null);
     }
 
+
+
     @PostMapping("/phone-verification/verify")
     @Operation(summary = "휴대폰 인증번호 검증")
     @ApiResponses(value = {
@@ -71,17 +73,24 @@ public class MemberController {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "인증번호 일치", new VerifyCodeResponse(token));
     }
 
+
+
+
     @PostMapping("/join")
     @Operation(summary = "회원가입", responses = {
             @ApiResponse(responseCode = "200", description = "회원가입 완료"),
             @ApiResponse(responseCode = "409", description = "중복되는 아이디"),
             @ApiResponse(responseCode = "401", description = "전화번호 인증 토큰 유효하지 않음")
     })
-    public ResponseEntity join(@RequestBody JoinRequest request) {
+    public ResponseEntity join(@RequestBody JoinRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
 // 로직 구현
+        memberService.join(request);
 
-        return ResponseEntity.ok().build();
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
     }
+
+
+
 
     @PostMapping("/login")
     @Operation(summary = "로그인", responses = {
@@ -106,6 +115,9 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+
+
+
     @Operation(summary = "마이페이지 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "마이페이지 조회 성공",
@@ -119,6 +131,8 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+
+
     @Operation(summary = "비밀번호 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
@@ -129,6 +143,8 @@ public class MemberController {
 // 로직 구현
         return ResponseEntity.ok().build();
     }
+
+
 
 
 
@@ -144,6 +160,19 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+
+
+
+    @Operation(summary = "fcm 토큰 갱신")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "fcm 토큰 갱신 성공"),
+            @ApiResponse(responseCode = "409", description = "fcm 토큰을 저장할 회원 정보 없음"),
+    })
+    @PatchMapping("/fcmToken")
+    public ResponseEntity renewFcmToken(@RequestBody RenewFcmTokenRequest request) {
+// 로직 구현
+        return ResponseEntity.ok().build();
+    }
 
 
 }

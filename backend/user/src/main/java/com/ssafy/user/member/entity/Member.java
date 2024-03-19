@@ -52,8 +52,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime birthDate;
 
-
-    @Column(nullable = false)
     private String fcmToken;
 
     @Size(min = 0, max = 50)
@@ -78,13 +76,12 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(String id, String name, String password, String phoneNumber,
-        LocalDateTime birthDate, String fcmToken) {
+        LocalDateTime birthDate) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.fcmToken = fcmToken;
         this.sincerity = 50;
     }
 
