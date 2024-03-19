@@ -9,9 +9,9 @@ springdoc:
     path: /swagger-ui.html
 
 server:
-  port: 8082
+  port: 8083
   servlet:
-    contextPath: "/api/user"
+    contextPath: "/api/bank"
 
 spring:
   config:
