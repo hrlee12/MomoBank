@@ -1,6 +1,3 @@
-spring:
-  profiles:
-    active: local
 springdoc:
   api-docs:
     enabled: true
@@ -14,6 +11,8 @@ server:
     context-path: /api/community
 
 spring:
+  profiles:
+    active: local
   config:
 #    import: classpath:application-private.yml
   jpa:
