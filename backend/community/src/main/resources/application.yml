@@ -5,15 +5,16 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-
 server:
   port: 8083
   servlet:
     context-path: /api/community
 
 spring:
+  profiles:
+    active: local
   config:
-#    import: classpath:application-private.yml
+  #    import: classpath:application-private.yml
   jpa:
     hibernate:
       ddl-auto: create
