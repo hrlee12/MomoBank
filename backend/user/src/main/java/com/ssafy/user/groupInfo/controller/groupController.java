@@ -1,4 +1,4 @@
-package com.ssafy.user.group.controller;
+package com.ssafy.user.groupInfo.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
