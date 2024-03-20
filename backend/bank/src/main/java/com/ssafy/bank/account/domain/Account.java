@@ -1,7 +1,7 @@
 package com.ssafy.bank.account.domain;
 
 import com.ssafy.bank.card.domain.CardInfo;
-import com.ssafy.bank.common.BaseTimeEntity;
+import com.ssafy.bank.common.BaseEntity;
 import com.ssafy.bank.member.domain.Member;
 import com.ssafy.bank.transfer.domain.Transfer;
 import jakarta.persistence.CascadeType;
@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "account")
@@ -26,18 +27,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account extends BaseTimeEntity {
+public class Account extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
     private int accountId;
 
-    @Column(name = "balance")
+    @Column(name = "balance", nullable = false)
+    @ColumnDefault("0")
     private long balance;
 
     @ManyToOne
-    @JoinColumn(name = "account_product_id")
+    @JoinColumn(name = "account_product_id", nullable = false)
     private AccountProduct accountProduct;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.REFRESH)
@@ -50,6 +52,6 @@ public class Account extends BaseTimeEntity {
     private List<Transfer> toTransfers;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }

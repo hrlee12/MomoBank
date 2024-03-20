@@ -1,7 +1,7 @@
 package com.ssafy.bank.card.domain;
 
 import com.ssafy.bank.account.domain.Bank;
-import com.ssafy.bank.common.BaseTimeEntity;
+import com.ssafy.bank.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,19 +26,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardProduct extends BaseTimeEntity {
+public class CardProduct extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_product_id")
     private int cardProductId;
 
-    @Column(length = 255, name = "name")
+    @Column(length = 255, name = "name", nullable = false)
     private String name;
 
-    @Column(length = 500, name = "description")
+    @Column(length = 500, name = "description", nullable = false)
     private String description;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private CardType type;
 
