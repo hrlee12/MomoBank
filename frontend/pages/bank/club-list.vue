@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+definePageMeta({
+  layout: "bank",
+});
+</script>
 
 <template>
   <div></div>

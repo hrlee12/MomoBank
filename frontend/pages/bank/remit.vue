@@ -1,7 +1,11 @@
-<script setup></script>
+<script setup>
+definePageMeta({
+  layout: "bank",
+});
+</script>
 
 <template>
-  <div></div>
+  <div>remit</div>
 </template>
 
 <style lang="scss" scoped></style>

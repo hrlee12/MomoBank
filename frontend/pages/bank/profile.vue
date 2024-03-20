@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+definePageMeta({
+  layout: "bank",
+});
+</script>
 
 <template>
   <Swiper :modules="[SwiperPagination]" :slides-per-view="1" :loop="true">
