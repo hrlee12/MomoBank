@@ -33,8 +33,6 @@ public abstract class BaseEntity {
     private boolean isDeleted = false;
 
     public void softDelete() {
-        if (isDeleted)
-            throw new IllegalStateException(ErrorCode.ALREADY_DELETED.getMessage());
         this.isDeleted = true;
     }
 }
