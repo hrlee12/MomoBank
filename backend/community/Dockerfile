@@ -1,5 +1,5 @@
 # 빌드 스테이지
-FROM openjdk:17-jdk AS build
+FROM openjdk:17-jdk-alpine AS build
 WORKDIR /app
 
 COPY build.gradle .
