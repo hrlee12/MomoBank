@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PasswordFindRequest {
+public class SendNewPasswordRequest {
 
     public String id;
     public String phoneNumber;

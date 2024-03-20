@@ -43,10 +43,13 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepositoryCustom memberRepositoryCustom;
+    private final MemberRepository memberRepository;
+
+
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증코드 생성 성공"),
+            @ApiResponse(responseCode = "200", description = "인증코드 보내기 성공"),
             @ApiResponse(responseCode = "409", description = "이미 가입된 전화번호"),
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
@@ -54,7 +57,7 @@ public class MemberController {
 
         memberService.makeVerificationCode(request.getPhoneNumber());
 
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 생성 성공", null);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 보내기 성공", null);
     }
 
 
@@ -97,20 +100,10 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "로그인 성공",
                     content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BankHomeResponse.class))}),
-            @ApiResponse(responseCode = "409", description = "아이디 또는 비밀번호 불일치")
+            @ApiResponse(responseCode = "400", description = "아이디 또는 비밀번호 불일치")
     })
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        List<Member> members = memberRepositoryCustom.findMembers();
 
-        for (Member member: members) {
-            System.out.println(member.getMemberId());
-        }
-
-        List<MemberDTO> memberDTOs = memberRepositoryCustom.findMembersDTO();
-
-        for (MemberDTO member : memberDTOs) {
-            System.out.println(member);
-        }
 // 로직 구현
         return ResponseEntity.ok().build();
     }
@@ -123,41 +116,48 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "마이페이지 조회 성공",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = MypageResponse.class))}),
-            @ApiResponse(responseCode = "409", description = "일치하는 id 없음")
+            @ApiResponse(responseCode = "400", description = "일치하는 id 없음")
     })
     @GetMapping("/{memberId}")
     public ResponseEntity getUserInfo(@PathVariable String memberId) {
-// 로직 구현
-        return ResponseEntity.ok().build();
+
+        MypageResponse mypageResponse = memberService.getUserInfo(memberId);
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "마이페이지 조회 성공", mypageResponse);
     }
+
+
 
 
 
     @Operation(summary = "비밀번호 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
-            @ApiResponse(responseCode = "409", description = "현재 비밀번호 불일치")
+            @ApiResponse(responseCode = "400", description = "현재 비밀번호 불일치")
     })
     @PatchMapping("/passwords")
     public ResponseEntity updatePassword(@RequestBody PasswordUpdateRequest request) {
-// 로직 구현
-        return ResponseEntity.ok().build();
+
+        memberService.updatePassword(request.getId(), request.getCurrentPassword(), request.getNewPassword());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "비밀번호 변경 완료", null);
     }
 
 
 
 
-
-    @Operation(summary = "비밀번호 찾기")
+    @Operation(summary = "임시 비밀번호 발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전화번호로 임시비밀번호 전송"),
-            @ApiResponse(responseCode = "409", description = "일치하는 아이디, 전화번호 정보 없음"),
+            @ApiResponse(responseCode = "400", description = "입력한 정보와 일치하는 회원 정보 없음"),
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
     @PostMapping("/passwords")
-    public ResponseEntity findPassword(@RequestBody PasswordFindRequest request) {
-// 로직 구현
-        return ResponseEntity.ok().build();
+    public ResponseEntity sendNewPassword(@RequestBody SendNewPasswordRequest request) {
+
+        memberService.sendNewPassword(request.getId(), request.getPhoneNumber());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "전화번호로 임시비밀번호 전송", null);
     }
 
 
@@ -166,13 +166,17 @@ public class MemberController {
     @Operation(summary = "fcm 토큰 갱신")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "fcm 토큰 갱신 성공"),
-            @ApiResponse(responseCode = "409", description = "fcm 토큰을 저장할 회원 정보 없음"),
+            @ApiResponse(responseCode = "400", description = "제공된 정보와 일치하는 회원 정보 없음"),
     })
     @PatchMapping("/fcmToken")
-    public ResponseEntity renewFcmToken(@RequestBody RenewFcmTokenRequest request) {
-// 로직 구현
-        return ResponseEntity.ok().build();
+    public ResponseEntity updateFcmToken(@RequestBody RenewFcmTokenRequest request) {
+
+        memberService.updateFcmToken(request.getId(), request.getFcmToken());
+
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "fcm 토큰 갱신 성공", null);
     }
+
 
 
 }

@@ -62,8 +62,14 @@ public class Member extends BaseEntity {
     @ColumnDefault("50")
     private int sincerity;
 
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
+
+
+
+
+
 
     public void addEmail(String email) {
         this.email = email;
@@ -71,6 +77,15 @@ public class Member extends BaseEntity {
 
     public void changeProvider() {
         this.provider = "kakao";
+    }
+
+
+    public void changePassword(String password){
+        this.password = password;
+    }
+
+    public void changeFcmToken(String fcmToken){
+        this.fcmToken = fcmToken;
     }
 
 
@@ -84,5 +99,8 @@ public class Member extends BaseEntity {
         this.birthDate = birthDate;
         this.sincerity = 50;
     }
+
+
+
 
 }

@@ -4,6 +4,9 @@ import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.member.dto.request.JoinRequest;
+import com.ssafy.user.member.dto.response.MemberDTO;
+import com.ssafy.user.member.dto.response.MemberToCheckDTO;
+import com.ssafy.user.member.dto.response.MypageResponse;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.repository.MemberRepository;
 import com.ssafy.user.member.repository.querydsl.MemberRepositoryCustom;
@@ -19,6 +22,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ssafy.user.common.ErrorCode.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -47,15 +51,7 @@ public class MemberService {
 
     @Value("${sms.from-number}")
     private String fromNumber;
-//    public MemberService(MemberRepository memberRepository, MemberRepositoryCustom memberRepositoryCustom, RedisUtil redisUtil,
-//                            @Value("${sms.api-key}") String apiKey,
-//                            @Value("${sms.api-secret-key}") String apiSecretKey,
-//                            @Value("${sms.url}") String url) {
-//        this.memberRepository = memberRepository;
-//        this.memberRepositoryCustom = memberRepositoryCustom;
-//        this.redisUtil = redisUtil;
-//        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, url);
-//    }
+
 
 
 
@@ -63,23 +59,18 @@ public class MemberService {
     public void makeVerificationCode(String phoneNumber) {
 
         // 이미 회원가입된 전화번호인지 확인
-        Member member = memberRepository.findByPhoneNumber(phoneNumber).orElse(null);
+        MemberToCheckDTO member = memberRepositoryCustom.findMemberToCheckDtoByPhoneNumber(phoneNumber);
 
-        if (member != null) {
+        if (member != null)
             throw new CustomException(ErrorCode.ALREADY_JOINED_PHONE_NUMBER);
-        }
+
 
         // 레디스에 해당번호로 생성된 인증번호 있다면 지우기
-        if (redisUtil.existKey(phoneNumber)){
+        if (redisUtil.existKey(phoneNumber))
             redisUtil.deleteValues(phoneNumber);
-        }
 
 
-        // sms 보내기
-        Message message = new Message();
 
-        message.setFrom(fromNumber);
-        message.setTo(phoneNumber);
 
         // 랜덤한 숫자(6글자) 생성
         String verificationNumber = "";
@@ -89,25 +80,9 @@ public class MemberService {
             verificationNumber += random.nextInt(10);
         }
 
+        String message = "인증번호 [" + verificationNumber + "]를 입력하십시오.";
+        sendSms(phoneNumber, message);
 
-        message.setText("인증번호 [" + verificationNumber + "]를 입력하십시오.");
-
-        SingleMessageSentResponse smsResponse;
-
-        try {
-            // sms 보내기
-            smsResponse = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        } catch(Exception e) {
-            log.info(e.getMessage());
-            throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
-        }
-
-
-        // 2000코드 : 잘 접수됨.
-        // 아닌 경우
-        if (!smsResponse.getStatusCode().equals("2000")){
-            throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
-        }
 
 
         // redis에 저장
@@ -140,9 +115,9 @@ public class MemberService {
     public void join(JoinRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
         verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
-        if(memberRepositoryCustom.findMemberByID(request.getId()) != null){
+        if(memberRepositoryCustom.findMemberToCheckDtoById(request.getId()) != null)
             throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
-        }
+
 
 
         Member member = Member.builder()
@@ -151,11 +126,77 @@ public class MemberService {
                 .phoneNumber(request.getPhoneNumber())
                 .birthDate(toLocalDateTime(request.getBirthdate()))
                 .password(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()))
+//                .password(request.getPassword())
                 .build();
 
         memberRepository.save(member);
     }
 
+
+
+    @Transactional
+    public void sendNewPassword(String id, String phoneNumber) {
+
+        Member member = memberRepositoryCustom.findMemberByIdAndPhoneNumber(id, phoneNumber);
+
+        if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+
+
+        String newPassword = getRandomPassword();
+
+        String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
+
+        sendSms(phoneNumber, message);
+
+        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+
+    }
+
+
+    @Transactional
+    public void updatePassword(String id, String currentPassword, String newPassword) {
+
+        Member member = memberRepositoryCustom.findMemberByIdAndPassword(id, currentPassword);
+
+        if (member == null)
+            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+
+
+        member.changePassword(newPassword);
+
+    }
+
+
+    @Transactional
+    public void updateFcmToken(String id, String fcmToken) {
+        Member member = memberRepositoryCustom.findMemberById(id);
+
+        if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_TO_UPDATE_FCM_TOKEN);
+
+
+
+        member.changeFcmToken(fcmToken);
+    }
+
+    public MypageResponse getUserInfo(String id) {
+        MemberDTO member = memberRepositoryCustom.findMemberDtoById(id);
+
+        if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+
+        MypageResponse mypageResponse = MypageResponse.builder()
+                .id(member.getId())
+                .birthDate(member.getBirthDate().toLocalDate())
+                .phoneNumber(member.getPhoneNumber())
+                .name(member.getName())
+                .registrationDate(member.getRegistrationDate().toLocalDate())
+                .build();
+
+
+        return mypageResponse;
+    }
 
     private void verifyToken(String token, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
         String secretKey = redisUtil.getValues(phoneNumber);
@@ -184,6 +225,26 @@ public class MemberService {
         return sb.toString();
     }
 
+    private String getRandomPassword() {
+        String alphabet = "abcdefghijknmlopqrstuvwxyz";
+        String number = "0123456789";
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(alphabet.length());
+            sb.append(alphabet.charAt(index));
+        }
+
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(number.length());
+            sb.append(number.charAt(index));
+        }
+
+        return sb.toString();
+    }
+
 
     private String encrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), alg);
@@ -196,6 +257,34 @@ public class MemberService {
         return hashed;
     }
 
+    private void sendSms(String toPhoneNumber, String content) {
+        Message message = new Message();
+
+        message.setFrom(fromNumber);
+        message.setTo(toPhoneNumber);
+
+
+
+        message.setText(content);
+
+        SingleMessageSentResponse smsResponse;
+
+        try {
+            // sms 보내기
+            smsResponse = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        } catch(Exception e) {
+            log.info(e.getMessage());
+            throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
+        }
+
+
+        // 2000코드 : 잘 접수됨.
+        // 아닌 경우
+        if (!smsResponse.getStatusCode().equals("2000")){
+            throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
+        }
+
+    }
 
     private LocalDateTime toLocalDateTime(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
