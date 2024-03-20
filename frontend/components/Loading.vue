@@ -14,6 +14,7 @@ const getImageUrl = (imageName, idx) => {
     <div class="text-content">
       <h2>모두가 모이는 뱅킹</h2>
       <h1>모모뱅크</h1>
+      <p>되겠찌 쮸벌탱</p>
     </div>
   </div>
 </template>
