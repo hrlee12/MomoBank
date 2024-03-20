@@ -10,7 +10,7 @@ const getImageUrl = (imageName, idx) => {
 };
 
 definePageMeta({
-  layout: "bank",
+  layout: "bank-home",
 });
 
 function onSlideChange(swiper) {
@@ -113,7 +113,7 @@ const isLastSlide = ref(false);
       </div>
 
       <div class="center club-item">
-        <NuxtLink to="/bank/club-list">모임 더보기 ></NuxtLink>
+        <NuxtLink to="/bank/group-list">모임 더보기 ></NuxtLink>
       </div>
     </div>
   </div>

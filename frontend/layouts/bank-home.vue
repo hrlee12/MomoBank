@@ -1,10 +1,8 @@
 <script setup>
 import BankFooter from "~/components/layout/BankFooter.vue";
-import CommonHeader from "~/components/layout/CommonHeader.vue";
 </script>
 
 <template>
-  <CommonHeader />
   <!-- output the page content -->
   <div class="layout-container">
     <NuxtPage />

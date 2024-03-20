@@ -9,7 +9,7 @@ const menuItems = [
   { name: "메인", path: "/bank", icon: "logo-icon.png" },
   { name: "전체계좌", path: "/bank/account-list", icon: "card-icon.png" },
   { name: "프로필", path: "/bank/profile", icon: "user-icon.png" },
-  { name: "모임", path: "/groups", icon: "main2-icon.png" },
+  { name: "모임", path: "/bank/group-list", icon: "main2-icon.png" },
   { name: "계좌 개설", path: "/bank/remit", icon: "add-icon.png" },
 ];
 </script>
