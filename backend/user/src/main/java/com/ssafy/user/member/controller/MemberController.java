@@ -63,7 +63,7 @@ public class MemberController {
 
 
     @PostMapping("/phone-verification/verify")
-    @Operation(summary = "휴대폰 인증번호 검증")
+    @Operation(summary = "휴대폰 인증번호 검증", description = "인증이 완료되면 휴대폰 인증이 됐음을 증명하는 토큰 발급. 토큰은 30분 후에 만료됨")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증번호 일치",
                     content = {@Content(schema = @Schema(implementation=VerifyCodeResponse.class))}),
