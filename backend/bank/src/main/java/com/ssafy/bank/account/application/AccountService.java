@@ -46,9 +46,12 @@ public class AccountService {
         return AccountResponse.from(accountRepository.save(account), accountProduct);
     }
 
-    public void deleteAccount(int memberId, int accountId) {
+    public void deleteAccount(int accountId) {
         Account account = accountRepository.findById(accountId)
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+        if (account.getBalance()!=0){
+            throw new CustomException(ErrorCode.YET_TO_BE_DELETED);
+        }
         if (account.isDeleted()) {
             throw new CustomException(ErrorCode.DELETED_ACCOUNT);
         }
