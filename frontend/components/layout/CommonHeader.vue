@@ -43,7 +43,6 @@ header {
   position: relative;
   width: 100%;
   height: 8vh;
-  background-color: white;
   vertical-align: middle;
   padding: 1.5vh 1.5vh 1vh 1.5vh;
   display: flex;

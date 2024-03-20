@@ -16,6 +16,7 @@ $light-gray-color: #eae9ee;
 .layout-container {
   min-height: 90vh;
   background-color: $background-color;
+  padding-bottom: 80px; /* 푸터 높이보다 조금 더 큰 값 */
 }
 
 h1 {
@@ -35,4 +36,5 @@ h3 {
 
 p {
   font-size: 2vh;
+  color: $gray-color;
 }
