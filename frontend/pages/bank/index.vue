@@ -1,4 +1,7 @@
 <script setup>
+import BankAccount from "@/components/bank/BankAccount.vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
@@ -10,8 +13,6 @@ definePageMeta({
   layout: "bank",
 });
 
-// Import Swiper Vue.js components
-import { Swiper, SwiperSlide } from "swiper/vue";
 function onSlideChange(swiper) {
   // 마지막 슬라이드에 도달했는지 확인
   isLastSlide.value = swiper.isEnd;
@@ -166,7 +167,7 @@ header {
         margin-top: 0.5vh;
         min-width: 100px;
         width: 14vw;
-        padding-top: 0.7vh;
+        padding-top: 0.5vh;
         font-size: 2vh;
         height: 4.5vh;
         text-align: center;

@@ -1,9 +1,11 @@
-<script setup></script>
+<script setup>
+import BankFooter from "~/components/layout/BankFooter.vue";
+</script>
 
 <template>
   <!-- output the page content -->
   <div class="layout-container">
-    <slot />
+    <NuxtPage />
   </div>
 
   <BankFooter />

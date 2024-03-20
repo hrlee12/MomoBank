@@ -1,5 +1,5 @@
 <script setup>
-import KebabMenu from "@/components/KebabMenu.vue";
+import KebabMenu from "@/components/ui/KebabMenu.vue";
 defineProps({
   accountName: String,
   accountNumber: String,
@@ -12,6 +12,16 @@ const getImageUrl = (imageName, idx) => {
   else if (idx === 1) return "/images/" + imageName;
   else console.log("Image code error");
 };
+
+const textToCopy = ref("");
+const copyTextToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    alert(`클립보드에 복사되었습니다! text-${text}`);
+  } catch (err) {
+    console.error("클립보드 복사 실패:", err);
+  }
+};
 </script>
 
 <template>
@@ -20,8 +30,9 @@ const getImageUrl = (imageName, idx) => {
       <div class="account-info">
         <h2>{{ accountName }}</h2>
         <div class="account-no">
-          <p>입출금 {{ accountNumber }}</p>
-          <p>복사</p>
+          <p @click="copyTextToClipboard(accountNumber)">
+            입출금 {{ accountNumber }}
+          </p>
         </div>
       </div>
       <!-- <KebabMenu /> -->
@@ -72,6 +83,7 @@ const getImageUrl = (imageName, idx) => {
 
     .account-no {
       display: flex;
+      color: $gray-color;
     }
   }
 
@@ -86,8 +98,12 @@ const getImageUrl = (imageName, idx) => {
     button {
       background-color: $light-gray-color;
       border-radius: 20px;
-      min-width: 40px;
+      min-width: 50px;
       color: $gray-color;
+    }
+
+    p {
+      font-size: 1.8vh;
     }
   }
 

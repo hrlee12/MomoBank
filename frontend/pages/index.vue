@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import Loading from "~/components/layout/Loading.vue";
+</script>
 
 <template>
   <Loading />
