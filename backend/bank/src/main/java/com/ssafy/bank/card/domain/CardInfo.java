@@ -1,7 +1,7 @@
 package com.ssafy.bank.card.domain;
 
 import com.ssafy.bank.account.domain.Account;
-import com.ssafy.bank.common.BaseTimeEntity;
+import com.ssafy.bank.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,13 +21,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardInfo extends BaseTimeEntity {
+public class CardInfo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_info_id")
     private int cardInfoId;
 
-    @Column(length = 255, name = "card_num")
+    @Column(length = 255, name = "card_num", nullable = false)
     private String cardNum;
 
     @ManyToOne
