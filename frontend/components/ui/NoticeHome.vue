@@ -10,12 +10,9 @@ const getImageUrl = (imageName, idx) => {
 <template>
   <div class="link-container around">
     <NuxtLink to=""
-      ><img
-        class="item"
-        :src="getImageUrl('bell-icon.png', 0)"
-        alt="알림 아이콘"
+      ><img class="item" :src="getImageUrl('bell-icon.png', 0)" alt="홈 아이콘"
     /></NuxtLink>
-    <NuxtLink to=""
+    <NuxtLink to="/bank"
       ><img class="item" :src="getImageUrl('home-icon.png', 0)" alt="홈 아이콘"
     /></NuxtLink>
   </div>

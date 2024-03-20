@@ -2,6 +2,10 @@
 import { ref } from "vue";
 import NoticeHome from "~/components/ui/NoticeHome.vue";
 
+const goBack = () => {
+  window.history.back();
+};
+
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
@@ -14,7 +18,7 @@ const pageName = ref("전체계좌");
 
 <template>
   <header>
-    <div class="link-container left">
+    <div class="link-container left" @click="goBack">
       <img
         class="double"
         :src="getImageUrl('arrow-icon.png', 0)"
