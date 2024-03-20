@@ -1,7 +1,11 @@
-<script setup></script>
+<script setup>
+definePageMeta({
+  layout: "bank",
+});
+</script>
 
 <template>
-  <div></div>
+  <div>전체 계좌</div>
 </template>
 
 <style lang="scss" scoped></style>
