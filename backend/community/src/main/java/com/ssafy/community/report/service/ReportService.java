@@ -22,7 +22,7 @@ public class ReportService {
     @Value("${gpt.token}")
     String gptToken;
 
-    public void getAIRecomendation(MonthlyReportDto monthlyReportDto) throws IOException {
+    public String getAIRecomendation(MonthlyReportDto monthlyReportDto) throws IOException {
 
 
 
@@ -96,12 +96,15 @@ public class ReportService {
         JsonNode choicesNode = rootNode.path("choices");
 
         if (choicesNode.isArray()) {
-            for (JsonNode choice : choicesNode) {
-                JsonNode messageNode = choice.get("message");
-                String content = messageNode.get("content").asText();
-                System.out.println(content);
-            }
+            return choicesNode.get(0).get("message").get("content").asText();
+//            for (JsonNode choice : choicesNode) {
+//                JsonNode messageNode = choice.get("message");
+//                String content = messageNode.get("content").asText();
+//                System.out.println(content);
+//
+//            }
         }
+        return "error";
 
 
     }
