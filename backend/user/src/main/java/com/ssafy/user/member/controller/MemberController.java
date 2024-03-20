@@ -53,7 +53,7 @@ public class MemberController {
             @ApiResponse(responseCode = "409", description = "이미 가입된 전화번호"),
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
-    public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) {
+    public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) throws Exception {
 
         memberService.makeVerificationCode(request.getPhoneNumber());
 
@@ -69,7 +69,7 @@ public class MemberController {
                     content = {@Content(schema = @Schema(implementation=VerifyCodeResponse.class))}),
             @ApiResponse(responseCode = "400", description = "인증번호 불일치")
     })
-    public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity verifyCode(@RequestBody VerifyCodeRequest request) throws Exception {
 
         String token = memberService.verifyCode(request.getCode(), request.getPhoneNumber());
 
@@ -85,7 +85,7 @@ public class MemberController {
             @ApiResponse(responseCode = "409", description = "중복되는 아이디"),
             @ApiResponse(responseCode = "401", description = "전화번호 인증 토큰 유효하지 않음")
     })
-    public ResponseEntity join(@RequestBody JoinRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity join(@RequestBody JoinRequest request) throws Exception {
 // 로직 구현
         memberService.join(request);
 

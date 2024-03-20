@@ -30,7 +30,7 @@ public class MemberRepositoryCustom {
                 .from(member)
                 .leftJoin(member.accounts, account)
                 .fetchJoin()
-                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)))
+                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)).and(member.isDeleted.eq(false)))
                 .fetchOne();
     }
 
@@ -59,7 +59,7 @@ public class MemberRepositoryCustom {
 
 
     public MemberDTO findMemberDtoById(String id){
-        return queryFactory.select(new QMemberDTO(member.id, member.email, member.name, member.phoneNumber, member.birthDate, member.createdAt))
+        return queryFactory.select(new QMemberDTO(member.id, member.name, member.phoneNumber, member.birthDate, member.createdAt))
                 .from(member)
                 .where(member.id.eq(id).and(member.isDeleted.eq(false)))
                 .fetchOne();

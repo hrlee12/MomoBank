@@ -18,8 +18,7 @@ import java.util.List;
 public class MemberDTO {
     @Schema(description = "아이디")
     private String id;
-    @Schema(description = "이메일")
-    private String email;
+
     @Schema(description = "이름")
     private String name;
     @Schema(description = "휴대폰번호")
@@ -31,9 +30,8 @@ public class MemberDTO {
 
 
     @QueryProjection
-    public MemberDTO(String id, String email, String name, String phoneNumber, LocalDateTime birthDate, LocalDateTime registrationDate) {
+    public MemberDTO(String id, String name, String phoneNumber, LocalDateTime birthDate, LocalDateTime registrationDate) {
         this.id = id;
-        this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;

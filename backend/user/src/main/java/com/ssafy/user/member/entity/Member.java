@@ -32,9 +32,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String id;
 
-    @Size(min = 0, max = 100)
-    @Column(length = 100)
-    private String email;
 
     @Size(min = 0, max = 50)
     @Column(nullable = false, length = 50)
@@ -71,9 +68,6 @@ public class Member extends BaseEntity {
 
 
 
-    public void addEmail(String email) {
-        this.email = email;
-    }
 
     public void changeProvider() {
         this.provider = "kakao";

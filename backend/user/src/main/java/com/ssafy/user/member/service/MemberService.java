@@ -24,8 +24,10 @@ import org.springframework.stereotype.Service;
 import com.ssafy.user.common.ErrorCode.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -34,6 +36,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Random;
 
@@ -47,16 +50,17 @@ public class MemberService {
     private final RedisUtil redisUtil;
 
     private String alg = "HmacSHA256";
-
-
     @Value("${sms.from-number}")
     private String fromNumber;
+    @Value("${encrypt.secret-key}")
+    private  String aesSecretKey;
+    private final IvParameterSpec iv = new IvParameterSpec(new byte[16]);
+    private final String aesAlg = "AES/CBC/PKCS5Padding";
 
 
 
 
-
-    public void makeVerificationCode(String phoneNumber) {
+    public void makeVerificationCode(String phoneNumber) throws Exception {
 
         // 이미 회원가입된 전화번호인지 확인
         MemberToCheckDTO member = memberRepositoryCustom.findMemberToCheckDtoByPhoneNumber(phoneNumber);
@@ -86,14 +90,14 @@ public class MemberService {
 
 
         // redis에 저장
-        redisUtil.setValues(phoneNumber, verificationNumber, Duration.ofSeconds(60*3));
+        redisUtil.setValues(phoneNumber, aesEncrypt(verificationNumber), Duration.ofSeconds(60*3));
 
         return;
     }
 
 
 
-    public String verifyCode(String code, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
+    public String verifyCode(String code, String phoneNumber) throws Exception {
 
         // 레디스에 저장된 인증정보 가져오기
         String correctCode = redisUtil.getValues(phoneNumber);
@@ -101,6 +105,8 @@ public class MemberService {
         // 없으면 예외처리
         if (correctCode == null)
             throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+
+        correctCode = aesDecrypt(correctCode);
 
         // 코드가 틀리면 예외처리
         if (!correctCode.equals(code))
@@ -115,13 +121,13 @@ public class MemberService {
         // (전화번호 : 시크릿 키) 저장
         // 만료시간을 지정하기 위해 레디스에 저장.
         // 향후 시크릿키 암호화로 바꾸기
-        redisUtil.setValues(phoneNumber, secretKey, Duration.ofSeconds(20*60));
+        redisUtil.setValues(phoneNumber, aesEncrypt(secretKey), Duration.ofSeconds(20*60));
 
-        return encrypt(phoneNumber, secretKey);
+        return hashEncrypt(phoneNumber, secretKey);
 
     }
 
-    public void join(JoinRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+    public void join(JoinRequest request) throws Exception {
 
         // 토큰 검증
         verifyToken(request.getAuthToken(), request.getPhoneNumber());
@@ -221,7 +227,7 @@ public class MemberService {
         return mypageResponse;
     }
 
-    private void verifyToken(String token, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
+    private void verifyToken(String token, String phoneNumber) throws Exception {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
 
@@ -231,7 +237,10 @@ public class MemberService {
             throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
         }
 
-        if (!encrypt(phoneNumber, secretKey).equals(token)){
+        secretKey = aesDecrypt(secretKey);
+
+
+        if (!hashEncrypt(phoneNumber, secretKey).equals(token)){
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
         }
 
@@ -274,7 +283,7 @@ public class MemberService {
     }
 
 
-    private String encrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
+    private String hashEncrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), alg);
 
         Mac hasher = Mac.getInstance(alg);
@@ -285,7 +294,28 @@ public class MemberService {
         return hashed;
     }
 
-    
+
+    public String aesEncrypt(String s) throws Exception {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
+
+        Cipher cipher = Cipher.getInstance(aesAlg);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, iv);
+        byte[] encrypted = cipher.doFinal(s.getBytes("UTF-8"));
+
+        return Base64.getEncoder().encodeToString(encrypted);
+    }
+
+    public String aesDecrypt(String s) throws Exception {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
+
+        Cipher cipher = Cipher.getInstance(aesAlg);
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
+        byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(s));
+
+        return new String(decrypted, "UTF-8");
+    }
+
+
     private void sendSms(String toPhoneNumber, String content) {
         
         Message message = new Message();
