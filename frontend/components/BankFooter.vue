@@ -43,7 +43,7 @@ footer {
   bottom: 0;
   background-color: white;
   vertical-align: middle;
-  padding: 1.5vh 1.5vh 0 1.5vh;
+  padding: 1.5vh 1.5vh 1vh 1.5vh;
 
   .menu {
     display: flex;
