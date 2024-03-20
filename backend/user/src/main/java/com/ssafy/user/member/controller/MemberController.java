@@ -47,7 +47,7 @@ public class MemberController {
 
 
     @PostMapping("/phone-verification/code")
-    @Operation(summary = "휴대폰 인증번호 요청")
+    @Operation(summary = "휴대폰 인증번호 요청", description = "인증번호는 3분 후에 만료됨")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증코드 보내기 성공"),
             @ApiResponse(responseCode = "409", description = "이미 가입된 전화번호"),

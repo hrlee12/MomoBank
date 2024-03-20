@@ -41,7 +41,7 @@ public class MemberRepositoryCustom {
                 .from(member)
                 .leftJoin(member.accounts, account)
                 .fetchJoin()
-                .where(member.id.eq(id).and(member.password.eq(password)))
+                .where(member.id.eq(id).and(member.password.eq(password)).and(member.isDeleted.eq(false)))
                 .fetchOne();
 
     }
@@ -52,7 +52,7 @@ public class MemberRepositoryCustom {
                 .from(member)
                 .leftJoin(member.accounts, account)
                 .fetchJoin()
-                .where(member.id.eq(id))
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
                 .fetchOne();
     }
 
@@ -61,7 +61,7 @@ public class MemberRepositoryCustom {
     public MemberDTO findMemberDtoById(String id){
         return queryFactory.select(new QMemberDTO(member.id, member.email, member.name, member.phoneNumber, member.birthDate, member.createdAt))
                 .from(member)
-                .where(member.id.eq(id))
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
                 .fetchOne();
     }
 
@@ -70,7 +70,7 @@ public class MemberRepositoryCustom {
     public MemberToCheckDTO findMemberToCheckDtoByPhoneNumber(String phoneNumber) {
         return queryFactory.select(new QMemberToCheckDTO(member.id))
                 .from(member)
-                .where(member.phoneNumber.eq(phoneNumber))
+                .where(member.phoneNumber.eq(phoneNumber).and(member.isDeleted.eq(false)))
                 .fetchOne();
     }
 
@@ -78,7 +78,7 @@ public class MemberRepositoryCustom {
     public MemberToCheckDTO findMemberToCheckDtoById(String id){
         return queryFactory.select(new QMemberToCheckDTO(member.id))
                 .from(member)
-                .where(member.id.eq(id))
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
                 .fetchOne();
     }
 

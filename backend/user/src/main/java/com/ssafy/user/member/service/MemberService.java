@@ -92,20 +92,29 @@ public class MemberService {
     }
 
 
+
     public String verifyCode(String code, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
 
+        // 레디스에 저장된 인증정보 가져오기
         String correctCode = redisUtil.getValues(phoneNumber);
 
+        // 없으면 예외처리
         if (correctCode == null)
             throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
 
+        // 코드가 틀리면 예외처리
         if (!correctCode.equals(code))
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
 
+        // 인증된 정보는 제거
         redisUtil.deleteValues(phoneNumber);
 
+        // 전화번호 인증 토큰 생성
         String secretKey = getRandomKey();
 
+        // (전화번호 : 시크릿 키) 저장
+        // 만료시간을 지정하기 위해 레디스에 저장.
+        // 향후 시크릿키 암호화로 바꾸기
         redisUtil.setValues(phoneNumber, secretKey, Duration.ofSeconds(20*60));
 
         return encrypt(phoneNumber, secretKey);
@@ -113,13 +122,16 @@ public class MemberService {
     }
 
     public void join(JoinRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+
+        // 토큰 검증
         verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
+
+        // 이미 가입된 아이디면 예외처리
         if(memberRepositoryCustom.findMemberToCheckDtoById(request.getId()) != null)
             throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
 
-
-
+        // 멤버 엔티티 생성 및 저장
         Member member = Member.builder()
                 .id(request.getId())
                 .name(request.getName())
@@ -129,6 +141,7 @@ public class MemberService {
 //                .password(request.getPassword())
                 .build();
 
+
         memberRepository.save(member);
     }
 
@@ -137,18 +150,21 @@ public class MemberService {
     @Transactional
     public void sendNewPassword(String id, String phoneNumber) {
 
+        // 회원정보 일치 확인
         Member member = memberRepositoryCustom.findMemberByIdAndPhoneNumber(id, phoneNumber);
 
         if (member == null)
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
 
-
+        // 랜덤 패스워드 생성
         String newPassword = getRandomPassword();
 
         String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
 
+        // sms 발송
         sendSms(phoneNumber, message);
 
+        // 비밀번호 변경
         member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 
     }
@@ -157,19 +173,26 @@ public class MemberService {
     @Transactional
     public void updatePassword(String id, String currentPassword, String newPassword) {
 
-        Member member = memberRepositoryCustom.findMemberByIdAndPassword(id, currentPassword);
+
+        Member member = memberRepositoryCustom.findMemberById(id);
+
 
         if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+
+        // 비밀번호 일치 여부 확인
+        if (!BCrypt.checkpw(currentPassword, member.getPassword())){
             throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+        }
 
-
-        member.changePassword(newPassword);
-
+        // 비밀번호 변경
+        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
     }
 
 
     @Transactional
     public void updateFcmToken(String id, String fcmToken) {
+
         Member member = memberRepositoryCustom.findMemberById(id);
 
         if (member == null)
@@ -199,6 +222,9 @@ public class MemberService {
     }
 
     private void verifyToken(String token, String phoneNumber) throws NoSuchAlgorithmException, InvalidKeyException {
+
+        // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
+
         String secretKey = redisUtil.getValues(phoneNumber);
 
         if (secretKey == null) {
@@ -208,6 +234,8 @@ public class MemberService {
         if (!encrypt(phoneNumber, secretKey).equals(token)){
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
         }
+
+
 
     }
 
@@ -257,7 +285,9 @@ public class MemberService {
         return hashed;
     }
 
+    
     private void sendSms(String toPhoneNumber, String content) {
+        
         Message message = new Message();
 
         message.setFrom(fromNumber);
@@ -286,6 +316,7 @@ public class MemberService {
 
     }
 
+    // String을 LocalDateTime으로 변환
     private LocalDateTime toLocalDateTime(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(date + " 00:00:00", formatter);
