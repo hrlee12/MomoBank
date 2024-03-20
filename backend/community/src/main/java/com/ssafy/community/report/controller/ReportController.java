@@ -80,13 +80,15 @@ public class ReportController {
         // 데이터 가져오기
         MonthlyReportDto monthlyReportDto = collectMonthlyReportData("2023.03").getBody();
 
-        reportService.getAIRecomendation(monthlyReportDto);
+        String reportStr = reportService.getAIRecomendation(monthlyReportDto);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(monthlyReportDto);
+                .body(reportStr);
 
     }
     @Operation(summary = "연간 리포트 조회", description = "지정된 연도의 연간 리포트를 조회합니다.", responses = {
