@@ -1,5 +1,6 @@
 <script setup>
 import CommonHeader from "~/components/layout/CommonHeader.vue";
+import BankFooter from "~/components/layout/BankFooter.vue";
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
@@ -25,6 +26,7 @@ const getImageUrl = (imageName, idx) => {
       <NuxtPage />
     </div>
   </div>
+  <BankFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -49,7 +51,6 @@ const getImageUrl = (imageName, idx) => {
 
 .rotate-image {
   height: 15vh;
-  margin-bottom: 10%;
-  transition: transform 1s ease; /* 회전에 걸리는 시간을 4초로 설정 */
+  align-self: center;
 }
 </style>
