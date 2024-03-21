@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 html {
-  @apply bg-background-color; /* 예시: 파란색 배경 */
+  @apply bg-main-color; /* 예시: 파란색 배경 */
 }

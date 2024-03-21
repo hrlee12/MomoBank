@@ -1,34 +1,53 @@
 <script setup>
-const getImageUrl = (imageName) => {
-  return "/icon/" + imageName;
+import { useRoute } from "#vue-router";
+
+const getImageUrl = (imageName, idx) => {
+  if (idx == 0) return "/icon/" + imageName;
+  else if (idx === 1) return "/images/" + imageName;
+  else console.log("Image code error");
 };
 
 const goBack = () => {
   window.history.back();
 };
+
+const route = useRoute();
+
+const groupsName = "5반5린이들";
+
+// TODO : pinia로 관리할지, Header에서 직접 관리할지.
+const pageTitle = computed(() => {
+  if (route.name === "groups") {
+    return groupsName;
+  } else if (route.name === "groups-detail") {
+    return "모임 상세";
+  } else if (route.name === "groups-deposit-status") {
+    return "입금 현황";
+  }
+});
 </script>
 
 <template>
-  <div class="pt-4">
-    <header class="flex flex-row justify-between h-11">
+  <div>
+    <header class="flex flex-row justify-between pt-4 bg-white h-11">
       <div @click="goBack">
         <img
           class="w-10 h-8 ml-4"
-          :src="getImageUrl('arrow-icon.png')"
+          :src="getImageUrl('arrow-icon.png', 0)"
           alt="arrow-icon 화살표 아이콘"
         />
       </div>
-      <div class="ml-8 text-xl font-semibold">5반 5린이들</div>
+      <div class="ml-8 text-xl font-semibold">{{ pageTitle }}</div>
       <div>
         <div class="flex">
           <img
             class="mr-4 w-7 h-7"
-            :src="getImageUrl('bell-icon.png')"
+            :src="getImageUrl('bell-icon.png', 0)"
             alt="bell-icon"
           />
           <img
             class="mr-4 w-7 h-7"
-            :src="getImageUrl('home-icon.png')"
+            :src="getImageUrl('home-icon.png', 0)"
             alt="home-icon"
           />
         </div>

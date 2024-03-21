@@ -1,7 +1,8 @@
-<!-- TODO
+<!-- TODO : API 연동 시 변경 사항
 - DB 데이터 연결
 - NuxtLink 연결
 - 피드 게시글 상세보기 눌렀을 떄 다른 게시글까지 변경되는거 수정
+
 -->
 <script setup>
 import { ref, computed } from "vue";
@@ -43,7 +44,6 @@ const toggleText = () => {
 
 <template>
   <div class="bg-white h-60 rounded-b-[14px]">
-    <GroupsHeader> </GroupsHeader>
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
       <div class="flex flex-row justify-between">
@@ -234,5 +234,4 @@ const toggleText = () => {
       </div>
     </div>
   </div>
-  <GroupFooter></GroupFooter>
 </template>

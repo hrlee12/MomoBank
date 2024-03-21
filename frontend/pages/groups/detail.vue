@@ -27,8 +27,6 @@ const groupDetails = [
 
 <template>
   <div class="bg-white h-60 rounded-b-[14px]">
-    <GroupsHeader></GroupsHeader>
-
     <div class="flex flex-row justify-between">
       <div class="flex items-center justify-center w-10 h-6 ml-4 rounded-xl">
         <div class="text-[13px]"></div>
@@ -49,7 +47,9 @@ const groupDetails = [
 
     <!-- 매월 예산 납부 금액, 입금현황 -->
     <div class="flex justify-center mt-4">
-      <div
+      <!-- TODO : 각 모임 별 입금 현황이라 id 값으로 받아야함 즉, :to로 동적 경로로 설정해야함. -->
+      <NuxtLink
+        to="/groups/deposit-status"
         class="flex items-center justify-center w-64 border border-gray-300 rounded-xl h-9"
       >
         <div
@@ -58,7 +58,7 @@ const groupDetails = [
           매월 11일, 320,000원씩
         </div>
         <div class="pl-2 text-sm text-sub-color">입금 현황 ></div>
-      </div>
+      </NuxtLink>
     </div>
   </div>
 
@@ -84,5 +84,4 @@ const groupDetails = [
       </div>
     </div>
   </div>
-  <GroupFooter></GroupFooter>
 </template>
