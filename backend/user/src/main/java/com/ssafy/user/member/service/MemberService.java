@@ -127,29 +127,29 @@ public class MemberService {
 
     }
 
-    public void join(JoinRequest request) throws Exception {
-
-        // 토큰 검증
-        verifyToken(request.getAuthToken(), request.getPhoneNumber());
-
-
-        // 이미 가입된 아이디면 예외처리
-        if(memberRepositoryCustom.findMemberToCheckDtoById(request.getId()) != null)
-            throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
-
-        // 멤버 엔티티 생성 및 저장
-        Member member = Member.builder()
-                .id(request.getId())
-                .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
-                .birthDate(toLocalDateTime(request.getBirthdate()))
-                .password(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()))
-//                .password(request.getPassword())
-                .build();
-
-
-        memberRepository.save(member);
-    }
+//    public void join(JoinRequest request) throws Exception {
+//
+//        // 토큰 검증
+//        verifyToken(request.getAuthToken(), request.getPhoneNumber());
+//
+//
+//        // 이미 가입된 아이디면 예외처리
+//        if(memberRepositoryCustom.findMemberToCheckDtoById(request.getId()) != null)
+//            throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
+//
+//        // 멤버 엔티티 생성 및 저장
+//        Member member = Member.builder()
+//                .id(request.getId())
+//                .name(request.getName())
+//                .phoneNumber(request.getPhoneNumber())
+//                .birthDate(toLocalDateTime(request.getBirthdate()))
+//                .password(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()))
+////                .password(request.getPassword())
+//                .build();
+//
+//
+//        memberRepository.save(member);
+//    }
 
 
 
@@ -227,7 +227,7 @@ public class MemberService {
         return mypageResponse;
     }
 
-    private void verifyToken(String token, String phoneNumber) throws Exception {
+    public void verifyToken(String token, String phoneNumber) throws Exception {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
 
@@ -346,9 +346,9 @@ public class MemberService {
 
     }
 
-    // String을 LocalDateTime으로 변환
-    private LocalDateTime toLocalDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.parse(date + " 00:00:00", formatter);
-    }
+//    // String을 LocalDateTime으로 변환
+//    private LocalDateTime toLocalDateTime(String date) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        return LocalDateTime.parse(date + " 00:00:00", formatter);
+//    }
 }

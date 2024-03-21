@@ -2,6 +2,7 @@ package com.ssafy.user.member.controller;
 
 
 import com.ssafy.user.common.CommonResponse;
+import com.ssafy.user.common.util.RestTemplateUtil;
 import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
 import com.ssafy.user.member.entity.Member;
@@ -22,10 +23,15 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.apache.catalina.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -44,7 +50,9 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final MemberRepository memberRepository;
-
+    private final WebClient client;
+    @Value("${bank.url}")
+    private String bankUrl;
 
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청", description = "인증번호는 3분 후에 만료됨")
@@ -56,6 +64,8 @@ public class MemberController {
     public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) throws Exception {
 
         memberService.makeVerificationCode(request.getPhoneNumber());
+
+
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "인증코드 보내기 성공", null);
     }
@@ -77,8 +87,6 @@ public class MemberController {
     }
 
 
-
-
     @PostMapping("/join")
     @Operation(summary = "회원가입", responses = {
             @ApiResponse(responseCode = "200", description = "회원가입 완료"),
@@ -87,10 +95,17 @@ public class MemberController {
     })
     public ResponseEntity join(@RequestBody JoinRequest request) throws Exception {
 // 로직 구현
-        memberService.join(request);
 
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
+
+
+        memberService.verifyToken(request.getAuthToken(), request.getPhoneNumber());
+
+
+            return new RestTemplateUtil().send(bankUrl + "/member/join", HttpMethod.POST, request);
+        // bank로 요청 보내기
+//        return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
     }
+
 
 
 

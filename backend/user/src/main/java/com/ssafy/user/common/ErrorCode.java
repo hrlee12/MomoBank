@@ -21,4 +21,8 @@ public enum ErrorCode {
     NO_MEMBER_TO_UPDATE_FCM_TOKEN(BAD_REQUEST, "fcm 토큰을 갱신할 회원 정보 없음");
     private final HttpStatus status;
     private final String message;
+
+    public ErrorCode findErrorCode(){
+        return ErrorCode.ALREADY_DELETED;
+    }
 }
