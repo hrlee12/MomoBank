@@ -30,7 +30,6 @@ const pageTitle = computed(() => {
     sideMenuActive.value = false;
     return "알림";
   } else if (router.name === "bank-profile") {
-    sideMenuActive.value = false;
     return "마이페이지";
   } else if (router.name === "bank-remit") {
     return "계좌개설";
