@@ -1,0 +1,29 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+server:
+  port: 8083
+  servlet:
+    context-path: /api/community
+
+spring:
+  profiles:
+    active: local
+  config:
+    jpa:
+      hibernate:
+        ddl-auto: create
+      properties:
+        hibernate:
+          format_sql: true
+
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: trace
