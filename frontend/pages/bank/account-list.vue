@@ -1,5 +1,10 @@
 <script setup>
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
+import { useMenuStore } from "~/stores/menu-store";
+
+const menuStore = useMenuStore();
+
+menuStore.updateMenuTitle("전체계좌");
 
 definePageMeta({
   layout: "bank",

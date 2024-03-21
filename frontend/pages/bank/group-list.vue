@@ -1,4 +1,10 @@
 <script setup>
+import { useMenuStore } from "~/stores/menu-store";
+
+const menuStore = useMenuStore();
+
+menuStore.updateMenuTitle("전체모임");
+
 definePageMeta({
   layout: "bank",
 });

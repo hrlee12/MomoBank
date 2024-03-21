@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import NoticeHome from "~/components/ui/NoticeHome.vue";
+import { useMenuStore } from "@/stores/menu-store";
+
+const menuStore = useMenuStore();
 
 const goBack = () => {
   window.history.back();
@@ -26,7 +29,7 @@ const pageName = ref("전체계좌");
       />
     </div>
 
-    <h1 class="title">{{ pageName }}</h1>
+    <h1 class="title">{{ menuStore.menuTitle }}</h1>
 
     <NoticeHome />
   </header>
