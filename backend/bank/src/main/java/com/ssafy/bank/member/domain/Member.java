@@ -49,6 +49,10 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime birthDate;
 
+    @Size(min = 0, max = 50)
+    @Column(length = 50)
+    @ColumnDefault("\"momo\"")
+    private String provider;
 
     @ColumnDefault("50")
     private int sincerity;
@@ -57,7 +61,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
 
-
+    public void changeProvider() {
+        this.provider = "kakao";
+    }
 
     public void changePassword(String password){
         this.password = password;

@@ -1,6 +1,7 @@
 package com.ssafy.bank.common;
 
 
+import com.ssafy.bank.common.exception.CustomException;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -32,7 +33,7 @@ public abstract class BaseEntity {
 
     public void softDelete() {
         if (isDeleted)
-            throw new IllegalStateException(ErrorCode.ALREADY_DELETED.getMessage());
+            throw new CustomException(ErrorCode.ALREADY_DELETED);
         this.isDeleted = true;
     }
 }

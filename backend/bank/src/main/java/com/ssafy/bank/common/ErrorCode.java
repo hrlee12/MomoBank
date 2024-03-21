@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    ALREADY_DELETED(BAD_REQUEST, "이미 삭제된 값"),
     NO_SUCH_ACCOUNT(FORBIDDEN, "존재하지 않는 계좌입니다."),
     NO_SUCH_MEMBER(FORBIDDEN, "존재하지 않는 회원입니다."),
     NO_SUCH_ACCOUNT_PRODUCT(FORBIDDEN, "존재하지 않는 계좌 상품입니다."),
