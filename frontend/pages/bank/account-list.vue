@@ -1,10 +1,6 @@
 <script setup>
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
-import { useMenuStore } from "~/stores/menu-store";
-
-const menuStore = useMenuStore();
-
-menuStore.updateMenuTitle("전체계좌");
+import AddBox from "~/components/bank/AddBox.vue";
 
 definePageMeta({
   layout: "bank",
@@ -22,6 +18,8 @@ const accounts = ref([
     money: 100000000,
   },
 ]);
+
+console.log(accounts.length);
 </script>
 
 <template>
@@ -33,6 +31,7 @@ const accounts = ref([
         :money="account.money"
       />
     </div>
+    <AddBox to="/bank/remit" />
   </div>
 </template>
 

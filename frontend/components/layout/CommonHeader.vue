@@ -1,9 +1,6 @@
 <script setup>
-import { ref } from "vue";
 import NoticeHome from "~/components/ui/NoticeHome.vue";
-import { useMenuStore } from "@/stores/menu-store";
-
-const menuStore = useMenuStore();
+import { useRoute } from "#vue-router";
 
 const goBack = () => {
   window.history.back();
@@ -16,7 +13,28 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const pageName = ref("전체계좌");
+const router = useRoute();
+
+const sideMenuActive = ref(true);
+
+const pageTitle = computed(() => {
+  sideMenuActive.value = true;
+
+  if (router.name === "bank-account-list") {
+    return "전체계좌";
+  } else if (router.name === "bank-group-list") {
+    return "전체모임";
+  } else if (router.name === "history") {
+    return "거래내역";
+  } else if (router.name === "bank-notice") {
+    sideMenuActive.value = false;
+    return "알림";
+  } else if (router.name === "bank-profile") {
+    return "마이페이지";
+  } else if (router.name === "bank-remit") {
+    return "계좌개설";
+  }
+});
 </script>
 
 <template>
@@ -29,9 +47,12 @@ const pageName = ref("전체계좌");
       />
     </div>
 
-    <h1 class="title">{{ menuStore.menuTitle }}</h1>
+    <!-- <h1 class="title">{{ menuStore.menuTitle }}</h1> -->
+    <h1 class="title">{{ pageTitle }}</h1>
 
-    <NoticeHome />
+    <div v-if="sideMenuActive" class="link-container">
+      <NoticeHome />
+    </div>
   </header>
 </template>
 
@@ -51,7 +72,7 @@ header {
   width: 100%;
   height: 8vh;
   vertical-align: middle;
-  padding: 1.5vh 1.5vh 1vh 1.5vh;
+  padding: 3vh 1.5vh 1vh 1.5vh;
   display: flex;
   align-items: center;
 

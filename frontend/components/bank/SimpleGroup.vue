@@ -29,7 +29,7 @@ const getImageUrl = (imageName, idx) => {
       <p v-else class="not-ok bold">미납 {{ delayDate }}일</p>
     </div>
     <div class="item">
-      <p>{{ groupDescription }}</p>
+      <p class="description">{{ groupDescription }}</p>
       <div class="icon-item">
         <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
         <p>6명</p>
@@ -41,11 +41,23 @@ const getImageUrl = (imageName, idx) => {
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
 @import "~/assets/css/content.scss";
+
 .content {
   padding: 4% 8%;
-}
-.item {
-  margin: 2% 0;
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    margin: 2% 0;
+
+    .description {
+      width: 70%;
+      max-width: 70vw;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 .icon-item {
@@ -59,7 +71,12 @@ const getImageUrl = (imageName, idx) => {
 .ok {
   color: $positive-color;
 }
+
 .not-ok {
   color: $negative-color;
+}
+
+img {
+  height: 3vh;
 }
 </style>

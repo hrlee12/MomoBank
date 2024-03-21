@@ -8,8 +8,8 @@ const getImageUrl = (imageName, idx) => {
 </script>
 
 <template>
-  <div class="link-container around">
-    <NuxtLink to=""
+  <div class="around">
+    <NuxtLink to="/bank/notice"
       ><img class="item" :src="getImageUrl('bell-icon.png', 0)" alt="홈 아이콘"
     /></NuxtLink>
     <NuxtLink to="/bank"
@@ -21,16 +21,13 @@ const getImageUrl = (imageName, idx) => {
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
 
-.link-container {
-  display: flex;
-  width: 25%;
-}
-
 img {
   height: 3.8vh;
 }
 
 .around {
+  width: 100%;
+  display: flex;
   justify-content: space-around;
 }
 </style>

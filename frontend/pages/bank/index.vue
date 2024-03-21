@@ -42,7 +42,9 @@ const isLastSlide = ref(false);
 
         <NuxtLink to="/bank/account-list" class="list-link">전체계좌</NuxtLink>
       </div>
-      <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt="" />
+      <NuxtLink to="/bank/notice">
+        <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt=""
+      /></NuxtLink>
     </nav>
   </header>
 
@@ -147,7 +149,6 @@ header {
 
     img {
       height: 4.5vh;
-      align-self: center;
     }
 
     .menu {
@@ -199,6 +200,7 @@ header {
       align-self: center;
       color: $gray-color;
     }
+
     .club-item {
       display: flex;
       justify-content: space-between;

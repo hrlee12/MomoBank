@@ -1,10 +1,6 @@
 <script setup>
 import SimpleGroup from "~/components/bank/SimpleGroup.vue";
-import { useMenuStore } from "~/stores/menu-store";
-
-const menuStore = useMenuStore();
-
-menuStore.updateMenuTitle("전체모임");
+import AddBox from "~/components/bank/AddBox.vue";
 
 definePageMeta({
   layout: "bank",
@@ -17,7 +13,8 @@ const groups = ref([
     groupJoinDate: "2024-03-12",
     state: true,
     delayDate: 0,
-    groupDescription: "설명이에요",
+    groupDescription:
+      "설명이에요 이게 길어지면 어떻게 될까요? 한 번 실험해 봅시다.",
     groupMemberCount: 6,
   },
   {
@@ -63,6 +60,7 @@ const groups = ref([
         :groupMemberCount="group.groupMemberCount"
       />
     </div>
+    <AddBox to="/bank/group-add" />
   </div>
 </template>
 
