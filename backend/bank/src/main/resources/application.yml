@@ -15,10 +15,10 @@ server:
 
 spring:
   config:
-    import: classpath:application.properties
+    import: classpath:application-private.yml
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -29,5 +29,6 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: trace
+
 
 
