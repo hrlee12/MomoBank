@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-
 //@ExtendWith(MockitoExtension.class)
 //@WebMvcTest(ReportController.class)
 class ReportControllerTest {
@@ -100,11 +99,21 @@ class ReportControllerTest {
 
     @Test
     void recommendNextActivity() throws Exception {
-//        mockMvc.perform(post("/reports/recommend-next-activity")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"monthlyData\":\"Some data\"}"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string("여기에 다음 활동 추천 결과"));
+
+
+        MvcResult result = mockMvc.perform(get("/reports/recommend-next-activity")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"yearMonth\":\"2023.03\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().encoding("UTF-8"))
+                .andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+
+
+        System.out.println(responseBody);
+
     }
 
     @Test

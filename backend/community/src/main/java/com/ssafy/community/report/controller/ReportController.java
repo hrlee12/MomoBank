@@ -2,6 +2,7 @@ package com.ssafy.community.report.controller;
 
 import com.ssafy.community.report.dto.ActivityPreferencesDto;
 import com.ssafy.community.report.dto.MonthlyReportDto;
+import com.ssafy.community.report.dto.RecommendationDto;
 import com.ssafy.community.report.entity.Recommendations;
 import com.ssafy.community.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
@@ -62,7 +64,7 @@ public class ReportController {
     }
 
     @Operation(summary = "월간 리포트 생성",
-            description = "지정된 월의 데이터를 읽어와서 리포트를 작성합니다.",
+            description = "매월 데이터를 읽어와서 리포트를 작성합니다.",
             responses = {
                     @ApiResponse(responseCode = "200",
                             description = "데이터 수집 성공",
@@ -74,13 +76,28 @@ public class ReportController {
                             description = "서버 내부 오류")
             })
     @GetMapping("/make")
-    public ResponseEntity<?> makeReport(
+    public ResponseEntity<String> makeReport(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) throws IOException {
 
         // 데이터 가져오기
         MonthlyReportDto monthlyReportDto = collectMonthlyReportData("2023.03").getBody();
 
-        String reportStr = reportService.getAIRecomendation(monthlyReportDto);
+//        String reportStr = reportService.getAIReport(monthlyReportDto);
+        String reportStr = "## 1. 회계\n" +
+                "\n" +
+                "- **불완전 납부**: 김철수님이 15,000원을 미납하셨습니다. 다음 회차에는 납부를 잊지 말아주세요.\n" +
+                "- **초과 입금**: 이영희님께서는 30,000원을 초과 납부하셨습니다. 너무 감사합니다! 모임의 발전에 큰 도움이 됩니다.\n" +
+                "- **완납**: 홍길동님은 물론이고 모임비를 제때 납부하셨습니다. 감사합니다!\n" +
+                "\n" +
+                "## 2. 게시판 활동\n" +
+                "\n" +
+                "- '**함께 본 시간을 달리는 소녀**': 작성자 홍길동님, 좋아요 120개와 댓글 2개라는 큰 사랑을 받았습니다. 영화에 대한 세심한 후기와 그날의 모임에 대한 이야기가 독자들의 공감을 얻었네요.\n" +
+                "- '**오늘의 영화 후기**': 작성자 김철수님, 좋아요 95개, 댓글 2개를 얻으셨습니다. 영화에 대한 깊이 있는 생각을 공유해주셔서 감사합니다.\n" +
+                "- '**카페에서의 작은 모임**': 작성자 이영희님, 좋아요 110개, 댓글 2개를 얻었습니다. 모임 전의 모습을 공유해주셔서 더욱 풍성해진 회원님들의 이야기를 만나보았습니다.\n" +
+                "\n" +
+                "## 3. 최우수 회원 선정\n" +
+                "\n" +
+                "홍길동님이 이번 달의 최우수 회원으로 선정되었습니다. 회비 완납에 더해 게시판에 3건의 게시물을 작성하고 13건의 댓글을 남겼으며, 특히 '함께 본 시간을 달리는 소녀'라는 글이 많은 사랑을 받았습니다. 활발한 활동에 감사드립니다!\n";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
@@ -145,11 +162,25 @@ public class ReportController {
     @Operation(summary = "다음 활동 추천", description = "수집된 데이터를 바탕으로 모임의 다음 활동을 추천합니다.", responses = {
             @ApiResponse(description = "성공", responseCode = "200", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    @PostMapping("/recommend-next-activity")
-    public ResponseEntity<String> recommendNextActivity(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "모임의 간단한 소개, 결제내역, 게시글 데이터를 포함한 한 달 동안의 데이터", required = true, content = @Content(schema = @Schema(implementation = String.class))) String monthlyData) {
+    @GetMapping("/recommend-next-activity")
+    public ResponseEntity<List<RecommendationDto>> recommendNextActivity(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) throws IOException {
 
-        return ResponseEntity.ok("여기에 다음 활동 추천 결과");
+        // 두 번째 인자 make 말고 그냥 읽어오는걸로 대체해야 함.
+        List<RecommendationDto> list;
+
+
+        try {
+            list = reportService.getAIRecomendationNextActivity(collectMonthlyReportData("2023.03").getBody(), makeReport("2023.03").getBody());
+        }catch(Exception e) {
+            list = null;
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(list);
     }
 
 }
