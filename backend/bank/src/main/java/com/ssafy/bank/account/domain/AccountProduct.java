@@ -41,9 +41,9 @@ public class AccountProduct extends BaseEntity {
     @Column(name = "interest_rate", nullable = false)
     private float interestRate;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "account_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private AccountType type;
+    private AccountType accountType;
 
     @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)

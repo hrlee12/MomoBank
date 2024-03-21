@@ -13,7 +13,7 @@ public record AccountResponse(
 
     public static AccountResponse from(Account account, AccountProduct product) {
         return new AccountResponse(
-            product.getType().toString(),
+            product.getAccountType().toString(),
             product.getName(),
             account.getAccountNumber(),
             account.getBalance()

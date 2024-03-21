@@ -28,7 +28,6 @@ public class AccountService {
         if (member.isDeleted()) {
             throw new CustomException(ErrorCode.DELETED_MEMBER);
         }
-
         AccountProduct accountProduct = accountProductRepository.findById(accountProductId)
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT_PRODUCT));
         if (accountProduct.isDeleted()) {
@@ -37,16 +36,15 @@ public class AccountService {
 
         Account account = Account.builder()
             .accountProduct(accountProduct)
-            .accountNumber("505-01"
-                + String.format("%02d",accountProduct.getType())
-                + String.format("%10d",accountProduct.getAccountProductId()))
+            .accountNumber("505-01-"
+                + String.format("%08d",accountProduct.getAccountProductId()))
             .member(member)
             .build();
-
-        return AccountResponse.from(accountRepository.save(account), accountProduct);
+        accountRepository.save(account);
+        return AccountResponse.from(account, accountProduct);
     }
 
-    public void deleteAccount(int accountId) {
+    public AccountResponse deleteAccount(int accountId) {
         Account account = accountRepository.findById(accountId)
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
         if (account.getBalance()!=0){
@@ -55,6 +53,14 @@ public class AccountService {
         if (account.isDeleted()) {
             throw new CustomException(ErrorCode.DELETED_ACCOUNT);
         }
+
+        AccountProduct accountProduct = accountProductRepository.findById(account.getAccountProduct().getAccountProductId())
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT_PRODUCT));
+        if (accountProduct.isDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_ACCOUNT_PRODUCT);
+        }
+
         account.softDelete();
+        return AccountResponse.from(account, accountProduct);
     }
 }
