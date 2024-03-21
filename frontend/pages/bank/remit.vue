@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div>remit</div>
+  <div>remit123</div>
 </template>
 
 <style lang="scss" scoped></style>
