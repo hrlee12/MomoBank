@@ -1,4 +1,5 @@
 <script setup>
+import SimpleGroup from "~/components/bank/SimpleGroup.vue";
 import { useMenuStore } from "~/stores/menu-store";
 
 const menuStore = useMenuStore();
@@ -8,10 +9,71 @@ menuStore.updateMenuTitle("전체모임");
 definePageMeta({
   layout: "bank",
 });
+
+const groups = ref([
+  {
+    groupName: "저축은행",
+    groupMoney: 1000000,
+    groupJoinDate: "2024-03-12",
+    state: true,
+    delayDate: 0,
+    groupDescription: "설명이에요",
+    groupMemberCount: 6,
+  },
+  {
+    groupName: "효리모임",
+    groupMoney: 1000000,
+    groupJoinDate: "2024-03-12",
+    state: true,
+    delayDate: 0,
+    groupDescription: "설명이에요",
+    groupMemberCount: 6,
+  },
+  {
+    groupName: "성수모임",
+    groupMoney: 1000000,
+    groupJoinDate: "2024-03-12",
+    state: true,
+    delayDate: 0,
+    groupDescription: "설명이에요",
+    groupMemberCount: 6,
+  },
+  {
+    groupName: "소이모임",
+    groupMoney: 1000000,
+    groupJoinDate: "2024-03-12",
+    state: false,
+    delayDate: 3,
+    groupDescription: "설명이에요",
+    groupMemberCount: 6,
+  },
+]);
 </script>
 
 <template>
-  <div></div>
+  <div class="account-container">
+    <div v-for="(group, index) in groups" :key="index">
+      <SimpleGroup
+        :groupName="group.groupName"
+        :groupMoney="group.groupMoney"
+        :groupJoinDate="group.groupJoinDate"
+        :state="group.state"
+        :delayDate="group.delayDate"
+        :groupDescription="group.groupDescription"
+        :groupMemberCount="group.groupMemberCount"
+      />
+    </div>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "~/assets/css/main.scss";
+@import "~/assets/css/content.scss";
+
+.account-container {
+  padding: 5%;
+  display: grid;
+  grid-template-rows: repeat(auto, 1fr);
+  gap: 30px;
+}
+</style>

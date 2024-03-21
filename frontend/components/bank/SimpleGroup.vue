@@ -1,0 +1,65 @@
+<script setup>
+defineProps({
+  groupName: String,
+  groupMoney: Number,
+  groupJoinDate: String,
+  state: Boolean,
+  delayDate: Number,
+  groupDescription: String,
+  groupMemberCount: Number,
+});
+
+// 이미지 불러오는 메소드
+const getImageUrl = (imageName, idx) => {
+  if (idx == 0) return "/icon/" + imageName;
+  else if (idx === 1) return "/images/" + imageName;
+  else console.log("Image code error");
+};
+</script>
+
+<template>
+  <div class="content">
+    <div class="item">
+      <h2>{{ groupName }}</h2>
+      <h2>{{ groupMoney.toLocaleString("ko-KR") }}원</h2>
+    </div>
+    <div class="item">
+      <p>가입날짜: {{ groupJoinDate }}</p>
+      <p v-if="state" class="ok bold">납부 완료</p>
+      <p v-else class="not-ok bold">미납 {{ delayDate }}일</p>
+    </div>
+    <div class="item">
+      <p>{{ groupDescription }}</p>
+      <div class="icon-item">
+        <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
+        <p>6명</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+@import "~/assets/css/main.scss";
+@import "~/assets/css/content.scss";
+.content {
+  padding: 4% 8%;
+}
+.item {
+  margin: 2% 0;
+}
+
+.icon-item {
+  display: flex;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.ok {
+  color: $positive-color;
+}
+.not-ok {
+  color: $negative-color;
+}
+</style>

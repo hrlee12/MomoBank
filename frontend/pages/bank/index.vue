@@ -147,6 +147,7 @@ header {
 
     img {
       height: 4.5vh;
+      align-self: center;
     }
 
     .menu {

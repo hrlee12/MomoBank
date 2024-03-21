@@ -1,5 +1,5 @@
 <script setup>
-import KebabMenu from "@/components/ui/KebabMenu.vue";
+import KebabMenu from "@/components/ui/KebabMenu";
 defineProps({
   accountName: String,
   accountNumber: String,
