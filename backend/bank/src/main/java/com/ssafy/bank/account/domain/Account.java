@@ -38,6 +38,9 @@ public class Account extends BaseEntity {
     @ColumnDefault("0")
     private long balance;
 
+    @Column(name = "account_number", nullable = false)
+    private String accountNumber;
+
     @ManyToOne
     @JoinColumn(name = "account_product_id", nullable = false)
     private AccountProduct accountProduct;
