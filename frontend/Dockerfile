@@ -23,6 +23,6 @@ WORKDIR /usr/share/nginx/html
 # Nuxt.js 빌드 결과물을 Nginx 서빙 디렉토리로 복사
 COPY --from=build-stage /app/.output/public .
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
