@@ -22,6 +22,11 @@ const copyTextToClipboard = async (text) => {
     console.error("클립보드 복사 실패:", err);
   }
 };
+
+const hide = ref(false);
+const hideActive = () => {
+  hide.value = !hide.value;
+};
 </script>
 
 <template>
@@ -39,9 +44,13 @@ const copyTextToClipboard = async (text) => {
       <KebabMenu />
     </div>
     <div class="money-content">
-      <h1>{{ money.toLocaleString("ko-KR") }}원</h1>
+      <h1 v-if="!hide">{{ money.toLocaleString("ko-KR") }}원</h1>
+      <h2 v-if="hide">잔액 숨김 중</h2>
 
-      <button><p>숨김</p></button>
+      <button @click="hideActive()">
+        <p v-if="!hide">숨김</p>
+        <p v-if="hide">보기</p>
+      </button>
     </div>
 
     <div class="link-content">
