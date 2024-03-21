@@ -1,14 +1,18 @@
 package com.ssafy.user.member.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.user.bank.entity.QAccount;
 import com.ssafy.user.member.dto.response.MemberDTO;
+import com.ssafy.user.member.dto.response.MemberToCheckDTO;
 import com.ssafy.user.member.dto.response.QMemberDTO;
+import com.ssafy.user.member.dto.response.QMemberToCheckDTO;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.entity.QMember;
 import kotlinx.serialization.Required;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -18,25 +22,65 @@ public class MemberRepositoryCustom {
 
     private QMember member = QMember.member;
 
+    private QAccount account = QAccount.account;
 
-    public List<Member> findMembers() {
+
+    public Member findMemberByIdAndPhoneNumber(String id, String phoneNumber) {
         return queryFactory.select(member)
                 .from(member)
-                .fetch();
+                .leftJoin(member.accounts, account)
+                .fetchJoin()
+                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)).and(member.isDeleted.eq(false)))
+                .fetchOne();
     }
 
 
-    // 프로젝션 !
-    // 특정 컬럼만 가져오기 !
-    // 연관관계의 엔티티 불러오지 않음 !
-    // 성능 최적화의 끝판왕
-    public List<MemberDTO> findMembersDTO() {
-        return queryFactory.select(new QMemberDTO(member.memberId, member.name, member.sincerity))
+
+    public Member findMemberByIdAndPassword(String id, String password) {
+        return queryFactory.select(member)
                 .from(member)
-                .fetch();
+                .leftJoin(member.accounts, account)
+                .fetchJoin()
+                .where(member.id.eq(id).and(member.password.eq(password)).and(member.isDeleted.eq(false)))
+                .fetchOne();
+
     }
 
 
+    public Member findMemberById(String id){
+        return queryFactory.select(member)
+                .from(member)
+                .leftJoin(member.accounts, account)
+                .fetchJoin()
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
+                .fetchOne();
+    }
+
+
+
+    public MemberDTO findMemberDtoById(String id){
+        return queryFactory.select(new QMemberDTO(member.id, member.name, member.phoneNumber, member.birthDate, member.createdAt))
+                .from(member)
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
+                .fetchOne();
+    }
+
+
+
+    public MemberToCheckDTO findMemberToCheckDtoByPhoneNumber(String phoneNumber) {
+        return queryFactory.select(new QMemberToCheckDTO(member.id))
+                .from(member)
+                .where(member.phoneNumber.eq(phoneNumber).and(member.isDeleted.eq(false)))
+                .fetchOne();
+    }
+
+
+    public MemberToCheckDTO findMemberToCheckDtoById(String id){
+        return queryFactory.select(new QMemberToCheckDTO(member.id))
+                .from(member)
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
+                .fetchOne();
+    }
 
 
 }

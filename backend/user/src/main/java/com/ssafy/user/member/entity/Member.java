@@ -32,9 +32,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String id;
 
-    @Size(min = 0, max = 100)
-    @Column(length = 100)
-    private String email;
 
     @Size(min = 0, max = 50)
     @Column(nullable = false, length = 50)
@@ -52,8 +49,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime birthDate;
 
-
-    @Column(nullable = false)
     private String fcmToken;
 
     @Size(min = 0, max = 50)
@@ -64,28 +59,42 @@ public class Member extends BaseEntity {
     @ColumnDefault("50")
     private int sincerity;
 
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
 
-    public void addEmail(String email) {
-        this.email = email;
-    }
+
+
+
+
+
 
     public void changeProvider() {
         this.provider = "kakao";
     }
 
 
+    public void changePassword(String password){
+        this.password = password;
+    }
+
+    public void changeFcmToken(String fcmToken){
+        this.fcmToken = fcmToken;
+    }
+
+
     @Builder
     public Member(String id, String name, String password, String phoneNumber,
-        LocalDateTime birthDate, String fcmToken) {
+        LocalDateTime birthDate) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.fcmToken = fcmToken;
         this.sincerity = 50;
     }
+
+
+
 
 }

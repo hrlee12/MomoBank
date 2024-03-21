@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PasswordFindRequest {
-
-    public String id;
-    public String phoneNumber;
-
+public class RenewFcmTokenRequest {
+    private String id;
+    private String fcmToken;
 }
