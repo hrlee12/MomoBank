@@ -23,35 +23,35 @@ const pageTitle = computed(() => {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
     return "입금 현황";
+  } else if (route.name === route.name) {
+    return groupsName;
   }
 });
 </script>
 
 <template>
-  <div>
-    <header class="flex flex-row justify-between pt-4 bg-white h-11">
-      <div @click="goBack">
+  <header class="flex flex-row justify-between pt-3 bg-white h-14">
+    <div @click="goBack">
+      <img
+        class="w-10 h-8 ml-4"
+        :src="getImageUrl('arrow-icon.png', 0)"
+        alt="arrow-icon 화살표 아이콘"
+      />
+    </div>
+    <div class="ml-8 text-xl font-semibold">{{ pageTitle }}</div>
+    <div>
+      <div class="flex">
         <img
-          class="w-10 h-8 ml-4"
-          :src="getImageUrl('arrow-icon.png', 0)"
-          alt="arrow-icon 화살표 아이콘"
+          class="mr-4 w-7 h-7"
+          :src="getImageUrl('bell-icon.png', 0)"
+          alt="bell-icon"
+        />
+        <img
+          class="mr-4 w-7 h-7"
+          :src="getImageUrl('home-icon.png', 0)"
+          alt="home-icon"
         />
       </div>
-      <div class="ml-8 text-xl font-semibold">{{ pageTitle }}</div>
-      <div>
-        <div class="flex">
-          <img
-            class="mr-4 w-7 h-7"
-            :src="getImageUrl('bell-icon.png', 0)"
-            alt="bell-icon"
-          />
-          <img
-            class="mr-4 w-7 h-7"
-            :src="getImageUrl('home-icon.png', 0)"
-            alt="home-icon"
-          />
-        </div>
-      </div>
-    </header>
-  </div>
+    </div>
+  </header>
 </template>
