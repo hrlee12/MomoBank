@@ -1,9 +1,15 @@
-<!-- TODO
+<!-- TODO : API 연동 시 변경 사항
 - DB 데이터 연결
 - NuxtLink 연결
 - 피드 게시글 상세보기 눌렀을 떄 다른 게시글까지 변경되는거 수정
+
 -->
 <script setup>
+import { ref, computed } from "vue";
+import GroupsHeader from "~/components/layout/GroupsHeader.vue";
+import AccountInformation from "~/components/group/AccountInformation.vue";
+import GroupFooter from "~/components/layout/GroupFooter.vue";
+
 definePageMeta({
   layout: "groups",
 });
@@ -12,12 +18,11 @@ definePageMeta({
 const getImageUrl = (imageName, idx) => {
   // Note: You might need to adjust the path depending on your project structure
   if (idx == 0) return "/icon/" + imageName;
-  else return "/images/" + imageName;
+  else if (idx == 1) return "/images/" + imageName;
+  else console.log("Image code error");
 };
 
 // 피드 내용 상세보기(더보기 클릭)
-import { ref, computed } from "vue";
-import GroupsHeader from "~/components/layout/GroupsHeader.vue";
 
 const fullText = ref("5반5린이들과 함께간 일본 후쿠오카에서 사진 한장!");
 const showFullText = ref(false);
@@ -39,15 +44,17 @@ const toggleText = () => {
 
 <template>
   <div class="bg-white h-60 rounded-b-[14px]">
-    <GroupsHeader> </GroupsHeader>
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
       <div class="flex flex-row justify-between">
-        <div
-          class="flex items-center justify-center w-10 h-6 ml-4 bg-light-gray-color rounded-xl"
-        >
-          <div class="text-gray-color text-[13px]">상세</div>
-        </div>
+        <NuxtLink to="/groups/detail">
+          <div
+            class="flex items-center justify-center w-10 h-6 ml-4 bg-light-gray-color rounded-xl"
+          >
+            <div class="text-gray-color text-[13px]">상세</div>
+          </div>
+        </NuxtLink>
+
         <div class="items-center">
           <p class="text-positive-color text-[13px]">납부 완료</p>
         </div>
@@ -61,23 +68,7 @@ const toggleText = () => {
       </div>
 
       <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->
-      <div class="flex justify-center mt-4">
-        <div
-          class="text-gray-color border-b-2 border-b-gray-color-500 text-[15px]"
-        >
-          1234-12-567456
-        </div>
-      </div>
-      <div class="flex justify-center">
-        <div class="font-bold text-[28px]">2,345,678</div>
-        <div class="text-[15px] pt-4 pl-1 pr-2">원</div>
-        <div
-          class="flex items-center justify-center w-8 mt-3 bg-light-gray-color rounded-xl h-7"
-        >
-          <div class="text-gray-color text-[13px]">숨김</div>
-        </div>
-      </div>
-
+      <AccountInformation></AccountInformation>
       <!-- 실선, 거래 내역, 예산 -->
       <div class="flex justify-center">
         <div class="mt-4 border-t-[1px] border-t-light-gray-color w-80"></div>
@@ -113,7 +104,7 @@ const toggleText = () => {
   </div>
 
   <!-- 피드리스트 -->
-  <div class="w-full h-full mx-auto mt-2 bg-white">
+  <div class="w-full h-full pb-16 mx-auto mt-2 bg-white">
     <div class="pb-4 border-b-2 border-light-gray-color">
       <!-- 프로필, 닉네임, 게시일 -->
       <div class="flex items-center pt-3 ml-2">
