@@ -1,6 +1,6 @@
 package com.ssafy.user.groupInfo.dto.request;
 
-public record GetFeesPerMonthRequest(
+public record GroupRequest(
     int memberId
 ) {
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetGroupDetailsResponse {
     private String groupName;
+    private int accountId;
     private boolean status;
     private String accountNumber;
     private int balance;
