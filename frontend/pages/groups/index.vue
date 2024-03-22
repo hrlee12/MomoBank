@@ -43,7 +43,7 @@ const toggleText = () => {
 </script>
 
 <template>
-  <div class="bg-white h-60 rounded-b-[14px]">
+  <div class="bg-white h-44 rounded-b-[14px]">
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
       <div class="flex flex-row justify-between">
@@ -92,7 +92,7 @@ const toggleText = () => {
 
   <!-- 공지사항 -->
   <div
-    class="flex items-center justify-between h-12 mx-auto mt-2 bg-white w-96 rounded-xl"
+    class="flex items-center justify-between w-full h-12 mx-auto mt-2 bg-white rounded-xl"
   >
     <div>
       <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png', 0)" />

@@ -26,7 +26,7 @@ const groupDetails = [
 </script>
 
 <template>
-  <div class="bg-white h-60 rounded-b-[14px]">
+  <div class="bg-white h-44 rounded-b-[14px]">
     <div class="flex flex-row justify-between">
       <div class="flex items-center justify-center w-10 h-6 ml-4 rounded-xl">
         <div class="text-[13px]"></div>
