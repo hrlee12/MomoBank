@@ -22,5 +22,5 @@ RUN npm run build
 EXPOSE 3000
 
 # Nuxt.js 앱 실행
-CMD ["npm", "start"]
+CMD ["node", "./server/index.mjs"]
 
