@@ -4,11 +4,13 @@ import com.ssafy.user.bank.dto.request.CreateAccountRequest;
 import com.ssafy.user.bank.dto.request.GetAccountDetailRequest;
 import com.ssafy.user.bank.dto.request.GetAccountTransferRequest;
 import com.ssafy.user.bank.dto.request.GetMyAccountRequest;
+import com.ssafy.user.bank.dto.request.SearchAccountRequest;
 import com.ssafy.user.bank.dto.request.TransferRequest;
 import com.ssafy.user.bank.dto.response.AccountResponse;
 import com.ssafy.user.bank.dto.response.CardResponse;
 import com.ssafy.user.bank.dto.response.GetAccountProductListResponse;
 import com.ssafy.user.bank.dto.response.GetMyAccountListResponse;
+import com.ssafy.user.bank.dto.response.SearchAccountResponse;
 import com.ssafy.user.bank.dto.response.TransferResponse;
 import com.ssafy.user.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -83,14 +85,20 @@ public class BankController {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "송금 성공", new TransferResponse());
     }
 
-//    @Operation(summary = "신분증 진위 확인", description = "사용자의 신분증 진위여부를 확인합니다.")
-//    @PostMapping("/varify-id-card")
+    @Operation(summary = "계좌 조회", description = "계좌 조회")
+    @PostMapping("/account-search")
+    public ResponseEntity<?> searchAccount(@RequestBody SearchAccountRequest request) {
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 조회 성공", new SearchAccountResponse());
+    }
+
+//    @Operation(summary = "신분증 진위 확인", description = "사용자의 신분증 진위를 확인합니다.")
+//    @PostMapping("/varify")
 //    public ResponseEntity<?> varifyIdCard() {
-//        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 생성했습니다.", null);
+//        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 신분증의 진위를 확인했습니다.", null);
 //
 //    @Operation(summary = "신분증 OCR", description = "사용자의 신분증 정보를 확인합니다.")
-//    @PostMapping("/varify-id-card")
-//    public ResponseEntity<?> varifyIdCard() {
-//        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 생성했습니다.", null);
+//    @PostMapping("/varify/ocr")
+//    public ResponseEntity<?> varifyIdCardOCR() {
+//        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 사용자의 신분증 정보를 확인했습니다.", null);
 //    }
 }
