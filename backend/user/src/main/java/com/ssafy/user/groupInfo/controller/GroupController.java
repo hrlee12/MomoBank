@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping("groups")
 @Tag(name = "모임", description = "모임관련 데이터 생성, 조회, 수정, 삭제 및 상태 관리")
-public class groupController {
+public class GroupController {
 
     @Operation(summary = "전체 모임 조회", description = "참여중인 모든 모임 조회")
     @GetMapping("/my-groups")

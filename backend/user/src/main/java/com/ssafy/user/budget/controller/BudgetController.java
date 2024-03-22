@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping("groups/{id}/budgets")
 @Tag(name = "예산", description = "예산 생성, 수정, 삭제, 조회")
-public class budgetController {
+public class BudgetController {
 
     @Operation(summary = "현재 예산 목록 조회", description = "모임 내 예산 목록 조회")
     @GetMapping("/budgets-list")
