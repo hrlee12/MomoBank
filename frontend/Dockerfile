@@ -15,14 +15,12 @@ COPY . .
 # Nuxt.js 애플리케이션 빌드
 RUN npm run build
 
-# 단계 2: Nginx를 사용해 앱 서빙
-FROM nginx:stable-alpine AS production-stage
+# 프로덕션을 위한 패키지 설치
+RUN npm ci --only=production
 
-WORKDIR /usr/share/nginx/html
-
-# Nuxt.js 빌드 결과물을 Nginx 서빙 디렉토리로 복사
-COPY --from=build-stage /app/.output/public .
-
+# 문서화 목적 포트
 EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+# Nuxt.js 앱 실행
+CMD ["npm", "start"]
+
