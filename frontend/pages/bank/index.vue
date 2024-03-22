@@ -32,7 +32,7 @@ const isLastSlide = ref(false);
     <nav>
       <div class="menu">
         <!-- 나중에 /bank/profile로 바꿀 것 -->
-        <NuxtLink to="/user" class="font-bold">
+        <NuxtLink to="/bank/profile" class="font-bold">
           <!-- getImageUrl함수가 존재할 때만 동작 -->
           <img
             :src="getImageUrl ? getImageUrl('user-icon.png', 0) : ''"
