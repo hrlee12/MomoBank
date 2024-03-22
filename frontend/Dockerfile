@@ -15,8 +15,8 @@ COPY . .
 # Nuxt.js 애플리케이션 빌드
 RUN npm run build
 
-# 프로덕션을 위한 패키지 설치
-RUN npm ci --only=production
+# 프로덕션을 위한 패키지 설치(tailwind 오류 남)
+# RUN npm ci --only=production
 
 # 문서화 목적 포트
 EXPOSE 3000
