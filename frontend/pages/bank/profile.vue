@@ -14,8 +14,16 @@ const userInfo = {
   id: "ssafy",
   name: "김성수",
   birth: "2000-03-01",
-  phone: "010-1234-1234",
+  phone: "01012341234",
 };
+
+const onPhone = () => {
+  userInfo.phone = userInfo.phone
+    .replace(/[^0-9]/g, "")
+    .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
+};
+
+onPhone();
 </script>
 
 <template>

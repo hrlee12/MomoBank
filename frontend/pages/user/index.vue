@@ -22,7 +22,9 @@ const getImageUrl = (imageName, idx) => {
       >
     </div>
     <div class="login-content center">
-      <button class="second-btn login-item">새 계정 만들기</button>
+      <NuxtLink to="/user/authenicate">
+        <button class="second-btn login-item">새 계정 만들기</button></NuxtLink
+      >
       <div class="icon-item">
         <p class="login-item">간편 로그인</p>
         <img

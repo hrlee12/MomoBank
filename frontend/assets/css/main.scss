@@ -52,14 +52,17 @@ p {
 button {
   border-radius: 20px;
   height: 4.5vh;
+  align-self: center;
 }
 
 .prime-btn {
   background-color: $primary-color;
   color: white;
+  width: 100%;
 }
 
 .second-btn {
   border: 1px solid $primary-color;
   color: $primary-color;
+  width: 100%;
 }

@@ -18,24 +18,27 @@ const router = useRoute();
 const menuActive = ref(true);
 const sideMenuActive = ref(true);
 
-const pageTitle = computed(() => {
-  menuActive.value = true;
-  sideMenuActive.value = true;
+// 라우터 이름에 따른 타이틀 및 sideMenuActive 상태 매핑
+const routerNameToInfoMap = {
+  "bank-account-list": { title: "전체계좌", sideMenuActive: true },
+  "bank-group-list": { title: "전체모임", sideMenuActive: true },
+  "bank-history": { title: "거래내역", sideMenuActive: true },
+  "bank-notice": { title: "알림", sideMenuActive: false },
+  "bank-profile": { title: "마이페이지", sideMenuActive: true },
+  "bank-remit": { title: "계좌개설", sideMenuActive: true },
+  user: { title: "", sideMenuActive: false },
+  "user-signup": { title: "회원가입", sideMenuActive: false },
+  "user-authenicate": { title: "본인확인", sideMenuActive: false },
+};
 
-  if (router.name === "bank-account-list") {
-    return "전체계좌";
-  } else if (router.name === "bank-group-list") {
-    return "전체모임";
-  } else if (router.name === "history") {
-    return "거래내역";
-  } else if (router.name === "bank-notice") {
-    sideMenuActive.value = false;
-    return "알림";
-  } else if (router.name === "bank-profile") {
-    return "마이페이지";
-  } else if (router.name === "bank-remit") {
-    return "계좌개설";
-  } else if (router.name === "user") menuActive.value = false;
+const pageTitle = computed(() => {
+  const routeInfo = routerNameToInfoMap[router.name];
+  return routeInfo ? routeInfo.title : ""; // 라우터 이름에 해당하는 타이틀이 없는 경우 기본 타이틀 반환
+});
+
+const isSideMenuActive = computed(() => {
+  const routeInfo = routerNameToInfoMap[router.name];
+  return routeInfo ? routeInfo.sideMenuActive : false; // sideMenuActive가 1이면 true, 아니면 false 반환
 });
 </script>
 
@@ -52,7 +55,7 @@ const pageTitle = computed(() => {
     <!-- <h1 class="title">{{ menuStore.menuTitle }}</h1> -->
     <h1 class="title">{{ pageTitle }}</h1>
 
-    <div v-if="sideMenuActive" class="link-container">
+    <div v-if="isSideMenuActive" class="link-container">
       <NoticeHome />
     </div>
   </header>
