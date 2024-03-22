@@ -9,6 +9,10 @@ export default defineNuxtConfig({
   app: {
     head: {
       titleTemplate: "MOMO 뱅크",
+      link: [
+        // PNG 또는 SVG 아이콘을 사용하는 경우
+        { rel: "icon", type: "image/png", href: "/favicon.png" },
+      ],
     },
   },
 });
