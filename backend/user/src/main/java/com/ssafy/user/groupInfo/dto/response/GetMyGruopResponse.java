@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetMyGruopResponse {
 
+    private int groupId;
     private String name;
     private long monthlyFee;
     private Date joinDate;
