@@ -73,15 +73,9 @@ public class MemberController {
             @ApiResponse(responseCode = "401", description = "전화번호 인증 토큰 유효하지 않음")
     })
     public ResponseEntity join(@RequestBody JoinRequest request) throws Exception {
-// 로직 구현
-
-
 
         memberService.join(request);
 
-
-
-        // bank로 요청 보내기
         return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
     }
 
@@ -132,7 +126,7 @@ public class MemberController {
     @PatchMapping("/passwords")
     public ResponseEntity updatePassword(@RequestBody PasswordUpdateRequest request) {
 
-        memberService.updatePassword(request.getId(), request.getCurrentPassword(), request.getNewPassword());
+        memberService.updatePassword(request);
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "비밀번호 변경 완료", null);
     }

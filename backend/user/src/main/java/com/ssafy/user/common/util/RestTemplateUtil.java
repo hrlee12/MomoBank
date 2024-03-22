@@ -1,5 +1,6 @@
 package com.ssafy.user.common.util;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,7 +10,10 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Component
+@RequiredArgsConstructor
 public class RestTemplateUtil{
+
+    private final RestTemplate restTemplate;
 
 
     // RestTemplate apiRequest
@@ -20,11 +24,7 @@ public class RestTemplateUtil{
 
         HttpEntity entity = new HttpEntity(body, headers);
 
-
-
-
-
-        RestTemplate restTemplate = new RestTemplate();
+//        RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity response = restTemplate.exchange(
                 uri,

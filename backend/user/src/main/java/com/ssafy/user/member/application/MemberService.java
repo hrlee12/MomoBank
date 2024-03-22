@@ -8,6 +8,7 @@ import com.ssafy.user.common.exception.ErrorResponse;
 import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.common.util.RestTemplateUtil;
 import com.ssafy.user.member.dto.request.JoinRequest;
+import com.ssafy.user.member.dto.request.PasswordUpdateRequest;
 import com.ssafy.user.member.dto.response.MemberDTO;
 import com.ssafy.user.member.dto.response.MemberToCheckDTO;
 import com.ssafy.user.member.dto.response.MypageResponse;
@@ -20,6 +21,7 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.apache.kafka.common.config.types.Password;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -140,7 +144,7 @@ public class MemberService {
 
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
-        } catch (HttpClientErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
@@ -194,26 +198,33 @@ public class MemberService {
         member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 
     }
+    public void updatePassword(PasswordUpdateRequest request)  {
 
-
-    @Transactional
-    public void updatePassword(String id, String currentPassword, String newPassword) {
-
-
-        Member member = memberRepositoryCustom.findMemberById(id);
-
-
-        if (member == null)
-            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
-
-        // 비밀번호 일치 여부 확인
-        if (!BCrypt.checkpw(currentPassword, member.getPassword())){
-            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+        try {
+            ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/passwords", HttpMethod.PUT, request);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
+            throw new ApiException(errorResponse);
         }
-
-        // 비밀번호 변경
-        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
     }
+//    @Transactional
+//    public void updatePassword(String id, String currentPassword, String newPassword) {
+//
+//
+//        Member member = memberRepositoryCustom.findMemberById(id);
+//
+//
+//        if (member == null)
+//            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+//
+//        // 비밀번호 일치 여부 확인
+//        if (!BCrypt.checkpw(currentPassword, member.getPassword())){
+//            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+//        }
+//
+//        // 비밀번호 변경
+//        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+//    }
 
 
     @Transactional
