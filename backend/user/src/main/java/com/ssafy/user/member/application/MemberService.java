@@ -9,12 +9,14 @@ import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.common.util.RestTemplateUtil;
 import com.ssafy.user.member.dto.request.JoinRequest;
 import com.ssafy.user.member.dto.request.PasswordUpdateRequest;
+import com.ssafy.user.member.dto.request.SendNewPasswordRequest;
 import com.ssafy.user.member.dto.response.MemberDTO;
 import com.ssafy.user.member.dto.response.MemberToCheckDTO;
 import com.ssafy.user.member.dto.response.MypageResponse;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import com.ssafy.user.member.domain.repository.MemberRepositoryCustom;
+import com.ssafy.user.member.dto.response.ReturnPasswordDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.model.Message;
@@ -144,7 +146,7 @@ public class MemberService {
 
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException  e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
@@ -178,35 +180,77 @@ public class MemberService {
 
 
     @Transactional
-    public void sendNewPassword(String id, String phoneNumber) {
+    public void sendNewPassword(SendNewPasswordRequest request) {
 
-        // 회원정보 일치 확인
-        Member member = memberRepositoryCustom.findMemberByIdAndPhoneNumber(id, phoneNumber);
 
-        if (member == null)
-            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+        ResponseEntity response;
 
-        // 랜덤 패스워드 생성
-        String newPassword = getRandomPassword();
+        try {
+            response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.PUT, request);
+        } catch (HttpClientErrorException  e) {
+            ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
+            throw new ApiException(errorResponse);
+        }
+
+        ReturnPasswordDTO returnPasswordDTO = (ReturnPasswordDTO)response.getBody();
+
+        String newPassword = returnPasswordDTO.getNewPassword();
 
         String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
 
-        // sms 발송
-        sendSms(phoneNumber, message);
+        try {
+            // sms 발송
+            sendSms(request.getPhoneNumber(), message);
+        } catch (CustomException e) {
+            try {
+                response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.PUT, request);
+            } catch (HttpClientErrorException  exception) {
+                ErrorResponse errorResponse = exception.getResponseBodyAs(ErrorResponse.class);
+                throw new ApiException(errorResponse);
+            }
+        }
 
-        // 비밀번호 변경
-        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+
 
     }
+
+
+
+
+//    @Transactional
+//    public void sendNewPassword(String id, String phoneNumber) {
+//
+//        // 회원정보 일치 확인
+//        Member member = memberRepositoryCustom.findMemberByIdAndPhoneNumber(id, phoneNumber);
+//
+//        if (member == null)
+//            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+//
+//        // 랜덤 패스워드 생성
+//        String newPassword = getRandomPassword();
+//
+//        String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
+//
+//        // sms 발송
+//        sendSms(phoneNumber, message);
+//
+//        // 비밀번호 변경
+//        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+//
+//
+//    }
     public void updatePassword(PasswordUpdateRequest request)  {
 
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/passwords", HttpMethod.PUT, request);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
     }
+
+
+
 //    @Transactional
 //    public void updatePassword(String id, String currentPassword, String newPassword) {
 //
@@ -293,25 +337,25 @@ public class MemberService {
         return sb.toString();
     }
 
-    private String getRandomPassword() {
-        String alphabet = "abcdefghijknmlopqrstuvwxyz";
-        String number = "0123456789";
-
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 5; i++) {
-            int index = random.nextInt(alphabet.length());
-            sb.append(alphabet.charAt(index));
-        }
-
-        for (int i = 0; i < 5; i++) {
-            int index = random.nextInt(number.length());
-            sb.append(number.charAt(index));
-        }
-
-        return sb.toString();
-    }
+//    private String getRandomPassword() {
+//        String alphabet = "abcdefghijknmlopqrstuvwxyz";
+//        String number = "0123456789";
+//
+//        SecureRandom random = new SecureRandom();
+//        StringBuilder sb = new StringBuilder();
+//
+//        for (int i = 0; i < 5; i++) {
+//            int index = random.nextInt(alphabet.length());
+//            sb.append(alphabet.charAt(index));
+//        }
+//
+//        for (int i = 0; i < 5; i++) {
+//            int index = random.nextInt(number.length());
+//            sb.append(number.charAt(index));
+//        }
+//
+//        return sb.toString();
+//    }
 
 
     private String hashEncrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -347,7 +391,7 @@ public class MemberService {
     }
 
 
-    private void sendSms(String toPhoneNumber, String content) {
+    private void sendSms(String toPhoneNumber, String content) throws CustomException{
         
         Message message = new Message();
 

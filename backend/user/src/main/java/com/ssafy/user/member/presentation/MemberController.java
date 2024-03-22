@@ -143,7 +143,7 @@ public class MemberController {
     @PostMapping("/passwords")
     public ResponseEntity sendNewPassword(@RequestBody SendNewPasswordRequest request) {
 
-        memberService.sendNewPassword(request.getId(), request.getPhoneNumber());
+        memberService.sendNewPassword(request);
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "전화번호로 임시비밀번호 전송", null);
     }
