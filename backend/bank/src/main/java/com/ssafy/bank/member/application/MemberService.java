@@ -9,6 +9,7 @@ import com.ssafy.bank.member.dto.request.JoinRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +41,26 @@ public class MemberService {
 
 
         memberRepository.save(member);
+    }
+
+
+    @Transactional
+    public void updatePassword(String id, String currentPassword, String newPassword) {
+
+
+        Member member = memberRepositoryCustom.findMemberById(id);
+
+
+        if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+
+        // 비밀번호 일치 여부 확인
+        if (!BCrypt.checkpw(currentPassword, member.getPassword())){
+            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+        }
+
+        // 비밀번호 변경
+        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
     }
 
 

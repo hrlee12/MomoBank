@@ -4,16 +4,15 @@ package com.ssafy.bank.member.presentation;
 import com.ssafy.bank.common.CommonResponse;
 import com.ssafy.bank.member.application.MemberService;
 import com.ssafy.bank.member.dto.request.JoinRequest;
+import com.ssafy.bank.member.dto.request.PasswordUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "멤버")
 @RequiredArgsConstructor
@@ -36,6 +35,24 @@ public class MemberController {
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
     }
+
+
+
+
+    @Operation(summary = "비밀번호 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
+            @ApiResponse(responseCode = "400", description = "현재 비밀번호 불일치")
+    })
+    @PutMapping("/passwords")
+    public ResponseEntity updatePassword(@RequestBody PasswordUpdateRequest request) {
+
+        memberService.updatePassword(request.getId(), request.getCurrentPassword(), request.getNewPassword());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "비밀번호 변경 완료", null);
+    }
+
+
 }
 
 
