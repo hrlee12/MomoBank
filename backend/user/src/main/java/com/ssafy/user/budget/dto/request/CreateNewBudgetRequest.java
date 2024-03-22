@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public record CreateNewBudgetRequest(
     int memberId,
+    int monthlyDueDate,
     String name,
     long finalFee,
     Date finalDueDate

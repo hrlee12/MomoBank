@@ -29,6 +29,9 @@ public class Budget extends BaseEntity {
     @Column(name = "budget_id")
     private int budgetId;
 
+    @Column(name = "monthly_due_date")
+    private int monthlyDueDate;
+
     @Column(length = 255, name = "name")
     private String name;
 
