@@ -135,22 +135,16 @@ public class MemberService {
     }
 
     public void join(JoinRequest request) throws Exception {
-        verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
+        verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
 
-//            ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
-//
-//
-//            if (response.getBody().getClass().equals(ErrorResponse.class)){
-//                throw new ApiException((ErrorResponse)response.getBody());
-//            }
     }
 
 //    public void join(JoinRequest request) throws Exception {
