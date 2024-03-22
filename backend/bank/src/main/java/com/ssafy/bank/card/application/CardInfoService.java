@@ -3,6 +3,7 @@ package com.ssafy.bank.card.application;
 import com.ssafy.bank.account.domain.Account;
 import com.ssafy.bank.account.domain.repository.AccountRepository;
 import com.ssafy.bank.account.dto.response.AccountResponse;
+import com.ssafy.bank.card.domain.Card;
 import com.ssafy.bank.card.domain.CardInfo;
 import com.ssafy.bank.card.domain.CardProduct;
 import com.ssafy.bank.card.domain.repository.CardInfoRepository;
@@ -50,7 +51,12 @@ public class CardInfoService {
         .account(account)
         .build();
     cardInfoRepository.save(cardInfo);
-    return CardInfoResponse.from(cardInfo);
+
+    if(cardInfo.getCardProduct().getBank() != null){
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
+    }else{
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
+    }
   }
 
   public CardInfoResponse deleteCardInfo(int cardInfoId){
@@ -60,6 +66,10 @@ public class CardInfoService {
       throw new CustomException(ErrorCode.DELETED_CARD_INFO);
     }
     cardInfo.softDelete();
-    return CardInfoResponse.from(cardInfo);
+    if(cardInfo.getCardProduct().getBank() != null){
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
+    }else{
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
+    }
   }
 }
