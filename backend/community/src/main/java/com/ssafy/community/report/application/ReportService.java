@@ -2,6 +2,8 @@ package com.ssafy.community.report.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.community.report.dto.BestMemberDto;
+import com.ssafy.community.report.dto.MemberIdName;
 import com.ssafy.community.report.dto.MonthlyReportDto;
 import com.ssafy.community.report.dto.RecommendationDto;
 import org.apache.http.HttpResponse;
@@ -42,9 +44,6 @@ public class ReportService {
                 "Analyze the ratings of posts that were popular, and write down why they were good and what the reaction was." +
                 "3. Best member" +
                 "The best member must first pay all fees in full, and if no one pays in full, there is no best member. Give it to someone who has paid in full and faithfully participated in the bulletin board activities. Please also tell us the reason for selecting the best member" +
-                "Lastly, write the name of the best member in one line at the end." +
-                "The format to write is" +
-                "$!$name$!$" +
                 "Please do it." +
                 "I would like you to respond in Korean and send it in md format.";
         String user = "data: " + monthlyReportDto.toString();
@@ -58,39 +57,63 @@ public class ReportService {
         }
     }
 
-    public List<RecommendationDto> getAIRecomendationNextActivity(MonthlyReportDto monthlyReportDto, String aiReport) throws IOException, JSONException {
-
+    public List<RecommendationDto> getAIRecommendationNextActivity(MonthlyReportDto monthlyReportDto, String aiReport) throws IOException, JSONException {
         String system = "You are a teacher AI who looks at a group of children's accounts and reports and recommends a number of next activities.";
         String assistant = "do: Recommend the following four activities based on statistics and reports and provide reasons." +
                 "Return type: JSON" +
                 "example:" +
-                "{recommandations: [{recommand: 클럽, reason: 이전에 노래방을 갔으니 이번엔 재미있게 클럽을 가보세요!}, , ,]}" +
+                "{recommendations: [{recommend: 클럽, reason: 이전에 노래방을 갔으니 이번엔 재미있게 클럽을 가보세요!}, , ,]}" +
                 "Caution: Respond only with JSON according to the above conditions. And the content must be in Korean.";
 
         aiReport = aiReport.replaceAll("\n", "");
 
         String user = "These are this months statistics: " + monthlyReportDto.toString() + " And this is a report written by AI" + aiReport;
-
-
-
-
         String response = getResponse(system, assistant, user);
 
         List<RecommendationDto> list = new ArrayList<>();
 
         JSONObject jsonObject = new JSONObject(response);
-        JSONArray recommendationsArray = jsonObject.getJSONArray("recommandations");
+        JSONArray recommendationsArray = jsonObject.getJSONArray("recommendations");
 
         for (int i = 0; i < recommendationsArray.length(); i++) {
             JSONObject recommendationObject = recommendationsArray.getJSONObject(i);
-            String recommend = recommendationObject.getString("recommand");
+            String recommend = recommendationObject.getString("recommend");
             String reason = recommendationObject.getString("reason");
 
             RecommendationDto recommendationDTO = new RecommendationDto(recommend, reason);
             list.add(recommendationDTO);
         }
-
         return list;
+    }
+
+
+
+    public BestMemberDto getBestMember(MonthlyReportDto monthlyReportDto, String aiReport) throws IOException, JSONException {
+        String system = "You are a teacher who reads the children's group's accounting report and AI-based report and selects the best members.";
+        String assistant = "do: Read the accounting data and AI report and select the best member." +
+                "Return type: JSON" +
+                "example:" +
+                "{'bestMember': { 'id': 1, 'name': '손준성'}, 'reason': '손준성님은 회비를 잘 납부하였고, 게시판 활동에도 열심히 참여하셔서 베스트멤버로 선정되셨습니다 !'}" +
+                "Caution: Respond only with JSON according to the above conditions. And the content must be in Korean.";
+
+        aiReport = aiReport.replaceAll("\n", "");
+
+        String user = "These are this months statistics: " + monthlyReportDto.toString() + " And this is a report written by AI" + aiReport;
+        String response = getResponse(system, assistant, user);
+
+        JSONObject jsonObject = new JSONObject(response);
+
+
+        JSONObject bestMemberObject = jsonObject.getJSONObject("bestMember");
+        int id = bestMemberObject.getInt("id");
+        String name = bestMemberObject.getString("name");
+
+
+        MemberIdName bestMember = new MemberIdName(id, name);
+
+        String reason = jsonObject.getString("reason");
+
+        return new BestMemberDto(bestMember, reason);
 
     }
     private String getResponse(String system, String assistant, String user) throws IOException {

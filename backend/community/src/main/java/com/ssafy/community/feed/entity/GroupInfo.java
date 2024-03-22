@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "group_info")
 @Schema(description = "그룹 정보")
+@ToString
 public class GroupInfo {
 
     @Id
