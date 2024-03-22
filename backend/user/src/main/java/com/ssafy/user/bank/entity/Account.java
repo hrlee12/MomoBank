@@ -1,7 +1,7 @@
 package com.ssafy.user.bank.entity;
 
 import com.ssafy.user.common.BaseEntity;
-import com.ssafy.user.member.entity.Member;
+import com.ssafy.user.member.domain.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

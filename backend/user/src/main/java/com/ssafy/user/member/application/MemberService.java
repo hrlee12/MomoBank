@@ -1,18 +1,21 @@
-package com.ssafy.user.member.service;
+package com.ssafy.user.member.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.user.common.ErrorCode;
+import com.ssafy.user.common.exception.ApiException;
 import com.ssafy.user.common.exception.CustomException;
+import com.ssafy.user.common.exception.ErrorResponse;
 import com.ssafy.user.common.util.RedisUtil;
+import com.ssafy.user.common.util.RestTemplateUtil;
 import com.ssafy.user.member.dto.request.JoinRequest;
 import com.ssafy.user.member.dto.response.MemberDTO;
 import com.ssafy.user.member.dto.response.MemberToCheckDTO;
 import com.ssafy.user.member.dto.response.MypageResponse;
-import com.ssafy.user.member.entity.Member;
-import com.ssafy.user.member.repository.MemberRepository;
-import com.ssafy.user.member.repository.querydsl.MemberRepositoryCustom;
+import com.ssafy.user.member.domain.Member;
+import com.ssafy.user.member.domain.repository.MemberRepository;
+import com.ssafy.user.member.domain.repository.MemberRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
@@ -20,9 +23,12 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.ssafy.user.common.ErrorCode.*;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -34,8 +40,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Random;
@@ -48,7 +52,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final RedisUtil redisUtil;
+    private final RestTemplateUtil restTemplateUtil;
+    private final ObjectMapper objectMapper;
 
+    @Value("${bank.url}")
+    private String bankUrl;
     private String alg = "HmacSHA256";
     @Value("${sms.from-number}")
     private String fromNumber;
@@ -56,7 +64,6 @@ public class MemberService {
     private  String aesSecretKey;
     private final IvParameterSpec iv = new IvParameterSpec(new byte[16]);
     private final String aesAlg = "AES/CBC/PKCS5Padding";
-
 
 
 
@@ -125,6 +132,25 @@ public class MemberService {
 
         return hashEncrypt(phoneNumber, secretKey);
 
+    }
+
+    public void join(JoinRequest request) throws Exception {
+        verifyToken(request.getAuthToken(), request.getPhoneNumber());
+
+
+        try {
+            ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
+            throw new ApiException(errorResponse);
+        }
+
+//            ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
+//
+//
+//            if (response.getBody().getClass().equals(ErrorResponse.class)){
+//                throw new ApiException((ErrorResponse)response.getBody());
+//            }
     }
 
 //    public void join(JoinRequest request) throws Exception {

@@ -1,4 +1,4 @@
-package com.ssafy.user.member.controller;
+package com.ssafy.user.member.presentation;
 
 
 import io.swagger.v3.oas.annotations.Operation;

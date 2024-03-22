@@ -1,15 +1,12 @@
-package com.ssafy.user.member.controller;
+package com.ssafy.user.member.presentation;
 
 
 import com.ssafy.user.common.CommonResponse;
-import com.ssafy.user.common.util.RestTemplateUtil;
 import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
-import com.ssafy.user.member.entity.Member;
-import com.ssafy.user.member.repository.MemberRepository;
-import com.ssafy.user.common.util.RedisUtil;
-import com.ssafy.user.member.repository.querydsl.MemberRepositoryCustom;
-import com.ssafy.user.member.service.MemberService;
+import com.ssafy.user.member.domain.repository.MemberRepository;
+import com.ssafy.user.member.domain.repository.MemberRepositoryCustom;
+import com.ssafy.user.member.application.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,27 +15,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
-import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.apache.catalina.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Random;
 
 
 @Tag(name = "멤버 api")
@@ -50,9 +31,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final MemberRepository memberRepository;
-    private final WebClient client;
-    @Value("${bank.url}")
-    private String bankUrl;
+
 
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청", description = "인증번호는 3분 후에 만료됨")
@@ -98,12 +77,12 @@ public class MemberController {
 
 
 
-        memberService.verifyToken(request.getAuthToken(), request.getPhoneNumber());
+        memberService.join(request);
 
 
-            return new RestTemplateUtil().send(bankUrl + "/member/join", HttpMethod.POST, request);
+
         // bank로 요청 보내기
-//        return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
     }
 
 

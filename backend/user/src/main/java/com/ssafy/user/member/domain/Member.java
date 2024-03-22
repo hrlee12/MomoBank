@@ -1,4 +1,4 @@
-package com.ssafy.user.member.entity;
+package com.ssafy.user.member.domain;
 
 import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.common.BaseEntity;
