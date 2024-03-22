@@ -32,6 +32,9 @@ public class CardProduct extends BaseEntity {
     @Column(name = "card_product_id")
     private int cardProductId;
 
+    @Column(length = 255, name = "card_product_img")
+    private String cardInfoImg;
+
     @Column(length = 255, name = "name", nullable = false)
     private String name;
 
