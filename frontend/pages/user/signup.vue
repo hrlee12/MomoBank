@@ -1,19 +1,63 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router"; // useRouter 추가
 
-const inputNumber = ref("");
+const router = useRouter(); // useRouter 인스턴스 생성
 
-// 버튼 클릭 또는 엔터 키 이벤트 처리를 위한 함수
-const handleInput = () => {
-  console.log(inputNumber.value); // 콘솔에 입력 값을 출력
-  // 이곳에서 inputNumber.value를 사용하여 추가 작업을 수행할 수 있습니다.
+const signUpInfo = ref({
+  userName: "",
+  userId: "",
+  password: "",
+  passwordConfirm: "",
+  userBirth: "",
+});
+
+const isPasswordValid = ref(true);
+const checkPasswordMatch = () => {
+  isPasswordValid.value =
+    signUpInfo.value.password === signUpInfo.value.passwordConfirm
+      ? true
+      : false;
 };
 
-function oninputPhone(target) {
-  target.value = target.value
-    .replace(/[^0-9]/g, "")
-    .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
-}
+// 회원가입 요청시 재확인
+const signUpRequest = () => {
+  // 이름 입력란 확인
+  if (!signUpInfo.value.userName) {
+    alert("이름을 입력해주세요.");
+    return;
+  }
+
+  // 아이디 입력란 확인
+  if (!signUpInfo.value.userId) {
+    alert("아이디를 입력해주세요.");
+    return;
+  }
+
+  // 비밀번호 확인
+  if (!signUpInfo.value.password) {
+    alert("비밀번호를 입력해주세요.");
+    return;
+  }
+
+  // 비밀번호와 비밀번호 확인이 일치하는지 확인
+  checkPasswordMatch();
+  if (!isPasswordValid.value) {
+    alert("비밀번호가 일치하지 않습니다.");
+    return;
+  }
+
+  // 생일 입력란 확인
+  if (!signUpInfo.value.userBirth) {
+    alert("생년월일을 입력해주세요.");
+    return;
+  }
+
+  // 모든 검증을 통과했을 때
+  console.log(signUpInfo.value);
+  alert("회원가입이 완료되었습니다.");
+  router.push(`/user`);
+};
 
 definePageMeta({
   layout: "user",
@@ -22,14 +66,42 @@ definePageMeta({
 
 <template>
   <div class="login-container">
-    <h3>모모의 다양한 서비스를 이용하기 위해 본인 확인이 필요합니다.</h3>
+    <input type="text" placeholder="이름" v-model="signUpInfo.userName" />
     <input
-      type="number"
-      placeholder="전화번호 ex) 01012341234"
-      v-model="inputNumber"
-      @keyup.enter="handleInput"
+      type="text"
+      placeholder="아이디 (영어, 숫자 포함 6글자 이상)"
+      v-model="signUpInfo.userId"
     />
-    <button class="second-btn" @click="handleInput">인증 요청</button>
+    <input
+      type="password"
+      placeholder="비밀번호 (6자 ~ 18자, 영문 숫자 혼합)"
+      v-model="signUpInfo.password"
+    />
+    <div>
+      <input
+        type="password"
+        placeholder="비밀번호 확인"
+        v-model="signUpInfo.passwordConfirm"
+        @blur="checkPasswordMatch"
+        :class="{ 'warning-border ': !isPasswordValid }"
+      />
+      <p class="warning" v-if="!isPasswordValid">
+        비밀번호가 일치하지 않습니다.
+      </p>
+    </div>
+
+    <input
+      type="date"
+      placeholder="생년월일 ex) 20000214"
+      v-model="signUpInfo.userBirth"
+    />
+    <button
+      class="second-btn"
+      @click="signUpRequest"
+      @keyup.enter="signupRequest"
+    >
+      새 계정 만들기
+    </button>
   </div>
 </template>
 
@@ -38,11 +110,14 @@ definePageMeta({
 @import "~/assets/css/user.scss";
 
 .login-container {
-  width: 90%;
-  height: 30vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  text-align: center;
+  height: 45vh;
+}
+
+.warning-border {
+  border-color: $negative-color;
+
+  &:focus {
+    outline: 1px solid $negative-color;
+  }
 }
 </style>

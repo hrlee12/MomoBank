@@ -139,9 +139,4 @@ onUnmounted(() => {
     margin-top: 7px;
   }
 }
-
-.warning {
-  color: $negative-color;
-  border-color: $negative-color;
-}
 </style>

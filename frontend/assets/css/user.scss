@@ -3,6 +3,7 @@ input {
   border-radius: 10px;
   border: 1px solid $gray-color;
   padding: 0 1vh;
+  width: 100%;
 
   &:focus {
     outline: 2px solid $primary-color;
@@ -16,4 +17,9 @@ input {
   flex-direction: column;
   justify-content: space-evenly;
   text-align: center;
+}
+
+.warning {
+  color: $negative-color;
+  font-size: medium;
 }
