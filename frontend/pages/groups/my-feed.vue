@@ -3,6 +3,8 @@ import { ref } from "vue";
 
 const feedTab = ref("feed");
 
+const totalPay = "2,000,000원";
+
 function selectTab(selectedTab) {
   feedTab.value = selectedTab;
 
@@ -105,8 +107,57 @@ const getImageUrl = (imageName, idx) => {
         </div>
       </div>
     </div>
-    <div v-if="feedTab === 'myInfo'"></div>
+    <!-- 정보 탭 눌렀을 때 -->
+    <div v-if="feedTab === 'myInfo'">
+      <div
+        class="flex items-center justify-between w-11/12 h-8 px-4 mx-auto mt-4 bg-light-gray-color rounded-xl"
+      >
+        <div class="font-bold">총 납부 금액</div>
+        <div class="font-bold">{{ totalPay }}</div>
+      </div>
 
-    <!-- +버튼 -->
+      <!-- 년도, 총 금액 bar -->
+      <div
+        class="flex items-center w-11/12 h-8 mx-auto mt-6 bg-gray-100 rounded-xl"
+      >
+        <div class="pl-3 font-bold">2024년</div>
+      </div>
+
+      <!-- 월, 납부 회비, 미납 회비 -->
+      <div class="flex justify-around mt-3">
+        <div class="flex items-center">
+          <div>3월</div>
+        </div>
+        <div>
+          <div>납부 회비: 200,000원</div>
+          <div>미납 회비: 0원</div>
+        </div>
+      </div>
+      <div class="flex justify-around mt-3">
+        <div class="flex items-center">
+          <div>3월</div>
+        </div>
+        <div>
+          <div>납부 회비: 200,000원</div>
+          <div>미납 회비: 0원</div>
+        </div>
+      </div>
+      <div class="flex justify-around mt-3">
+        <div class="flex items-center">
+          <div>3월</div>
+        </div>
+        <div>
+          <div>납부 회비: 200,000원</div>
+          <div>미납 회비: 0원</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 입금 내역 년도별 더보기 버튼 -->
+    <div
+      class="flex items-center justify-center w-5/12 mx-auto mt-8 rounded-lg h-11 bg-light-gray-color"
+    >
+      <div class="mx-auto font-bold">2023년 더보기</div>
+    </div>
   </div>
 </template>
