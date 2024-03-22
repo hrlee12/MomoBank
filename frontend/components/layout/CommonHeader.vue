@@ -19,16 +19,20 @@ const menuActive = ref(true);
 const sideMenuActive = ref(true);
 
 // 라우터 이름에 따른 타이틀 및 sideMenuActive 상태 매핑
+const NO_SIDE_MENU = 0;
+const FULL_MENU = 1;
+const ONLY_ARROW = 2;
 const routerNameToInfoMap = {
-  "bank-account-list": { title: "전체계좌", sideMenuActive: true },
-  "bank-group-list": { title: "전체모임", sideMenuActive: true },
-  "bank-history": { title: "거래내역", sideMenuActive: true },
-  "bank-notice": { title: "알림", sideMenuActive: false },
-  "bank-profile": { title: "마이페이지", sideMenuActive: true },
-  "bank-remit": { title: "계좌개설", sideMenuActive: true },
-  user: { title: "", sideMenuActive: false },
-  "user-signup": { title: "회원가입", sideMenuActive: false },
-  "user-authenicate": { title: "본인확인", sideMenuActive: false },
+  "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
+  "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
+  "bank-history": { title: "거래내역", sideMenuActive: FULL_MENU },
+  "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
+  "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
+  "bank-remit": { title: "계좌개설", sideMenuActive: FULL_MENU },
+  user: { title: "", sideMenuActive: ONLY_ARROW },
+  "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
+  "user-authenicate": { title: "본인확인", sideMenuActive: NO_SIDE_MENU },
+  "user-find-password": { title: "비밀번호찾기", sideMenuActive: NO_SIDE_MENU },
 };
 
 const pageTitle = computed(() => {
@@ -43,7 +47,7 @@ const isSideMenuActive = computed(() => {
 </script>
 
 <template>
-  <header :style="{ visibility: menuActive ? 'visible' : 'hidden' }">
+  <header :style="{ visibility: isSideMenuActive == 2 ? 'hidden' : 'visible' }">
     <div class="link-container left" @click="goBack">
       <img
         class="double"

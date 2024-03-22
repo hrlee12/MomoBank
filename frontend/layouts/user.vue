@@ -1,6 +1,6 @@
 <script setup>
 import CommonHeader from "~/components/layout/CommonHeader.vue";
-import BankFooter from "~/components/layout/BankFooter.vue";
+
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
@@ -26,7 +26,6 @@ const getImageUrl = (imageName, idx) => {
       <NuxtPage />
     </div>
   </div>
-  <BankFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -42,7 +41,7 @@ const getImageUrl = (imageName, idx) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5vh 0;
+  padding: 5vh 0 3vh 0;
 }
 
 .text-content {
