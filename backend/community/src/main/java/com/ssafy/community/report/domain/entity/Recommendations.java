@@ -1,4 +1,4 @@
-package com.ssafy.community.report.entity;
+package com.ssafy.community.report.domain.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

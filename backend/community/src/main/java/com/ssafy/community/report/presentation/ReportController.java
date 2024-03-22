@@ -1,10 +1,9 @@
-package com.ssafy.community.report.controller;
+package com.ssafy.community.report.presentation;
 
 import com.ssafy.community.report.dto.ActivityPreferencesDto;
 import com.ssafy.community.report.dto.MonthlyReportDto;
 import com.ssafy.community.report.dto.RecommendationDto;
-import com.ssafy.community.report.entity.Recommendations;
-import com.ssafy.community.report.service.ReportService;
+import com.ssafy.community.report.application.ReportService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

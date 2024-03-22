@@ -1,4 +1,4 @@
-package com.ssafy.community.report.entity;
+package com.ssafy.community.report.domain.entity;
 
 import com.ssafy.community.feed.entity.Users;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package com.ssafy.community.report.service;
+package com.ssafy.community.report.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,9 +60,6 @@ public class ReportService {
 
     public List<RecommendationDto> getAIRecomendationNextActivity(MonthlyReportDto monthlyReportDto, String aiReport) throws IOException, JSONException {
 
-        System.out.println("!!!!!!!!!!!!!!==========");
-
-
         String system = "You are a teacher AI who looks at a group of children's accounts and reports and recommends a number of next activities.";
         String assistant = "do: Recommend the following four activities based on statistics and reports and provide reasons." +
                 "Return type: JSON" +
@@ -106,9 +103,10 @@ public class ReportService {
         httpPost.setHeader("Authorization", "Bearer " + gptToken);
         httpClient = HttpClients.createDefault();
 
-        // POST 요청을 위한 데이터 설정 (JSON 형태로 예시)
+        // gpt-4
+        // gpt-3.5-turbo
         StringEntity postData = new StringEntity("{\n" +
-                "  \"model\": \"gpt-4\",\n" +
+                "  \"model\": \"gpt-3.5-turbo\",\n" +
                 "  \"stream\" : false,\n" +
                 "  \"messages\": [\n" +
                 "        {\n" +
