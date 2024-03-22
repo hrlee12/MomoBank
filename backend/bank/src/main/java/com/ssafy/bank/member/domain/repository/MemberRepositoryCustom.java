@@ -35,4 +35,14 @@ public class MemberRepositoryCustom {
                 .fetchOne();
     }
 
+
+
+    public Member findMemberByIdAndPhoneNumber(String id, String phoneNumber) {
+        return queryFactory.select(member)
+                .from(member)
+                .leftJoin(member.accounts, account)
+                .fetchJoin()
+                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)).and(member.isDeleted.eq(false)))
+                .fetchOne();
+    }
 }
