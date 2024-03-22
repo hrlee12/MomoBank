@@ -15,9 +15,11 @@ const getImageUrl = (imageName, idx) => {
 
 const router = useRoute();
 
+const menuActive = ref(true);
 const sideMenuActive = ref(true);
 
 const pageTitle = computed(() => {
+  menuActive.value = true;
   sideMenuActive.value = true;
 
   if (router.name === "bank-account-list") {
@@ -33,12 +35,12 @@ const pageTitle = computed(() => {
     return "마이페이지";
   } else if (router.name === "bank-remit") {
     return "계좌개설";
-  }
+  } else if (router.name === "user") menuActive.value = false;
 });
 </script>
 
 <template>
-  <header>
+  <header :style="{ visibility: menuActive ? 'visible' : 'hidden' }">
     <div class="link-container left" @click="goBack">
       <img
         class="double"

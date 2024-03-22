@@ -14,7 +14,7 @@ $light-gray-color: #eae9ee;
 }
 
 .layout-container {
-  min-height: 90vh;
+  min-height: 100%;
   background-color: $background-color;
   padding-bottom: 80px; /* 푸터 높이보다 조금 더 큰 값 */
 }
@@ -37,4 +37,29 @@ h3 {
 p {
   font-size: 2vh;
   color: $gray-color;
+}
+
+.icon-item {
+  display: flex;
+  justify-content: space-around;
+  min-width: 45px;
+
+  img {
+    height: 3vh;
+  }
+}
+
+button {
+  border-radius: 20px;
+  height: 4.5vh;
+}
+
+.prime-btn {
+  background-color: $primary-color;
+  color: white;
+}
+
+.second-btn {
+  border: 1px solid $primary-color;
+  color: $primary-color;
 }

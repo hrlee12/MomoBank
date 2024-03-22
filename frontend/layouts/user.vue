@@ -35,6 +35,7 @@ const getImageUrl = (imageName, idx) => {
 .nuxt-content {
   display: flex;
   justify-content: center;
+  min-height: 30vh;
 }
 
 .loading-content {

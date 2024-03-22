@@ -18,8 +18,6 @@ const accounts = ref([
     money: 100000000,
   },
 ]);
-
-console.log(accounts.length);
 </script>
 
 <template>

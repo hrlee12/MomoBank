@@ -31,7 +31,8 @@ const isLastSlide = ref(false);
   <header>
     <nav>
       <div class="menu">
-        <NuxtLink to="/bank/profile" class="font-bold">
+        <!-- 나중에 /bank/profile로 바꿀 것 -->
+        <NuxtLink to="/user" class="font-bold">
           <!-- getImageUrl함수가 존재할 때만 동작 -->
           <img
             :src="getImageUrl ? getImageUrl('user-icon.png', 0) : ''"
@@ -135,10 +136,6 @@ h1 {
   padding-bottom: 5vh;
 }
 
-img {
-  height: 3vh;
-}
-
 header {
   width: 100%;
   padding: 2vh;
@@ -211,12 +208,6 @@ header {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-      }
-
-      .icon-item {
-        display: flex;
-        justify-content: space-around;
-        min-width: 45px;
       }
     }
 
