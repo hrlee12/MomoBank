@@ -8,7 +8,7 @@ const getImageUrl = (imageName, idx) => {
 const menuItems = [
   { name: "모임메인", path: "/groups", icon: "main2-icon.png" },
   { name: "예산", path: "/groups/budget", icon: "budget-icon.png" },
-  { name: "마이피드", path: "/", icon: "user-icon.png" },
+  { name: "마이피드", path: "/groups/my-feed", icon: "user-icon.png" },
   { name: "리포트", path: "/", icon: "report-icon.png" },
   { name: "추가메뉴", path: "/", icon: "apss-icon.png" },
 ];
