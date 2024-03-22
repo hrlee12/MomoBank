@@ -25,6 +25,8 @@ const pageTitle = computed(() => {
     return "입금 현황";
   } else if (route.name === route.name) {
     return groupsName;
+  } else if (route.name === "groups-my-feed") {
+    return "나의 모임";
   }
 });
 </script>
