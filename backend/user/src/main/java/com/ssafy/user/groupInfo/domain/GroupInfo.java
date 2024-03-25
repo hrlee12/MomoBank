@@ -1,14 +1,18 @@
-package com.ssafy.user.groupInfo.entity;
+package com.ssafy.user.groupInfo.domain;
 
+import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.budget.entity.Budget;
 import com.ssafy.user.common.BaseEntity;
+import com.ssafy.user.groupMember.domain.GroupMember;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -38,6 +42,13 @@ public class GroupInfo extends BaseEntity {
     @Column(name = "created_by")
     private int createdBy;
 
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @OneToMany(mappedBy = "groupInfo", cascade = CascadeType.REFRESH)
     private List<Budget> budgets;
+
+    @OneToMany(mappedBy = "groupInfo", cascade = CascadeType.REFRESH)
+    private List<GroupMember> groupMembers;
 }

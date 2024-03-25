@@ -1,4 +1,4 @@
-package com.ssafy.user.groupInfo.controller;
+package com.ssafy.user.groupInfo.presentation;
 
 import com.ssafy.user.common.CommonResponse;
 import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;

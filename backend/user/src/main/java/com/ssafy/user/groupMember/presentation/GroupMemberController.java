@@ -1,4 +1,4 @@
-package com.ssafy.user.groupMember.controller;
+package com.ssafy.user.groupMember.presentation;
 
 
 import com.ssafy.user.groupMember.dto.request.JoinGroupRequest;
@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
