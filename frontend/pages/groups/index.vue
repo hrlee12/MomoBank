@@ -6,9 +6,7 @@
 -->
 <script setup>
 import { ref, computed } from "vue";
-import GroupsHeader from "~/components/layout/GroupsHeader.vue";
 import AccountInformation from "~/components/group/AccountInformation.vue";
-import GroupFooter from "~/components/layout/GroupFooter.vue";
 
 definePageMeta({
   layout: "groups",
@@ -91,17 +89,19 @@ const toggleText = () => {
   </div>
 
   <!-- 공지사항 -->
-  <div
-    class="flex items-center justify-between w-full h-12 mx-auto mt-2 bg-white rounded-xl"
-  >
-    <div>
-      <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png', 0)" />
+  <nuxt-link to="/groups/announcement">
+    <div
+      class="flex items-center justify-between w-full h-12 mx-auto mt-2 bg-white rounded-xl"
+    >
+      <div>
+        <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png', 0)" />
+      </div>
+      <div class="overflow-hidden text-ellipsis whitespace-nowrap w-52">
+        드디어 일본여행! Let's go!!!!!!!!!!!!!!!!!!!
+      </div>
+      <div class="mr-3 text-sm font-semibold text-gray-color">전체보기</div>
     </div>
-    <div class="overflow-hidden text-ellipsis whitespace-nowrap w-52">
-      드디어 일본여행! Let's go!!!!!!!!!!!!!!!!!!!
-    </div>
-    <div class="mr-3 text-sm font-semibold text-gray-color">전체보기</div>
-  </div>
+  </nuxt-link>
 
   <!-- 피드리스트 -->
   <div class="w-full h-full pb-16 mx-auto mt-2 bg-white">
