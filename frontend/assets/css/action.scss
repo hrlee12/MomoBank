@@ -1,0 +1,36 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88vh;
+}
+
+.input-content {
+  width: 90%;
+}
+
+.input-item {
+  padding: 5% 0;
+}
+
+input {
+  width: 100%;
+  border-bottom: 2px solid $gray-color;
+  font-size: 2.5vh;
+  padding: 1%;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid $primary-color;
+  }
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+button {
+  width: 90% !important;
+}

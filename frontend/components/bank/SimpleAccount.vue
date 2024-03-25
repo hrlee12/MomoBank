@@ -3,6 +3,7 @@ defineProps({
   accountName: String,
   accountNumber: String,
   money: Number,
+  status: Boolean,
 });
 </script>
 
@@ -14,7 +15,7 @@ defineProps({
     </div>
     <div class="item">
       <p>입출금 {{ accountNumber }}</p>
-      <button>송금</button>
+      <button v-if="status == true">송금</button>
     </div>
   </div>
 </template>
