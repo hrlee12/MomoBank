@@ -23,10 +23,10 @@ const pageTitle = computed(() => {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
     return "입금 현황";
-  } else if (route.name === route.name) {
-    return groupsName;
   } else if (route.name === "groups-my-feed") {
     return "나의 모임";
+  } else if (route.name === "groups-report") {
+    return "리포트";
   }
 });
 </script>
