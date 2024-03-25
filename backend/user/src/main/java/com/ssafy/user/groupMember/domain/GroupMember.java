@@ -2,7 +2,7 @@ package com.ssafy.user.groupMember.domain;
 
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
-import com.ssafy.user.member.entity.Member;
+import com.ssafy.user.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
