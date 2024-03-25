@@ -42,27 +42,29 @@ const getImageUrl = (imageName, idx) => {
         </div>
       </div>
     </nuxt-link>
-
-    <div class="flex justify-center">
-      <div
-        class="flex flex-col justify-center-center w-11/12 h-11 mt-8 pl-5 border-b-[1px] border-light-gray-color"
-      >
-        <div class="flex items-center pb-2 text-sm font-bold h-1/6">
-          <div class="w-9/12 overflow-hidden whitespace-nowrap text-ellipsis">
-            [투표] 다음 모임 장소 투표
+    <nuxt-link to="/groups/announcement-vote">
+      <div class="flex justify-center">
+        <div
+          class="flex flex-col justify-center-center w-11/12 h-11 mt-8 pl-5 border-b-[1px] border-light-gray-color"
+        >
+          <div class="flex items-center pb-2 text-sm font-bold h-1/6">
+            <div class="w-9/12 overflow-hidden whitespace-nowrap text-ellipsis">
+              [투표] 다음 모임 장소 투표
+            </div>
           </div>
-        </div>
-        <div class="mt-4 text-xs">
-          <div class="flex items-center">
-            <div>2024.3.12</div>
-            <div class="ml-2">김성수</div>
-            <div class="w-3 h-3 ml-1">
-              <img :src="getImageUrl('blue-crown.png', 0)" alt="파란 왕관" />
+          <div class="mt-4 text-xs">
+            <div class="flex items-center">
+              <div>2024.3.12</div>
+              <div class="ml-2">김성수</div>
+              <div class="w-3 h-3 ml-1">
+                <img :src="getImageUrl('blue-crown.png', 0)" alt="파란 왕관" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </nuxt-link>
+
     <div class="flex justify-center">
       <div
         class="flex flex-col justify-center-center w-11/12 h-11 mt-8 pl-5 border-b-[1px] border-light-gray-color"
