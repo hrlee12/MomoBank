@@ -65,11 +65,9 @@ public class MemberService {
     @Value("${sms.from-number}")
     private String fromNumber;
     @Value("${encrypt.secret-key}")
-    private  String aesSecretKey;
+    private String aesSecretKey;
     private final IvParameterSpec iv = new IvParameterSpec(new byte[16]);
     private final String aesAlg = "AES/CBC/PKCS5Padding";
-
-
 
 
     // 전화번호 인증코드 생성
@@ -99,12 +97,10 @@ public class MemberService {
         sendSms(phoneNumber, message);
 
         // redis에 저장
-        redisUtil.setValues(phoneNumber, aesEncrypt(verificationNumber), Duration.ofSeconds(60*3));
+        redisUtil.setValues(phoneNumber, aesEncrypt(verificationNumber), Duration.ofSeconds(60 * 3));
 
         return;
     }
-
-
 
 
     // 회원가입 시, 전화번호 인증코드 검증하고 인증토큰 발급
@@ -124,9 +120,6 @@ public class MemberService {
     }
 
 
-
-
-
     // 전화번호 수정 시에, 인증코드 검증하고 수정.
     public void updatePhoneNumber(String id, String phoneNumber, String code) throws Exception {
 
@@ -143,15 +136,11 @@ public class MemberService {
         // 전화번호 수정
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/phone-numbers", HttpMethod.PUT, request);
-        } catch (HttpClientErrorException  e) {
+        } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
     }
-
-
-
-
 
 
     // 회원가입
@@ -164,7 +153,7 @@ public class MemberService {
         // 회원 정보 저장하기
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
-        } catch (HttpClientErrorException  e) {
+        } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
@@ -178,10 +167,6 @@ public class MemberService {
 
         member.changeFcmToken(request.getFcmToken());
     }
-
-
-
-
 
 
     // 임시 비밀번호 발급
@@ -214,19 +199,15 @@ public class MemberService {
         // 임시 비밀번호 저장
         try {
             restTemplateUtil.send(bankUrl + "/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
-        } catch (HttpClientErrorException  e) {
+        } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
     }
 
 
-
-
-
-
     // 비밀번호 변경
-    public void updatePassword(PasswordUpdateRequest request)  {
+    public void updatePassword(PasswordUpdateRequest request) {
 
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/passwords", HttpMethod.PUT, request);
@@ -235,9 +216,6 @@ public class MemberService {
             throw new ApiException(errorResponse);
         }
     }
-
-
-
 
 
     @Transactional
@@ -249,11 +227,8 @@ public class MemberService {
             throw new CustomException(ErrorCode.NO_MEMBER_TO_UPDATE_FCM_TOKEN);
 
 
-
         member.changeFcmToken(fcmToken);
     }
-
-
 
 
     // 마이페이지 조회
@@ -278,10 +253,6 @@ public class MemberService {
     }
 
 
-
-
-
-
     private void verifyCode(String code, String phoneNumber) throws Exception {
 
         // 레디스에 저장된 인증정보 가져오기
@@ -303,11 +274,6 @@ public class MemberService {
     }
 
 
-
-
-
-
-
     public void verifyToken(String token, String phoneNumber) throws Exception {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
@@ -321,13 +287,10 @@ public class MemberService {
         secretKey = aesDecrypt(secretKey);
 
 
-        if (!hashEncrypt(phoneNumber, secretKey).equals(token)){
+        if (!hashEncrypt(phoneNumber, secretKey).equals(token)) {
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
         }
     }
-
-
-
 
 
     private String getRandomKey() {
@@ -343,9 +306,6 @@ public class MemberService {
 
         return sb.toString();
     }
-
-
-
 
 
     private String getRandomPassword() {
@@ -369,9 +329,6 @@ public class MemberService {
     }
 
 
-
-
-
     private String hashEncrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), alg);
 
@@ -382,9 +339,6 @@ public class MemberService {
 
         return hashed;
     }
-
-
-
 
 
     public String aesEncrypt(String s) throws Exception {
@@ -398,9 +352,6 @@ public class MemberService {
     }
 
 
-
-
-
     public String aesDecrypt(String s) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
 
@@ -412,17 +363,12 @@ public class MemberService {
     }
 
 
+    private void sendSms(String toPhoneNumber, String content) {
 
-
-
-
-    private void sendSms(String toPhoneNumber, String content){
-        
         Message message = new Message();
 
         message.setFrom(fromNumber);
         message.setTo(toPhoneNumber);
-
 
 
         message.setText(content);
@@ -432,15 +378,17 @@ public class MemberService {
         try {
             // sms 보내기
             smsResponse = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
         }
 
 
         // 2000코드 : 잘 접수됨.
         // 아닌 경우
-        if (!smsResponse.getStatusCode().equals("2000")){
+        if (!smsResponse.getStatusCode().equals("2000")) {
             throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
         }
-
     }
+
+
+}
