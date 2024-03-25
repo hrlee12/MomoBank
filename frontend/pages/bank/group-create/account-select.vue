@@ -42,7 +42,7 @@ const goNext = () => {
       :key="index"
       @click="selectAccount(index)"
       class="account"
-      :class="{ 'selected-account': selectedId == index }"
+      :class="{ selected: selectedId == index }"
     >
       <SimpleAccount
         :accountName="account.accountName"
@@ -69,12 +69,6 @@ const goNext = () => {
 .account {
   border-radius: 20px;
   border-color: none;
-}
-
-.selected-account {
-  box-shadow: 3px 3px 10px -3px $primary-color;
-  outline: 3px solid $primary-color;
-  transition-duration: 0.2s;
 }
 
 .prime-btn,
