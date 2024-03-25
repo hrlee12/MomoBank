@@ -11,6 +11,7 @@ const getImageUrl = (imageName, idx) => {
 };
 </script>
 
+<!-- TODO : 유저인지, 방장인지 권한에 따라 납임 수정, 추방 보일지 정하기 -->
 <template>
   <div class="h-screen bg-white">
     <!-- 플러스 아이콘 -->
