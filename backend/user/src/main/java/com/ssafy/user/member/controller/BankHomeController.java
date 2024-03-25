@@ -21,8 +21,8 @@ import java.util.List;
 
 @Tag(name = "은행 api")
 @RestController
-@RequestMapping("/bank")
-public class BankController {
+@RequestMapping("/bank-home")
+public class BankHomeController {
 
     @GetMapping
     @ApiResponse(responseCode = "200", description = "뱅킹 메인 조회 성공",

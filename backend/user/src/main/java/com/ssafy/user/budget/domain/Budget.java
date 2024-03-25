@@ -1,5 +1,6 @@
-package com.ssafy.user.budget.entity;
+package com.ssafy.user.budget.domain;
 
+import com.ssafy.user.budget.dto.request.UpdateBudgetRequest;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "budget")
@@ -38,10 +40,25 @@ public class Budget extends BaseEntity {
     @Column(name = "due_date")
     private Date dueDate;
 
-    @Column(name = "total_money")
-    private long totalMoney;
+    @Column(name = "final_money")
+    private long finalMoney;
+
+    @Column(name = "current_money")
+    @ColumnDefault("0")
+    private long currentMoney;
 
     @ManyToOne
     @JoinColumn(name = "group_info_id")
     private GroupInfo groupInfo;
+
+    public void updateCurrentMoney(long monthlyFee){
+        this.currentMoney += monthlyFee;
+    }
+
+    public void updateBudget(UpdateBudgetRequest request){
+        this.monthlyDueDate = request.monthlyDueDate();
+        this.name = request.name();
+        this.dueDate = request.finalDueDate();
+        this.finalMoney = request.finalFee();
+    }
 }

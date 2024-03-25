@@ -25,12 +25,14 @@ public enum ErrorCode {
     NO_SUCH_CARD_PRODUCT(FORBIDDEN, "존재하지 않는 카드 상품입니다."),
     NO_SUCH_CARD_INFO(FORBIDDEN, "존재하지 않는 카드입니다."),
     NO_SUCH_GROUP_INFO(FORBIDDEN, "존재하지 않는 모임입니다."),
+    NO_SUCH_BUDGET(FORBIDDEN, "존재하지 않는 예산입니다."),
     DELETED_ACCOUNT(FORBIDDEN, "이미 삭제 된 계좌입니다."),
     DELETED_MEMBER(FORBIDDEN, "이미 삭제 된 회원입니다."),
     DELETED_ACCOUNT_PRODUCT(FORBIDDEN, "이미 삭제 된 계좌 상품입니다."),
     DELETED_CARD_PRODUCT(FORBIDDEN, "이미 삭제 된 카드 상품입니다."),
     DELETED_CARD_INFO(FORBIDDEN, "이미 삭제 된 카드입니다."),
     DELETED_GROUP_INFO(FORBIDDEN, "이미 삭제 된 모임입니다."),
+    DELETED_BUDGET(FORBIDDEN, "이미 삭제 된 예산입니다."),
     YET_TO_BE_DELETED(FORBIDDEN, "잔액이 남아 계좌를 삭제할 수 없습니다.");
     private final HttpStatus status;
     private final String message;
