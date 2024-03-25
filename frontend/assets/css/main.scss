@@ -66,3 +66,9 @@ button {
   color: $primary-color;
   width: 100%;
 }
+
+.selected {
+  box-shadow: 3px 3px 10px -3px $primary-color;
+  outline: 3px solid $primary-color;
+  transition-duration: 0.2s;
+}
