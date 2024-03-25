@@ -22,6 +22,8 @@ const accounts = ref([
 
 const isSelected = ref(false);
 const selectedId = ref();
+const isLoading = ref(false); // 로딩 상태 관리
+
 const selectAccount = (index) => {
   selectedId.value = index;
   isSelected.value = true;
@@ -30,13 +32,31 @@ const selectAccount = (index) => {
 
 const router = useRouter();
 
+// 비동기 데이터 로딩을 시뮬레이션하는 함수
+const loadData = async () => {
+  isLoading.value = true; // 로딩 시작
+  try {
+    // 데이터 로딩 로직 (여기서는 setTimeout을 사용하여 시뮬레이션)
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // 2초 대기
+    // 데이터 로딩 완료
+    isLoading.value = false; // 로딩 완료
+    router.push("/bank/card-select"); // 로딩 완료 후 card-select 페이지로 이동
+  } catch (error) {
+    console.error("데이터 로딩 중 오류 발생:", error);
+    isLoading.value = false; // 에러 시 로딩 상태 해제
+  }
+};
+
 const goNext = () => {
-  router.push(`/`);
+  loadData(); // goNext가 호출되면 loadData 함수 실행
 };
 </script>
 
 <template>
-  <div class="account-container">
+  <div v-if="isLoading">
+    <Loading />
+  </div>
+  <div v-else class="account-container">
     <div
       v-for="(account, index) in accounts"
       :key="index"
