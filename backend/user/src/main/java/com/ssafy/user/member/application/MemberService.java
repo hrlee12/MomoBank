@@ -147,6 +147,7 @@ public class MemberService {
 
     }
 
+    @Transactional
     public void join(JoinRequest request) throws Exception {
 
         verifyToken(request.getAuthToken(), request.getPhoneNumber());
@@ -158,6 +159,12 @@ public class MemberService {
             throw new ApiException(errorResponse);
         }
 
+        Member member = memberRepositoryCustom.findMemberById(request.getId());
+
+        if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_TO_UPDATE_FCM_TOKEN);
+
+        member.changeFcmToken(request.getFcmToken());
     }
 
 //    public void join(JoinRequest request) throws Exception {
