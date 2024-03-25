@@ -31,7 +31,8 @@ const pageTitle = computed(() => {
     return "모임 인원";
   } else if (
     route.name === "groups-announcement" ||
-    route.name === "groups-announcement-detail"
+    route.name === "groups-announcement-detail" ||
+    route.name === "groups-announcement-vote"
   ) {
     return "공지사항";
   }

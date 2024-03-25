@@ -1,11 +1,18 @@
 <script setup>
-import { ref } from "vue";
-
-const isEditMode = ref(false);
-
 definePageMeta({
   layout: "groups",
 });
+
+const voteList = [
+  { name: "우리 이제 일본 여행 간다!" },
+  { name: "우리 이제 대만 여행 간다!" },
+  { name: "우리 이제 중국 여행 간다!" },
+  { name: "우리 이제 중국 여행 간다!" },
+  { name: "우리 이제 중국 여행 간다!" },
+  { name: "우리 이제 중국 여행 간다!" },
+  { name: "우리 이제 중국 여행 간다!" },
+  { name: "우리 이제 중국 여행 간다!" },
+];
 
 // Define a method to dynamically require images
 const getImageUrl = (imageName, idx) => {
@@ -14,11 +21,7 @@ const getImageUrl = (imageName, idx) => {
   else if (idx == 1) return "/images/" + imageName;
   else console.log("Image code error");
 };
-
-const textVal = "우리 이제 일본 여행 간다!! 돈 모았으니 출발!! ";
-const fileUrl = "/path/to/example.pdf";
 </script>
-
 <template>
   <div class="h-screen bg-white">
     <div class="px-4">
@@ -33,35 +36,28 @@ const fileUrl = "/path/to/example.pdf";
         <div>작성자:김성수</div>
         <div>작성일:2024.3.12 화요일</div>
       </div>
-      <div class="px-2 py-2 mb-4 border-2 rounded-xl h-72">
-        <textarea
-          class="w-full h-full overflow-y-auto whitespace-normal"
-          :value="textVal"
-          :readonly="!isEditMode"
-        ></textarea>
-      </div>
-
-      <a
-        :href="fileUrl"
-        download
-        class="flex items-center justify-between border-b-[1px] border-gray-color pb-2 pr-2 pl-2"
-      >
-        <div class="text-gray-color">Img.png</div>
-        <div class="w-7 h-7 text-gray-color">
-          <img :src="getImageUrl('download-icon.png', 0)" alt="download-icon" />
+      <div class="h-64 px-6 py-6 mb-4 overflow-y-auto border-2">
+        <div
+          class="py-2 text-xl font-bold"
+          v-for="item in voteList"
+          :key="item.id"
+        >
+          <input
+            class="border-2 border-main-color"
+            type="radio"
+            :value="item.name"
+            :id="item.name"
+            name="vote"
+          />
+          <label class="pl-2" :for="item.name">{{ item.name }}</label>
         </div>
-      </a>
+      </div>
     </div>
     <div class="flex justify-end px-4 mt-4 space-x-4">
       <button
         class="px-4 py-2 font-bold text-white w- rounded-xl bg-main-color hover:bg-blue-700"
       >
-        수정
-      </button>
-      <button
-        class="px-4 py-2 font-bold text-white rounded-xl bg-negative-color hover:bg-red-700"
-      >
-        삭제
+        선택
       </button>
     </div>
   </div>
