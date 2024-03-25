@@ -46,9 +46,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -183,33 +181,35 @@ public class MemberService {
     public void sendNewPassword(SendNewPasswordRequest request) {
 
 
-        ResponseEntity response;
+        MemberToCheckDTO member = memberRepositoryCustom.findMemberToCheckDtoByIdAndPhoneNumber(request.getId(), request.getPhoneNumber());
+
+        if (member == null) {
+            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+        }
+
+        // 랜덤 패스워드 생성
+        String newPassword = getRandomPassword();
+
+
+        String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
+
+        // sms 발송
+        sendSms(request.getPhoneNumber(), message);
+
+        Map<String, String> toBankRequest = new HashMap<>();
+
+        toBankRequest.put("id", request.getId());
+        toBankRequest.put("phoneNumber", request.getPhoneNumber());
+        toBankRequest.put("newPassword", BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+
+
 
         try {
-            response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.PUT, request);
+            restTemplateUtil.send(bankUrl + "/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
         } catch (HttpClientErrorException  e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
-
-        ReturnPasswordDTO returnPasswordDTO = (ReturnPasswordDTO)response.getBody();
-
-        String newPassword = returnPasswordDTO.getNewPassword();
-
-        String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
-
-        try {
-            // sms 발송
-            sendSms(request.getPhoneNumber(), message);
-        } catch (CustomException e) {
-            try {
-                response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.PUT, request);
-            } catch (HttpClientErrorException  exception) {
-                ErrorResponse errorResponse = exception.getResponseBodyAs(ErrorResponse.class);
-                throw new ApiException(errorResponse);
-            }
-        }
-
 
 
     }
@@ -337,25 +337,25 @@ public class MemberService {
         return sb.toString();
     }
 
-//    private String getRandomPassword() {
-//        String alphabet = "abcdefghijknmlopqrstuvwxyz";
-//        String number = "0123456789";
-//
-//        SecureRandom random = new SecureRandom();
-//        StringBuilder sb = new StringBuilder();
-//
-//        for (int i = 0; i < 5; i++) {
-//            int index = random.nextInt(alphabet.length());
-//            sb.append(alphabet.charAt(index));
-//        }
-//
-//        for (int i = 0; i < 5; i++) {
-//            int index = random.nextInt(number.length());
-//            sb.append(number.charAt(index));
-//        }
-//
-//        return sb.toString();
-//    }
+    private String getRandomPassword() {
+        String alphabet = "abcdefghijknmlopqrstuvwxyz";
+        String number = "0123456789";
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(alphabet.length());
+            sb.append(alphabet.charAt(index));
+        }
+
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(number.length());
+            sb.append(number.charAt(index));
+        }
+
+        return sb.toString();
+    }
 
 
     private String hashEncrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -391,7 +391,7 @@ public class MemberService {
     }
 
 
-    private void sendSms(String toPhoneNumber, String content) throws CustomException{
+    private void sendSms(String toPhoneNumber, String content){
         
         Message message = new Message();
 
@@ -408,7 +408,6 @@ public class MemberService {
             // sms 보내기
             smsResponse = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         } catch(Exception e) {
-            log.info(e.getMessage());
             throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
         }
 

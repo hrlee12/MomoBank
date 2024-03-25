@@ -78,5 +78,11 @@ public class MemberRepositoryCustom {
                 .fetchOne();
     }
 
+    public MemberToCheckDTO findMemberToCheckDtoByIdAndPhoneNumber(String id, String phoneNumber){
+        return queryFactory.select(new QMemberToCheckDTO(member.id))
+                .from(member)
+                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber).and(member.isDeleted.eq(false))))
+                .fetchOne();
+    }
 
 }

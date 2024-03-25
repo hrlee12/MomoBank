@@ -140,7 +140,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "입력한 정보와 일치하는 회원 정보 없음"),
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
-    @PostMapping("/passwords")
+    @PatchMapping("/temporary-passwords")
     public ResponseEntity sendNewPassword(@RequestBody SendNewPasswordRequest request) {
 
         memberService.sendNewPassword(request);
