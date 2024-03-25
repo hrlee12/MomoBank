@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+definePageMeta({
+  layout: "action",
+});
+</script>
 
 <template>
   <div></div>

@@ -1,6 +1,9 @@
 <script setup>
 import BankAccount from "@/components/bank/BankAccount.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
@@ -25,6 +28,10 @@ const accounts = ref([
   { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
 ]);
 const isLastSlide = ref(false);
+
+const goToGroup = (param) => {
+  router.push(`/groups`);
+};
 </script>
 
 <template>
@@ -75,7 +82,7 @@ const isLastSlide = ref(false);
 
     <!-- 메인 모임 리스트 -->
     <div class="club-container content">
-      <div class="club-content">
+      <div class="club-content" @click="goToGroup('5반 5린이들')">
         <div class="club-item">
           <h2>5반 5린이들</h2>
           <h3>160,000원</h3>
