@@ -49,7 +49,10 @@ public class GroupMemberService {
         String secretKey = encryptUtil.getRandomKey();
 
         GroupInfo group = groupInfoRepositoryImpl.getGroupInfoById(groupId);
-        System.out.println(group.getGroupName());
+
+        if (group == null) {
+            throw new CustomException(ErrorCode.NO_GROUP_INFO);
+        }
 
         Invite invite = Invite.builder()
                 .group(group)
