@@ -1,16 +1,5 @@
-package com.ssafy.user.groupMember.entity;
+package com.ssafy.user.groupMember.domain;
 
-
-import com.ssafy.user.common.BaseEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 //
 //@Entity
 //@Getter

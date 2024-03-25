@@ -2,6 +2,7 @@ package com.ssafy.user.member.domain;
 
 import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.common.BaseEntity;
+import com.ssafy.user.groupMember.domain.GroupMember;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,26 +60,22 @@ public class Member extends BaseEntity {
     @ColumnDefault("50")
     private int sincerity;
 
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
 
-
-
-
-
-
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
+    private List<GroupMember> groupMembers;
 
     public void changeProvider() {
         this.provider = "kakao";
     }
 
 
-    public void changePassword(String password){
+    public void changePassword(String password) {
         this.password = password;
     }
 
-    public void changeFcmToken(String fcmToken){
+    public void changeFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
     }
 
@@ -93,8 +90,6 @@ public class Member extends BaseEntity {
         this.birthDate = birthDate;
         this.sincerity = 50;
     }
-
-
 
 
 }

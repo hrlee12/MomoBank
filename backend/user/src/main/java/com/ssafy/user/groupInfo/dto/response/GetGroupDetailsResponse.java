@@ -1,10 +1,12 @@
 package com.ssafy.user.groupInfo.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetGroupDetailsResponse {
@@ -12,5 +14,7 @@ public class GetGroupDetailsResponse {
     private int accountId;
     private boolean status;
     private String accountNumber;
-    private int balance;
+    private long balance;
+
+
 }

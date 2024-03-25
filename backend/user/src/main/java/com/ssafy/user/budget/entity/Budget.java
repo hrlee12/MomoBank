@@ -1,7 +1,7 @@
 package com.ssafy.user.budget.entity;
 
 import com.ssafy.user.common.BaseEntity;
-import com.ssafy.user.groupInfo.entity.GroupInfo;
+import com.ssafy.user.groupInfo.domain.GroupInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
