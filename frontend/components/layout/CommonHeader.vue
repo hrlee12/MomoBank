@@ -46,6 +46,10 @@ const routerNameToInfoMap = {
     title: "계좌선택",
     sideMenuActive: NO_SIDE_MENU,
   },
+  "bank-group-create-card-select": {
+    title: "카드선택",
+    sideMenuActive: NO_SIDE_MENU,
+  },
 };
 
 const pageTitle = computed(() => {

@@ -27,7 +27,7 @@ defineProps({
   padding: 0% 8%;
 }
 .item {
-  margin: 6% 0;
+  margin: 4% 0;
 }
 
 button {
