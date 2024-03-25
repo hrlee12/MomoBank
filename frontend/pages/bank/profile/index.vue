@@ -37,7 +37,7 @@ onPhone();
 
 <template>
   <!-- 메인 모임 리스트 -->
-  <div class="container">
+  <div class="container content">
     <div class="club-content">
       <div class="item">
         <p>아이디</p>
@@ -82,6 +82,7 @@ onPhone();
 
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
+@import "@/assets/css/content.scss";
 
 img {
   height: 2vh;
@@ -92,13 +93,7 @@ img {
 
 .container {
   width: 85%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px solid $light-gray-color;
-  border-radius: 20px;
   padding: 0 1vh;
-  background-color: white;
 
   .center {
     align-self: center;

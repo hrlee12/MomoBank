@@ -30,7 +30,7 @@ const hideActive = () => {
 </script>
 
 <template>
-  <div v-if="accountName" class="account-content">
+  <div v-if="accountName" class="content account-content">
     <div class="account-item">
       <div class="account-info">
         <h2>{{ accountName }}</h2>
@@ -72,13 +72,7 @@ const hideActive = () => {
 .account-content {
   min-height: 200px;
   padding: 2vh 3vw 2vh 3vw;
-
-  border: 1px solid #a3a3a3;
-  border-radius: 20px;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  border: 1px solid #a3a3a3 !important;
   height: 25vh;
 
   transition: transform 0.5s ease-in-out;

@@ -74,7 +74,7 @@ const isLastSlide = ref(false);
     </Swiper>
 
     <!-- 메인 모임 리스트 -->
-    <div class="club-container">
+    <div class="club-container content">
       <div class="club-content">
         <div class="club-item">
           <h2>5반 5린이들</h2>
@@ -124,6 +124,7 @@ const isLastSlide = ref(false);
 
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
+@import "@/assets/css/content.scss";
 
 h1 {
   padding-top: 0.5vh;
@@ -184,13 +185,7 @@ header {
 
   .club-container {
     width: 85%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    border: 1px solid $light-gray-color;
-    border-radius: 20px;
     padding: 1vh;
-    background-color: white;
     align-self: center;
 
     .center {
