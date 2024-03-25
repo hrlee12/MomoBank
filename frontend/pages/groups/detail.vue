@@ -1,7 +1,5 @@
 <script setup>
-import GroupsHeader from "~/components/layout/GroupsHeader.vue";
 import AccountInformation from "~/components/group/AccountInformation.vue";
-import GroupFooter from "~/components/layout/GroupFooter.vue";
 
 definePageMeta({
   layout: "groups",
@@ -63,25 +61,100 @@ const groupDetails = [
   </div>
 
   <!-- 상세 정보 -->
+
   <div class="h-full pb-16 mt-4 bg-white">
     <div class="flex-col ml-3 mr-3">
       <div
         class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-        v-for="(item, index) in groupDetails"
-        :key="index"
       >
         <div>
-          <div class="text-xl font-bold">{{ item.title }}</div>
-          <div class="font-semibold">{{ item.content }}</div>
+          <div class="text-xl font-bold">모임명</div>
+          <div class="font-semibold">5반5린이들</div>
         </div>
 
-        <div v-if="item.icon !== undefined" class="h-5 rotate-180 w-7">
+        <div class="h-5 rotate-180 w-7">
           <img
-            :src="getImageUrl ? getImageUrl(item.icon, 0) : ''"
-            :alt="item.icon"
+            :src="getImageUrl ? getImageUrl('arrow-icon.png', 0) : ''"
+            alt="arrow-icon"
           />
         </div>
       </div>
+    </div>
+    <div class="flex-col ml-3 mr-3">
+      <div
+        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
+      >
+        <div>
+          <div class="text-xl font-bold">목적</div>
+          <div class="font-semibold">5반 5린이들 친해지자!</div>
+        </div>
+
+        <div class="h-5 rotate-180 w-7">
+          <img
+            :src="getImageUrl ? getImageUrl('arrow-icon.png', 0) : ''"
+            alt="arrow-icon"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex-col ml-3 mr-3">
+      <div
+        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
+      >
+        <div>
+          <div class="text-xl font-bold">가용 금액</div>
+          <div class="font-semibold">1,234,567원</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col ml-3 mr-3">
+      <div
+        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
+      >
+        <div>
+          <div class="text-xl font-bold">총 납부 금액</div>
+          <div class="font-semibold">780,000원</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col ml-3 mr-3">
+      <div
+        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
+      >
+        <div>
+          <div class="text-xl font-bold">납부 일자</div>
+          <div class="font-semibold">매월 11일</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col ml-3 mr-3">
+      <div
+        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
+      >
+        <div>
+          <div class="text-xl font-bold">전체 금액</div>
+          <div class="font-semibold">2,345,678원</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col ml-3 mr-3">
+      <NuxtLink to="/groups/view-all-group-members">
+        <div
+          class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
+        >
+          <div>
+            <div class="text-xl font-bold">모임 인원</div>
+            <div class="font-semibold">6명</div>
+          </div>
+
+          <div class="h-5 rotate-180 w-7">
+            <img
+              :src="getImageUrl ? getImageUrl('arrow-icon.png', 0) : ''"
+              alt="arrow-icon"
+            />
+          </div>
+        </div>
+      </NuxtLink>
     </div>
   </div>
 </template>
