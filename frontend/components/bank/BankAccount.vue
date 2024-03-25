@@ -94,6 +94,8 @@ const hideActive = () => {
   .money-content {
     display: flex;
     justify-content: center;
+    align-self: center;
+    width: 100%;
 
     h1 {
       margin-right: 2%;
@@ -102,6 +104,7 @@ const hideActive = () => {
     button {
       background-color: $light-gray-color;
       border-radius: 20px;
+      height: 90%;
       min-width: 50px;
       color: $gray-color;
     }
