@@ -1,6 +1,4 @@
 <script setup>
-import GroupsHeader from "~/components/layout/GroupsHeader.vue";
-
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;
