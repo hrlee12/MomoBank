@@ -11,45 +11,77 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "Member")
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private int memberId;
 
-    @Column(length = 255, name = "id", nullable = false)
+    @Size(min = 0, max = 100)
+    @Column(nullable = false, length = 100)
     private String id;
 
-    @Column(length = 255, name = "email")
-    private String email;
 
-    @Column(length = 255, name = "password", nullable = false)
-    private String password;
-
-    @Column(length = 20, name = "name", nullable = false)
+    @Size(min = 0, max = 50)
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(length = 50, name = "phoneNumber", nullable = false)
+    @Size(min = 0, max = 100)
+    @Column(nullable = false, length = 100)
+    private String password;
+
+    @Size(min = 0, max = 50)
+    @Column(nullable = false, length = 50)
     private String phoneNumber;
 
-    @Column(name = "birth_date", nullable = false)
-    private Date birthDate;
 
-    @Column(name = "sincerity", nullable = false)
+    @Column(nullable = false)
+    private LocalDateTime birthDate;
+
+    @Size(min = 0, max = 50)
+    @Column(length = 50)
+    @ColumnDefault("\"momo\"")
+    private String provider;
+
+    @ColumnDefault("50")
     private int sincerity;
+
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<Account> accounts;
+
+    public void changeProvider() {
+        this.provider = "kakao";
+    }
+
+    public void changePassword(String password){
+        this.password = password;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+
+
+    @Builder
+    public Member(String id, String name, String password, String phoneNumber,
+                  LocalDateTime birthDate) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.sincerity = 50;
+    }
+
+
 }

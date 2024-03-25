@@ -15,7 +15,7 @@ server:
 
 spring:
   config:
-    import: classpath:application.properties
+    import: classpath:application-private.yml
   jpa:
     hibernate:
       ddl-auto: update
@@ -29,5 +29,6 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: trace
+
 
 
