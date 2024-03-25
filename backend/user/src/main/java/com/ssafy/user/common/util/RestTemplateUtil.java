@@ -24,7 +24,6 @@ public class RestTemplateUtil{
 
         HttpEntity entity = new HttpEntity(body, headers);
 
-//        RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity response = restTemplate.exchange(
                 uri,

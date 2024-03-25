@@ -71,6 +71,8 @@ public class MemberService {
 
 
 
+
+    // 전화번호 인증코드 생성
     public void makeVerificationCode(String phoneNumber) throws Exception {
 
         // 이미 회원가입된 전화번호인지 확인
@@ -85,8 +87,6 @@ public class MemberService {
             redisUtil.deleteValues(phoneNumber);
 
 
-
-
         // 랜덤한 숫자(6글자) 생성
         String verificationNumber = "";
         Random random = new Random();
@@ -98,8 +98,6 @@ public class MemberService {
         String message = "인증번호 [" + verificationNumber + "]를 입력하십시오.";
         sendSms(phoneNumber, message);
 
-
-
         // redis에 저장
         redisUtil.setValues(phoneNumber, aesEncrypt(verificationNumber), Duration.ofSeconds(60*3));
 
@@ -109,9 +107,10 @@ public class MemberService {
 
 
 
-
+    // 회원가입 시, 전화번호 인증코드 검증하고 인증토큰 발급
     public String getVerificationToken(String code, String phoneNumber) throws Exception {
 
+        // 인증코드 검증
         verifyCode(code, phoneNumber);
 
         // 전화번호 인증 토큰 생성
@@ -125,8 +124,13 @@ public class MemberService {
     }
 
 
+
+
+
+    // 전화번호 수정 시에, 인증코드 검증하고 수정.
     public void updatePhoneNumber(String id, String phoneNumber, String code) throws Exception {
 
+        // 인증코드 검증
         verifyCode(code, phoneNumber);
 
 
@@ -136,22 +140,28 @@ public class MemberService {
         request.put("id", id);
         request.put("newPhoneNumber", phoneNumber);
 
+        // 전화번호 수정
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/phone-numbers", HttpMethod.PUT, request);
         } catch (HttpClientErrorException  e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
-
-
-
     }
 
+
+
+
+
+
+    // 회원가입
     @Transactional
     public void join(JoinRequest request) throws Exception {
 
+        // 전화번호 인증토큰 검증
         verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
+        // 회원 정보 저장하기
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
         } catch (HttpClientErrorException  e) {
@@ -159,6 +169,8 @@ public class MemberService {
             throw new ApiException(errorResponse);
         }
 
+        // fcm토큰은 계정계에 저장하지 않음.
+        // -> 채널계에서 따로 저장해주기
         Member member = memberRepositoryCustom.findMemberById(request.getId());
 
         if (member == null)
@@ -167,36 +179,16 @@ public class MemberService {
         member.changeFcmToken(request.getFcmToken());
     }
 
-//    public void join(JoinRequest request) throws Exception {
-//
-//        // 토큰 검증
-//        verifyToken(request.getAuthToken(), request.getPhoneNumber());
-//
-//
-//        // 이미 가입된 아이디면 예외처리
-//        if(memberRepositoryCustom.findMemberToCheckDtoById(request.getId()) != null)
-//            throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
-//
-//        // 멤버 엔티티 생성 및 저장
-//        Member member = Member.builder()
-//                .id(request.getId())
-//                .name(request.getName())
-//                .phoneNumber(request.getPhoneNumber())
-//                .birthDate(toLocalDateTime(request.getBirthdate()))
-//                .password(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()))
-////                .password(request.getPassword())
-//                .build();
-//
-//
-//        memberRepository.save(member);
-//    }
 
 
 
+
+
+    // 임시 비밀번호 발급
     @Transactional
     public void sendNewPassword(SendNewPasswordRequest request) {
 
-
+        // 아이디, 기존 비밀번호로 회원 찾기
         MemberToCheckDTO member = memberRepositoryCustom.findMemberToCheckDtoByIdAndPhoneNumber(request.getId(), request.getPhoneNumber());
 
         if (member == null) {
@@ -212,49 +204,28 @@ public class MemberService {
         // sms 발송
         sendSms(request.getPhoneNumber(), message);
 
+
         Map<String, String> toBankRequest = new HashMap<>();
 
         toBankRequest.put("id", request.getId());
         toBankRequest.put("phoneNumber", request.getPhoneNumber());
         toBankRequest.put("newPassword", BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 
-
-
+        // 임시 비밀번호 저장
         try {
             restTemplateUtil.send(bankUrl + "/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
         } catch (HttpClientErrorException  e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
-
-
     }
 
 
 
 
-//    @Transactional
-//    public void sendNewPassword(String id, String phoneNumber) {
-//
-//        // 회원정보 일치 확인
-//        Member member = memberRepositoryCustom.findMemberByIdAndPhoneNumber(id, phoneNumber);
-//
-//        if (member == null)
-//            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
-//
-//        // 랜덤 패스워드 생성
-//        String newPassword = getRandomPassword();
-//
-//        String message = "임시 비밀번호는 [" + newPassword + "] 입니다.";
-//
-//        // sms 발송
-//        sendSms(phoneNumber, message);
-//
-//        // 비밀번호 변경
-//        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
-//
-//
-//    }
+
+
+    // 비밀번호 변경
     public void updatePassword(PasswordUpdateRequest request)  {
 
         try {
@@ -267,24 +238,6 @@ public class MemberService {
 
 
 
-//    @Transactional
-//    public void updatePassword(String id, String currentPassword, String newPassword) {
-//
-//
-//        Member member = memberRepositoryCustom.findMemberById(id);
-//
-//
-//        if (member == null)
-//            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
-//
-//        // 비밀번호 일치 여부 확인
-//        if (!BCrypt.checkpw(currentPassword, member.getPassword())){
-//            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
-//        }
-//
-//        // 비밀번호 변경
-//        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
-//    }
 
 
     @Transactional
@@ -300,12 +253,18 @@ public class MemberService {
         member.changeFcmToken(fcmToken);
     }
 
+
+
+
+    // 마이페이지 조회
     public MypageResponse getUserInfo(String id) {
+        // 멤버 정보 조회
         MemberDTO member = memberRepositoryCustom.findMemberDtoById(id);
 
         if (member == null)
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
 
+        // response 만들기
         MypageResponse mypageResponse = MypageResponse.builder()
                 .id(member.getId())
                 .birthDate(member.getBirthDate().toLocalDate())
@@ -317,6 +276,10 @@ public class MemberService {
 
         return mypageResponse;
     }
+
+
+
+
 
 
     private void verifyCode(String code, String phoneNumber) throws Exception {
@@ -341,6 +304,10 @@ public class MemberService {
 
 
 
+
+
+
+
     public void verifyToken(String token, String phoneNumber) throws Exception {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
@@ -357,10 +324,11 @@ public class MemberService {
         if (!hashEncrypt(phoneNumber, secretKey).equals(token)){
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
         }
-
-
-
     }
+
+
+
+
 
     private String getRandomKey() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -375,6 +343,10 @@ public class MemberService {
 
         return sb.toString();
     }
+
+
+
+
 
     private String getRandomPassword() {
         String alphabet = "abcdefghijknmlopqrstuvwxyz";
@@ -397,6 +369,9 @@ public class MemberService {
     }
 
 
+
+
+
     private String hashEncrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), alg);
 
@@ -409,6 +384,9 @@ public class MemberService {
     }
 
 
+
+
+
     public String aesEncrypt(String s) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
 
@@ -419,6 +397,10 @@ public class MemberService {
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
+
+
+
+
     public String aesDecrypt(String s) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
 
@@ -428,6 +410,10 @@ public class MemberService {
 
         return new String(decrypted, "UTF-8");
     }
+
+
+
+
 
 
     private void sendSms(String toPhoneNumber, String content){
@@ -458,10 +444,3 @@ public class MemberService {
         }
 
     }
-
-//    // String을 LocalDateTime으로 변환
-//    private LocalDateTime toLocalDateTime(String date) {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        return LocalDateTime.parse(date + " 00:00:00", formatter);
-//    }
-}
