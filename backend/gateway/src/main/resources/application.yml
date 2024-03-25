@@ -9,11 +9,11 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: http://user:8082
+          uri: http://localhost:8082
           predicates:
             - Path=/api/user/**
         - id: community-service
-          uri: http://community:8083
+          uri: http://localhost:8083
           predicates:
             - Path=/api/community/**
         - id: bank-service
