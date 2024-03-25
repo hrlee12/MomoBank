@@ -1,32 +1,63 @@
 <script setup>
 import { ref } from "vue";
+import SimpleNotice from "~/components/bank/SimpleNotice.vue";
 
 definePageMeta({
   layout: "bank",
 });
 
 const noticeList = ref([
-  { type: 0, title: "회비요청", date: "24-02-12" },
-  { accountName: "효리은행", accountNumber: "123-1234-12346", money: 2000000 },
-  { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
-  { accountName: "소이은행", accountNumber: "123-1234-12348", money: 100000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
+  // status 0은 안읽은 것, 1은 읽은 것
+  {
+    title: "회비요청",
+    content: "알림 내용 1",
+    date: "24-02-12",
+    status: 0,
+  },
+  {
+    title: "회비요청",
+    content: "알림 내용 2",
+    date: "24-02-13",
+    status: 0,
+  },
+  {
+    title: "회비요청",
+    content: "알림 내용 3",
+    date: "24-02-14",
+    status: 1,
+  },
+  {
+    title: "회비요청",
+    content: "알림 내용 4",
+    date: "24-02-15",
+    status: 1,
+  },
 ]);
 </script>
 
 <template>
-  <div class="account-container">
+  <div class="notice-container">
     <div v-for="(notice, index) in noticeList" :key="index">
-      <SimpleAccount
-        :accountName="account.accountName"
-        :accountNumber="account.accountNumber"
-        :money="account.money"
+      <SimpleNotice
+        :title="notice.title"
+        :date="notice.date"
+        :content="notice.content"
+        :status="notice.status"
       />
     </div>
-    <AddBox to="/bank/remit" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
+
+.notice-container {
+  height: 95vh;
+  padding-top: 8vh;
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: absolute;
+  background-color: white;
+}
 </style>

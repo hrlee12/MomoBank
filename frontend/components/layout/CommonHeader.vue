@@ -92,6 +92,7 @@ header {
   padding: 3vh 1.5vh 1vh 1.5vh;
   display: flex;
   align-items: center;
+  z-index: 2;
 
   .link-container {
     display: flex;

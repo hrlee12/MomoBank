@@ -58,7 +58,7 @@ const hideActive = () => {
       <NuxtLink to="/bank/remit">송금하기</NuxtLink>
     </div>
   </div>
-  <div v-else class="account-content">
+  <div v-else class="content account-content">
     <NuxtLink to="/bank/remit"
       ><div><img :src="getImageUrl('add-icon.png', 0)" alt="" /></div>
       <h1>계좌 개설</h1></NuxtLink
@@ -73,6 +73,7 @@ const hideActive = () => {
   min-height: 200px;
   padding: 2vh 3vw 2vh 3vw;
   border: 1px solid #a3a3a3 !important;
+
   height: 25vh;
 
   transition: transform 0.5s ease-in-out;
