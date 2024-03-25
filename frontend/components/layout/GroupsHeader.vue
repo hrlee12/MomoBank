@@ -27,6 +27,8 @@ const pageTitle = computed(() => {
     return "나의 모임";
   } else if (route.name === "groups-report") {
     return "리포트";
+  } else if (route.name === "groups-view-all-group-members") {
+    return "모임 인원";
   }
 });
 </script>
