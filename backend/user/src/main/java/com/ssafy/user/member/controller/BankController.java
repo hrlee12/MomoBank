@@ -50,6 +50,7 @@ public class BankController {
 
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "뱅킹 메인 조회 성공", responseData);
+
     }
 
 }
