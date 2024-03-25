@@ -108,33 +108,42 @@ public class MemberService {
 
 
 
-    public String verifyCode(String code, String phoneNumber) throws Exception {
 
-        // 레디스에 저장된 인증정보 가져오기
-        String correctCode = redisUtil.getValues(phoneNumber);
 
-        // 없으면 예외처리
-        if (correctCode == null)
-            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+    public String getVerificationToken(String code, String phoneNumber) throws Exception {
 
-        correctCode = aesDecrypt(correctCode);
-
-        // 코드가 틀리면 예외처리
-        if (!correctCode.equals(code))
-            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
-
-        // 인증된 정보는 제거
-        redisUtil.deleteValues(phoneNumber);
+        verifyCode(code, phoneNumber);
 
         // 전화번호 인증 토큰 생성
         String secretKey = getRandomKey();
 
         // (전화번호 : 시크릿 키) 저장
         // 만료시간을 지정하기 위해 레디스에 저장.
-        // 향후 시크릿키 암호화로 바꾸기
-        redisUtil.setValues(phoneNumber, aesEncrypt(secretKey), Duration.ofSeconds(20*60));
+        redisUtil.setValues(phoneNumber, aesEncrypt(secretKey), Duration.ofSeconds(20 * 60));
 
         return hashEncrypt(phoneNumber, secretKey);
+    }
+
+
+    public void updatePhoneNumber(String id, String phoneNumber, String code) throws Exception {
+
+        verifyCode(code, phoneNumber);
+
+
+        // 전화번호 변경
+        Map<String, String> request = new HashMap<>();
+
+        request.put("id", id);
+        request.put("newPhoneNumber", phoneNumber);
+
+        try {
+            ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/phone-numbers", HttpMethod.PUT, request);
+        } catch (HttpClientErrorException  e) {
+            ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
+            throw new ApiException(errorResponse);
+        }
+
+
 
     }
 
@@ -301,6 +310,29 @@ public class MemberService {
 
         return mypageResponse;
     }
+
+
+    private void verifyCode(String code, String phoneNumber) throws Exception {
+
+        // 레디스에 저장된 인증정보 가져오기
+        String correctCode = redisUtil.getValues(phoneNumber);
+
+        // 없으면 예외처리
+        if (correctCode == null)
+            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+
+        correctCode = aesDecrypt(correctCode);
+
+        // 코드가 틀리면 예외처리
+        if (!correctCode.equals(code))
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+
+        // 인증된 정보는 제거
+        redisUtil.deleteValues(phoneNumber);
+
+    }
+
+
 
     public void verifyToken(String token, String phoneNumber) throws Exception {
 
