@@ -14,18 +14,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/groups")
 @Tag(name = "모임원 관리 api")
+@RequiredArgsConstructor
 public class GroupMemberController {
 
-    private GroupMemberService groupMemberService;
+    private final GroupMemberService groupMemberService;
 
     @GetMapping("/{groupId}/members")
     @Operation(summary = "모임원 목록 불러오기")
@@ -41,14 +45,15 @@ public class GroupMemberController {
     }
 
 
-    @GetMapping("/{groupId}/invite")
+    @PostMapping("/{groupId}/invite")
     @Operation(summary = "모임 초대 링크 생성", responses = {
             @ApiResponse(responseCode = "200", description = "모임원 초대 링크 생성 성공",
                     content = @Content(schema = @Schema(implementation = InviteLinkResponse.class)))
     })
-    public ResponseEntity createInviteLink(@PathVariable String groupId) {
+    public ResponseEntity getInviteLink(@PathVariable String groupId) throws Exception {
 
-        return ResponseEntity.ok().build();
+        String inviteLink = groupMemberService.getInviteLink(Integer.parseInt(groupId));
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임원 초대 링크 생성 성공", new InviteLinkResponse(inviteLink));
     }
 
 
