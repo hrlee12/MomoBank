@@ -28,6 +28,14 @@ const routerNameToInfoMap = {
   "bank-history": { title: "거래내역", sideMenuActive: FULL_MENU },
   "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
   "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
+  "bank-profile-phoneEdit": {
+    title: "전화번호수정",
+    sideMenuActive: NO_SIDE_MENU,
+  },
+  "bank-profile-passwordEdit": {
+    title: "비밀번호수정",
+    sideMenuActive: NO_SIDE_MENU,
+  },
   "bank-remit": { title: "계좌개설", sideMenuActive: FULL_MENU },
   user: { title: "", sideMenuActive: ONLY_ARROW },
   "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },

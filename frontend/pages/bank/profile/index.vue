@@ -1,4 +1,8 @@
 <script setup>
+import { useRouter } from "vue-router"; // useRouter 추가
+
+const router = useRouter(); // useRouter 인스턴스 생성
+
 definePageMeta({
   layout: "user",
 });
@@ -21,6 +25,11 @@ const onPhone = () => {
   userInfo.phone = userInfo.phone
     .replace(/[^0-9]/g, "")
     .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
+};
+
+const goEdit = (param) => {
+  var pageName = param == 0 ? "phoneEdit" : "passwordEdit";
+  router.push(`/bank/profile/${pageName}`);
 };
 
 onPhone();
@@ -51,13 +60,21 @@ onPhone();
       <div class="item">
         <p>전화번호</p>
         <h3>{{ userInfo.phone }}</h3>
-        <img :src="getImageUrl('arrow-icon2.png', 0)" alt="" />
+        <img
+          :src="getImageUrl('arrow-icon2.png', 0)"
+          alt="phone number edit"
+          @click="goEdit(0)"
+        />
       </div>
     </div>
     <div class="club-content">
       <div class="item">
         <p>비밀번호</p>
-        <img :src="getImageUrl('arrow-icon2.png', 0)" alt="" />
+        <img
+          :src="getImageUrl('arrow-icon2.png', 0)"
+          alt="password edit"
+          @click="goEdit(1)"
+        />
       </div>
     </div>
   </div>
