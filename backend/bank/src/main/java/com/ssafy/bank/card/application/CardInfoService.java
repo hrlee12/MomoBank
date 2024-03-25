@@ -2,10 +2,13 @@ package com.ssafy.bank.card.application;
 
 import com.ssafy.bank.account.domain.Account;
 import com.ssafy.bank.account.domain.repository.AccountRepository;
+import com.ssafy.bank.account.dto.response.AccountResponse;
+import com.ssafy.bank.card.domain.Card;
 import com.ssafy.bank.card.domain.CardInfo;
 import com.ssafy.bank.card.domain.CardProduct;
 import com.ssafy.bank.card.domain.repository.CardInfoRepository;
 import com.ssafy.bank.card.domain.repository.CardProductRepository;
+import com.ssafy.bank.card.dto.response.CardInfoResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
@@ -23,7 +26,7 @@ public class CardInfoService {
   private final CardProductRepository cardProductRepository;
   private final CardInfoRepository cardInfoRepository;
 
-  public CardInfo createCardInfo(int memberId, int cardProductId, int accountId){
+  public CardInfoResponse createCardInfo(int memberId, int cardProductId, int accountId){
     Member member = memberRepository.findById(memberId)
         .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
     if (member.isDeleted()) {
@@ -43,19 +46,30 @@ public class CardInfoService {
     }
 
     CardInfo cardInfo = CardInfo.builder()
-        .cardNum("505-01")
+        .cardInfoNum("505-01")
         .cardProduct(cardProduct)
         .account(account)
         .build();
-    return cardInfoRepository.save(cardInfo);
+    cardInfoRepository.save(cardInfo);
+
+    if(cardInfo.getCardProduct().getBank() != null){
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
+    }else{
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
+    }
   }
 
-  public void deleteCardInfo(int cardInfoId){
+  public CardInfoResponse deleteCardInfo(int cardInfoId){
     CardInfo cardInfo = cardInfoRepository.findById(cardInfoId)
         .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_CARD_INFO));
     if(cardInfo.isDeleted()) {
       throw new CustomException(ErrorCode.DELETED_CARD_INFO);
     }
     cardInfo.softDelete();
+    if(cardInfo.getCardProduct().getBank() != null){
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
+    }else{
+      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
+    }
   }
 }

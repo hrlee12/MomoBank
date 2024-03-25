@@ -21,12 +21,6 @@ public class TransferController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "계좌 검색", description = "송금을 위한계좌를 검색합니다.")
-    @GetMapping("/get-account")
-    public ResponseEntity<?> getAccount() {
-        return ResponseEntity.ok().build();
-    }
-
     @Operation(summary = "송금", description = "송금합니다.")
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer() {

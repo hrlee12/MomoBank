@@ -32,15 +32,18 @@ public class CardProduct extends BaseEntity {
     @Column(name = "card_product_id")
     private int cardProductId;
 
+    @Column(length = 255, name = "card_product_img")
+    private String cardInfoImg;
+
     @Column(length = 255, name = "name", nullable = false)
     private String name;
 
     @Column(length = 500, name = "description", nullable = false)
     private String description;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "card_product_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private CardType type;
+    private CardType cardProductType;
 
     @ManyToOne
     @JoinColumn(name = "bank_id")

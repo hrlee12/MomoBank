@@ -27,8 +27,8 @@ public class CardInfo extends BaseEntity {
     @Column(name = "card_info_id")
     private int cardInfoId;
 
-    @Column(length = 255, name = "card_num", nullable = false)
-    private String cardNum;
+    @Column(length = 255, name = "card_info_num", nullable = false)
+    private String cardInfoNum;
 
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
