@@ -16,9 +16,14 @@ public enum ErrorCode {
     PROBLEM_DURING_SENDING_SMS(BAD_GATEWAY, "sms를 보내는 과정에서 문제 발생"),
     INCORRECT_CERTIFICATION_INFO(BAD_REQUEST, "인증정보 불일치"),
     EXPIRED_CERTIFICATION(BAD_REQUEST, "존재하지 않는 인증정보. 휴대전화 번호가 정확한지 확인 요망"),
-    NO_MEMBER_INFO(BAD_REQUEST, "제공된 정보와 일치하는 회원 정보 없음"),
+    NO_MEMBER_INFO(NOT_FOUND, "제공된 정보와 일치하는 회원 정보 없음"),
     INCORRECT_PASSWORD(BAD_REQUEST, "현재 비밀번호 불일치"),
-    NO_MEMBER_TO_UPDATE_FCM_TOKEN(BAD_REQUEST, "fcm 토큰을 갱신할 회원 정보 없음");
+    NO_MEMBER_TO_UPDATE_FCM_TOKEN(BAD_REQUEST, "fcm 토큰을 갱신할 회원 정보 없음"),
+    ERROR_IN_INTERNAL_MICRO_SERVER(INTERNAL_SERVER_ERROR, "안쪽 마이크로 서버의 에러");
     private final HttpStatus status;
     private final String message;
+
+    public ErrorCode findErrorCode(){
+        return ErrorCode.ALREADY_DELETED;
+    }
 }

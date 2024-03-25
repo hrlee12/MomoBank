@@ -1,4 +1,4 @@
-package com.ssafy.user.member.repository.querydsl;
+package com.ssafy.user.member.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.bank.entity.QAccount;
@@ -6,14 +6,10 @@ import com.ssafy.user.member.dto.response.MemberDTO;
 import com.ssafy.user.member.dto.response.MemberToCheckDTO;
 import com.ssafy.user.member.dto.response.QMemberDTO;
 import com.ssafy.user.member.dto.response.QMemberToCheckDTO;
-import com.ssafy.user.member.entity.Member;
-import com.ssafy.user.member.entity.QMember;
-import kotlinx.serialization.Required;
+import com.ssafy.user.member.domain.Member;
+import com.ssafy.user.member.domain.QMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,14 +21,14 @@ public class MemberRepositoryCustom {
     private QAccount account = QAccount.account;
 
 
-    public Member findMemberByIdAndPhoneNumber(String id, String phoneNumber) {
-        return queryFactory.select(member)
-                .from(member)
-                .leftJoin(member.accounts, account)
-                .fetchJoin()
-                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)).and(member.isDeleted.eq(false)))
-                .fetchOne();
-    }
+//    public Member findMemberByIdAndPhoneNumber(String id, String phoneNumber) {
+//        return queryFactory.select(member)
+//                .from(member)
+//                .leftJoin(member.accounts, account)
+//                .fetchJoin()
+//                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)).and(member.isDeleted.eq(false)))
+//                .fetchOne();
+//    }
 
 
 
@@ -82,5 +78,11 @@ public class MemberRepositoryCustom {
                 .fetchOne();
     }
 
+    public MemberToCheckDTO findMemberToCheckDtoByIdAndPhoneNumber(String id, String phoneNumber){
+        return queryFactory.select(new QMemberToCheckDTO(member.id))
+                .from(member)
+                .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber).and(member.isDeleted.eq(false))))
+                .fetchOne();
+    }
 
 }

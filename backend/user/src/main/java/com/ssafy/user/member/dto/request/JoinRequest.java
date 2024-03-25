@@ -17,4 +17,5 @@ public class JoinRequest {
     @Schema(description = "휴대폰번호", defaultValue = "01012345678")
     private String phoneNumber;
     private String authToken;
+    private String FcmToken;
 }
