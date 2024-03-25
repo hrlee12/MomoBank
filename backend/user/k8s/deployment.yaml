@@ -15,5 +15,6 @@ spec:
       containers:
         - name: user
           image: minwoo540/momo:user-latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082

@@ -15,5 +15,6 @@ spec:
       containers:
         - name: bank
           image: minwoo540/momo:bank-latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8084
