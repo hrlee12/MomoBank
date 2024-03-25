@@ -60,7 +60,7 @@ const groups = ref([
         :groupMemberCount="group.groupMemberCount"
       />
     </div>
-    <AddBox to="/bank/group-add" />
+    <AddBox to="/bank/group-create" />
   </div>
 </template>
 

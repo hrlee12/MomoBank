@@ -1,9 +1,10 @@
 <script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
-import AddBox from "~/components/bank/AddBox.vue";
 
 definePageMeta({
-  layout: "bank",
+  layout: "action",
 });
 
 const accounts = ref([
@@ -18,29 +19,67 @@ const accounts = ref([
     money: 100000000,
   },
 ]);
+
+const isSelected = ref(false);
+const selectedId = ref();
+const selectAccount = (index) => {
+  selectedId.value = index;
+  isSelected.value = true;
+  // console.log(selectedId.value + " " + isSelected.value);
+};
+
+const router = useRouter();
+
+const goNext = () => {
+  router.push(`/`);
+};
 </script>
 
 <template>
   <div class="account-container">
-    <div v-for="(account, index) in accounts" :key="index">
+    <div
+      v-for="(account, index) in accounts"
+      :key="index"
+      @click="selectAccount(index)"
+      class="account"
+      :class="{ 'selected-account': selectedId == index }"
+    >
       <SimpleAccount
         :accountName="account.accountName"
         :accountNumber="account.accountNumber"
         :money="account.money"
-        :status="true"
+        :status="false"
       />
     </div>
-    <AddBox to="/bank/remit" />
+    <button v-if="!isSelected" class="second-btn">다음</button>
+    <button v-else class="prime-btn" @click="goNext()">다음</button>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
+@import "~/assets/css/action.scss";
 
 .account-container {
   padding: 5%;
   display: grid;
   grid-template-rows: repeat(auto, 1fr);
   gap: 30px;
+}
+.account {
+  border-radius: 20px;
+  border-color: none;
+}
+
+.selected-account {
+  box-shadow: 3px 3px 10px -3px $primary-color;
+  outline: 3px solid $primary-color;
+  transition-duration: 0.2s;
+}
+
+.prime-btn,
+.second-btn {
+  width: 100% !important;
+  border-radius: 15px !important;
 }
 </style>

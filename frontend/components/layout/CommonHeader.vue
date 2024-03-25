@@ -41,6 +41,11 @@ const routerNameToInfoMap = {
   "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
   "user-authenicate": { title: "본인확인", sideMenuActive: NO_SIDE_MENU },
   "user-find-password": { title: "비밀번호찾기", sideMenuActive: NO_SIDE_MENU },
+  "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
+  "bank-group-create-account-select": {
+    title: "계좌선택",
+    sideMenuActive: NO_SIDE_MENU,
+  },
 };
 
 const pageTitle = computed(() => {
@@ -75,10 +80,6 @@ const isSideMenuActive = computed(() => {
 
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
-
-img {
-  height: 3.8vh;
-}
 
 .double {
   height: 5vh;

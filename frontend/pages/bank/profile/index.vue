@@ -1,4 +1,5 @@
 <script setup>
+import BankFooter from "~/components/layout/BankFooter.vue";
 import { useRouter } from "vue-router"; // useRouter 추가
 
 const router = useRouter(); // useRouter 인스턴스 생성
@@ -78,6 +79,7 @@ onPhone();
       </div>
     </div>
   </div>
+  <BankFooter />
 </template>
 
 <style lang="scss" scoped>
