@@ -2,7 +2,7 @@
 - DB 데이터 연결
 - NuxtLink 연결
 - 피드 게시글 상세보기 눌렀을 떄 다른 게시글까지 변경되는거 수정
-
+- api 연동할 때 파일면 변경하기
 -->
 <script setup>
 import { ref, computed } from "vue";
