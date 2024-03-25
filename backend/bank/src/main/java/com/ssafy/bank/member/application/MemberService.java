@@ -5,7 +5,6 @@ import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
 import com.ssafy.bank.member.domain.repository.MemberRepository;
 import com.ssafy.bank.member.domain.repository.MemberRepositoryCustom;
-import com.ssafy.bank.member.dto.ReturnPasswordDTO;
 import com.ssafy.bank.member.dto.request.JoinRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,7 +68,7 @@ public class MemberService {
 
 
     @Transactional
-    public ReturnPasswordDTO sendNewPassword(String id, String phoneNumber) {
+    public void sendNewPassword(String id, String phoneNumber, String newPassword) {
 
         // 회원정보 일치 확인
         Member member = memberRepositoryCustom.findMemberByIdAndPhoneNumber(id, phoneNumber);
@@ -80,18 +79,12 @@ public class MemberService {
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
 
 
-            // 랜덤 패스워드 생성
-        String newPassword = getRandomPassword();
-
-        ReturnPasswordDTO returnPasswordDTO = new ReturnPasswordDTO(id, member.getPassword(), newPassword);
-
-
         // 비밀번호 변경
-        member.changePassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        member.changePassword(newPassword);
 
-        return returnPasswordDTO;
 
     }
+
 
 
     //     String을 LocalDateTime으로 변환

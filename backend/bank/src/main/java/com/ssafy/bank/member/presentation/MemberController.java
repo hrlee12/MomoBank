@@ -3,10 +3,8 @@ package com.ssafy.bank.member.presentation;
 
 import com.ssafy.bank.common.CommonResponse;
 import com.ssafy.bank.member.application.MemberService;
-import com.ssafy.bank.member.dto.ReturnPasswordDTO;
 import com.ssafy.bank.member.dto.request.JoinRequest;
 import com.ssafy.bank.member.dto.request.PasswordUpdateRequest;
-import com.ssafy.bank.member.dto.request.SendNewPasswordRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Tag(name = "멤버")
 @RequiredArgsConstructor
@@ -61,12 +61,12 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "입력한 정보와 일치하는 회원 정보 없음"),
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
-    @PutMapping("/passwords")
-    public ResponseEntity sendNewPassword(@RequestBody SendNewPasswordRequest request) {
+    @PutMapping("/temporary-passwords")
+    public ResponseEntity sendNewPassword(@RequestBody Map<String, String> request) {
 
-        ReturnPasswordDTO response = memberService.sendNewPassword(request.getId(), request.getPhoneNumber());
+        memberService.sendNewPassword(request.get("id"), request.get("phoneNumber"), request.get("newPassword"));
 
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "임시비밀번호 저장", response);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "임시비밀번호 저장", null);
     }
 
 
