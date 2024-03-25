@@ -1,5 +1,7 @@
 package com.ssafy.user.groupInfo.dto.response;
 
+import com.ssafy.user.groupInfo.domain.GroupInfo;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +18,13 @@ public class GetGroupDetailsResponse {
     private String accountNumber;
     private long balance;
 
-
+    public static GetGroupDetailsResponse from(GroupInfo groupInfo){
+        return new GetGroupDetailsResponse(
+            groupInfo.getGroupName(),
+            groupInfo.getAccount().getAccountId(),
+            true, // status
+            groupInfo.getAccount().getAccountNumber(),
+            groupInfo.getAccount().getBalance()
+        );
+    }
 }

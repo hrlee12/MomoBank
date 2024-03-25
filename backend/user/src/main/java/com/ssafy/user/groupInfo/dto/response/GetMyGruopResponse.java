@@ -21,13 +21,4 @@ public class GetMyGruopResponse {
     private int joinMembers;
     private Boolean state;
 
-    @QueryProjection
-    public GetMyGruopResponse(GroupMember groupMember){
-        this.groupId = groupMember.getGroupInfo().getGroupId();
-        this.name = groupMember.getMember().getName();
-//        this.monthlyFee =
-        this.joinDate = Date.valueOf(groupMember.getCreatedAt().toLocalDate());
-//        this.joinMembers =
-//        this.state =
-    }
 }

@@ -51,4 +51,12 @@ public class GroupInfo extends BaseEntity {
 
     @OneToMany(mappedBy = "groupInfo", cascade = CascadeType.REFRESH)
     private List<GroupMember> groupMembers;
+
+    public void updateGroupName(String groupName){
+        this.groupName = groupName;
+    }
+
+    public void updateDescription(String description){
+        this.description = description;
+    }
 }
