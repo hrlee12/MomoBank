@@ -1,6 +1,4 @@
 
-
-
 springdoc:
   api-docs:
     enabled: true
@@ -16,7 +14,7 @@ server:
 
 spring:
   config:
-    import: classpath:application-private.yml
+    import: classpath:application-user-private-aws.yml
   jpa:
     hibernate:
       ddl-auto: update
