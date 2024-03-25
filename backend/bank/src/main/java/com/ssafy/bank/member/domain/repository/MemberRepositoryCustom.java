@@ -18,12 +18,6 @@ public class MemberRepositoryCustom {
     private QMember member = QMember.member;
     private QAccount account = QAccount.account;
 
-    public MemberToCheckDTO findMemberToCheckDtoById(String id){
-        return queryFactory.select(new QMemberToCheckDTO(member.id))
-                .from(member)
-                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
-                .fetchOne();
-    }
 
 
     public Member findMemberById(String id){
@@ -45,4 +39,13 @@ public class MemberRepositoryCustom {
                 .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber)).and(member.isDeleted.eq(false)))
                 .fetchOne();
     }
+
+
+    public MemberToCheckDTO findMemberToCheckDtoById(String id){
+        return queryFactory.select(new QMemberToCheckDTO(member.id))
+                .from(member)
+                .where(member.id.eq(id).and(member.isDeleted.eq(false)))
+                .fetchOne();
+    }
+
 }

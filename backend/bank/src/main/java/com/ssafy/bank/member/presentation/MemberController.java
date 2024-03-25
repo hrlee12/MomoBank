@@ -44,7 +44,7 @@ public class MemberController {
     @Operation(summary = "비밀번호 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
-            @ApiResponse(responseCode = "400", description = "현재 비밀번호 불일치")
+            @ApiResponse(responseCode = "404", description = "현재 비밀번호 불일치")
     })
     @PutMapping("/passwords")
     public ResponseEntity updatePassword(@RequestBody PasswordUpdateRequest request) {
@@ -58,7 +58,7 @@ public class MemberController {
     @Operation(summary = "임시 비밀번호 발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전화번호로 임시비밀번호 전송"),
-            @ApiResponse(responseCode = "400", description = "입력한 정보와 일치하는 회원 정보 없음"),
+            @ApiResponse(responseCode = "404", description = "입력한 정보와 일치하는 회원 정보 없음"),
             @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
     })
     @PutMapping("/temporary-passwords")
@@ -68,6 +68,22 @@ public class MemberController {
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "임시비밀번호 저장", null);
     }
+
+
+    @Operation(summary = "전화번호 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증번호 일치. 전화번호 수정 완료"),
+            @ApiResponse(responseCode = "404", description = "입력한 정보와 일치하는 회원 정보 없음"),
+    })
+    @PutMapping("/phone-numbers")
+    public ResponseEntity updatePhoneNumber(@RequestBody Map<String, String> request) {
+
+        memberService.updatePhoneNumber(request.get("id"), request.get("newPhoneNumber"));
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "임시비밀번호 저장", null);
+    }
+
+
 
 
 

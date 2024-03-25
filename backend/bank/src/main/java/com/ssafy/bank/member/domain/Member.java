@@ -69,7 +69,7 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-
+    public void changePhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 
 
     @Builder

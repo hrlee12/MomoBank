@@ -44,7 +44,6 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-
     @Transactional
     public void updatePassword(String id, String currentPassword, String newPassword) {
 
@@ -85,6 +84,18 @@ public class MemberService {
 
     }
 
+    @Transactional
+    public void updatePhoneNumber(String id, String newPhoneNumber) {
+
+        Member member = memberRepositoryCustom.findMemberById(id);
+
+        if (member == null)
+            throw new CustomException(ErrorCode.NO_MEMBER_INFO);
+
+        // 전화번호 변경
+        member.changePhoneNumber(newPhoneNumber);
+
+    }
 
 
     //     String을 LocalDateTime으로 변환
