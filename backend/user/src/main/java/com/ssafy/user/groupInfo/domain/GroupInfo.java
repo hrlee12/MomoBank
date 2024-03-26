@@ -31,7 +31,7 @@ public class GroupInfo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_info_id")
-    private int groupId;
+    private int groupInfoId;
 
     @Column(length = 255, name = "group_name")
     private String groupName;
