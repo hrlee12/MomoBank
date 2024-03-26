@@ -1,4 +1,4 @@
-package com.ssafy.user.bank.entity;
+package com.ssafy.user.bank.domain;
 
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;

@@ -1,19 +1,15 @@
 package com.ssafy.user.member.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.user.bank.entity.QAccount;
+import com.ssafy.user.bank.domain.QAccount;
 import com.ssafy.user.member.dto.response.MemberDTO;
 import com.ssafy.user.member.dto.response.MemberToCheckDTO;
 import com.ssafy.user.member.dto.response.QMemberDTO;
 import com.ssafy.user.member.dto.response.QMemberToCheckDTO;
 import com.ssafy.user.member.entity.Member;
 import com.ssafy.user.member.entity.QMember;
-import kotlinx.serialization.Required;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
