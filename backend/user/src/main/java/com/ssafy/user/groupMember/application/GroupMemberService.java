@@ -22,13 +22,10 @@ import com.ssafy.user.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.swing.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +43,9 @@ public class GroupMemberService {
     private final RedisUtil redisUtil;
     @Value("${user.url}")
     private String url;
+
+
+
 
 
     // 모임원 보기
@@ -84,22 +84,37 @@ public class GroupMemberService {
         inviteRepository.save(invite);
 
         // 초대코드로 uri 생성
-        String uri = "http://localhost:8082/api/user/groups/invite/" + groupId + "-" + encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey);
+        String uri = url + "/groups/invite/" + groupId + "-" + encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey);
 
         return uri;
     }
 
 
+
+
+
+
+
     // 초대 코드 검증 후 인증 토큰, 계좌 반환
     public VerifyInviteCodeResponse verifyInviteCode(String code, String memberId) throws Exception {
-        
-        // 초대 코드 검증
-        // groupId-해쉬값
-        // DB의 groupId와 identifier로 해쉬한 값
+
+
+
         String[] splitCode = code.split("-");
         int groupId = Integer.parseInt(splitCode[0]);
         String hashCode = splitCode[1];
-        
+
+        GroupMember alreadyGroupMember = groupMemberRepository.findByMember_IdAndGroupInfo_GroupId(memberId, groupId).orElse(null);
+
+        if (alreadyGroupMember != null){
+            throw new CustomException(ErrorCode.ALREADY_JOINED_MEMBER);
+        };
+
+
+        // 초대 코드 검증
+        // groupId-해쉬값
+        // DB의 groupId와 identifier로 해쉬한 값
+
         List<Invite> invites = inviteRepositoryCustom.findByGroupIdAndExpiredDate(groupId, LocalDateTime.now());
 
 
@@ -136,6 +151,11 @@ public class GroupMemberService {
                 .build();
     }
 
+
+
+
+
+
     // 그룹에 가입하기
     public void joinGroup(String authToken, int accountId, String memberId) throws Exception {
 
@@ -154,6 +174,7 @@ public class GroupMemberService {
         if (!token.equals(encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey)))
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
 
+        // GroupMember 만들기 위한 엔티티 불러오기
         GroupInfo group = groupInfoRepository.findByGroupIdAndIsDeletedFalse(groupId)
                             .orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
 

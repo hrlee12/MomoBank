@@ -65,7 +65,8 @@ public class GroupMemberController {
             @ApiResponse(responseCode = "200", description = "유효한 초대링크. 인증토큰 발급 완료",
             content = @Content(schema = @Schema(implementation = VerifyInviteCodeResponse.class))),
             @ApiResponse(responseCode = "400", description = "해당 초대링크가 존재하지 않습니다. 만료된 링크인지 확인해주세요."),
-            @ApiResponse(responseCode = "404", description = "삭제된 모임")
+            @ApiResponse(responseCode = "404", description = "삭제된 모임"),
+            @ApiResponse(responseCode = "409", description = "해당 모임에 이미 가입한 회원입니다.")
     })
     public ResponseEntity verifyInviteCode(@PathVariable String inviteCode, @RequestBody IdDTO request) throws Exception {
 
@@ -79,6 +80,7 @@ public class GroupMemberController {
     @Operation(summary = "연결할 계좌 선택하고 모임 가입", responses = {
             @ApiResponse(responseCode = "200", description = "모임 가입 완료"),
             @ApiResponse(responseCode = "400", description = "인증정보 불일치 <br> 제공된 정보와 일치하는 회원 정보 없음 <br> 존재하지 않는 계좌입니다.<br> 주어진 아이디로 조회되는 그룹이 없습니다. 그룹 아이디를 확인해주세요.")
+
     })
     public ResponseEntity joinGroup(@RequestBody JoinGroupRequest request) throws Exception {
 
