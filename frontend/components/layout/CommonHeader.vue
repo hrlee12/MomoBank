@@ -1,7 +1,6 @@
 <script setup>
 import NoticeHome from "~/components/ui/NoticeHome.vue";
 import { useRoute } from "#vue-router";
-import { ref } from "vue";
 
 const goBack = () => {
   window.history.back();
