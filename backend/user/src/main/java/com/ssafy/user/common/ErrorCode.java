@@ -38,7 +38,8 @@ public enum ErrorCode {
     YET_TO_BE_DELETED(FORBIDDEN, "잔액이 남아 계좌를 삭제할 수 없습니다."),
     ERROR_IN_INTERNAL_MICRO_SERVER(INTERNAL_SERVER_ERROR, "안쪽 마이크로 서버의 에러"),
     NO_GROUP_MEMBER_INFO(BAD_REQUEST, "조회되는 그룹 멤버가 없습니다. 그룹 아이디를 확인해주세요."),
-    NO_GROUP_INFO(BAD_REQUEST, "주어진 아이디로 조회되는 그룹이 없습니다. 그룹 아이디를 확인해주세요.");
+    NO_GROUP_INFO(BAD_REQUEST, "주어진 아이디로 조회되는 그룹이 없습니다. 그룹 아이디를 확인해주세요."),
+    NO_INVITE_LINK(BAD_REQUEST, "해당 초대링크가 존재하지 않습니다. 만료된 링크인지 확인해주세요.");
 
     private final HttpStatus status;
     private final String message;

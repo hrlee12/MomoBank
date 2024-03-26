@@ -252,7 +252,7 @@ public class MemberService {
     private void verifyCode(String code, String phoneNumber) throws Exception {
 
         // 레디스에 저장된 인증정보 가져오기
-        String correctCode = redisUtil.getValues(phoneNumber);
+        String correctCode = (String)redisUtil.getValues(phoneNumber);
 
         // 없으면 예외처리
         if (correctCode == null)
@@ -274,7 +274,7 @@ public class MemberService {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
 
-        String secretKey = redisUtil.getValues(phoneNumber);
+        String secretKey = (String)redisUtil.getValues(phoneNumber);
 
         if (secretKey == null) {
             throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);

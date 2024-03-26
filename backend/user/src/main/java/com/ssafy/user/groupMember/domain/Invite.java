@@ -22,7 +22,7 @@ public class Invite extends BaseEntity {
     private int inviteId;
 
     @Column(nullable = false)
-    private LocalDateTime expire_date;
+    private LocalDateTime expireDate;
 
     @Size(min = 0, max = 100)
     @Column(nullable = false, length = 100)
@@ -35,8 +35,8 @@ public class Invite extends BaseEntity {
 
 
     @Builder
-    public Invite(LocalDateTime expire_date, String identifier, GroupInfo group){
-        this.expire_date = expire_date;
+    public Invite(LocalDateTime expireDate, String identifier, GroupInfo group){
+        this.expireDate = expireDate;
         this.identifier = identifier;
         this.group = group;
     }

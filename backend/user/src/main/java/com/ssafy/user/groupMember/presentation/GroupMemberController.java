@@ -3,10 +3,12 @@ package com.ssafy.user.groupMember.presentation;
 
 import com.ssafy.user.common.CommonResponse;
 import com.ssafy.user.groupMember.application.GroupMemberService;
+import com.ssafy.user.groupMember.dto.request.IdDTO;
 import com.ssafy.user.groupMember.dto.request.JoinGroupRequest;
 import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.groupMember.dto.response.GroupMemberListDTO;
 import com.ssafy.user.groupMember.dto.response.InviteLinkResponse;
+import com.ssafy.user.groupMember.dto.response.VerifyInviteCodeResponse;
 import com.ssafy.user.member.dto.response.VerificationTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/groups")
@@ -59,14 +62,16 @@ public class GroupMemberController {
 
     @PostMapping("/invite/{inviteCode}")
     @Operation(summary = "초대 링크 검증", responses = {
-            @ApiResponse(responseCode = "200", description = "유효한 초대링크",
-            content = @Content(schema = @Schema(implementation = VerificationTokenResponse.class))),
-            @ApiResponse(responseCode = "410", description = "만료된 링크"),
+            @ApiResponse(responseCode = "200", description = "유효한 초대링크. 인증토큰 발급 완료",
+            content = @Content(schema = @Schema(implementation = VerifyInviteCodeResponse.class))),
+            @ApiResponse(responseCode = "400", description = "해당 초대링크가 존재하지 않습니다. 만료된 링크인지 확인해주세요."),
             @ApiResponse(responseCode = "404", description = "삭제된 모임")
     })
-    public ResponseEntity verifyInviteLink(@PathVariable String inviteCode) {
-        // 구현 생략
-        return ResponseEntity.ok().build();
+    public ResponseEntity verifyInviteCode(@PathVariable String inviteCode, @RequestBody IdDTO request) throws Exception {
+
+        VerifyInviteCodeResponse response = groupMemberService.verifyInviteCode(inviteCode, request.getMemberId());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "유효한 초대링크. 인증토큰 발급 완료", response);
     }
 
 
@@ -76,6 +81,9 @@ public class GroupMemberController {
             @ApiResponse(responseCode = "410", description = "유효하지 않은 토큰")
     })
     public ResponseEntity joinGroup(@RequestBody JoinGroupRequest joinRequest) {
+
+
+
         return ResponseEntity.ok().build();
     }
 

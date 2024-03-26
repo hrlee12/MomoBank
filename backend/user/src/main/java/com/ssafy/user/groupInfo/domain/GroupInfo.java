@@ -4,16 +4,8 @@ import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.budget.entity.Budget;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupMember.domain.GroupMember;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +34,7 @@ public class GroupInfo extends BaseEntity {
     @Column(name = "created_by")
     private int createdBy;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
