@@ -46,14 +46,7 @@ public class GroupInfoService {
     public GetGroupDetailsResponse getGroupDetails(int memberId, int groupInfoId){
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-        GetGroupDetailsResponse getGroupDetailsResponse = GetGroupDetailsResponse.builder()
-            .groupName(groupInfo.getGroupName())
-            .accountId(groupInfo.getAccount().getAccountId())
-//            .status() // 회비,예산 납입 여부
-            .accountNumber(groupInfo.getAccount().getAccountNumber())
-            .balance(groupInfo.getAccount().getBalance())
-            .build();
-        return getGroupDetailsResponse;
+        return GetGroupDetailsResponse.from(groupInfo);
     }
 
     // 각 모임원이 달마다 납입한 금액 조회
@@ -61,7 +54,6 @@ public class GroupInfoService {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
-        // 결과 생성
         return new GetFeesListResponse();
     }
 
@@ -144,6 +136,8 @@ public class GroupInfoService {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
+        groupInfo.softDelete();
+        groupInfoRepository.save(groupInfo);
         return new GetMyGruopResponse();
     }
 

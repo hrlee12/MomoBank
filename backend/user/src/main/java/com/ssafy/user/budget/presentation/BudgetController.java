@@ -1,4 +1,4 @@
-package com.ssafy.user.budget.controller;
+package com.ssafy.user.budget.presentation;
 
 import com.ssafy.user.budget.dto.request.BudgetRequest;
 import com.ssafy.user.budget.dto.request.CreateNewBudgetRequest;

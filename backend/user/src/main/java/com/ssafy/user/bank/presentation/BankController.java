@@ -1,4 +1,4 @@
-package com.ssafy.user.bank.controller;
+package com.ssafy.user.bank.presentation;
 
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
 import com.ssafy.user.bank.dto.request.GetAccountDetailRequest;

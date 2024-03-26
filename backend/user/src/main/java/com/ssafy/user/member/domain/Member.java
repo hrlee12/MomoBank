@@ -1,6 +1,6 @@
 package com.ssafy.user.member.domain;
 
-import com.ssafy.user.bank.entity.Account;
+import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import jakarta.persistence.CascadeType;

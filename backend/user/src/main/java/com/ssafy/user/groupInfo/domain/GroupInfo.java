@@ -1,7 +1,7 @@
 package com.ssafy.user.groupInfo.domain;
 
-import com.ssafy.user.bank.entity.Account;
-import com.ssafy.user.budget.entity.Budget;
+import com.ssafy.user.bank.domain.Account;
+import com.ssafy.user.budget.domain.Budget;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import jakarta.persistence.CascadeType;
@@ -51,4 +51,12 @@ public class GroupInfo extends BaseEntity {
 
     @OneToMany(mappedBy = "groupInfo", cascade = CascadeType.REFRESH)
     private List<GroupMember> groupMembers;
+
+    public void updateGroupName(String groupName){
+        this.groupName = groupName;
+    }
+
+    public void updateDescription(String description){
+        this.description = description;
+    }
 }
