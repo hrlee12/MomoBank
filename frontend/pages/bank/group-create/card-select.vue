@@ -7,13 +7,6 @@ definePageMeta({
   layout: "action",
 });
 
-// 이미지 불러오는 메소드
-const getImageUrl = (imageName, idx) => {
-  if (idx == 0) return "/icon/" + imageName;
-  else if (idx === 1) return "/images/" + imageName;
-  else console.log("Image code error");
-};
-
 const cardList = ref([
   {
     id: "2446",
