@@ -133,12 +133,14 @@ public class GroupMemberService {
             throw new CustomException(ErrorCode.NO_INVITE_LINK);
 
         
-        // 그룹Id + 시크릿 키를 해쉬해서 authToken 만들기
+        // 그룹Id + 멤버Id + 시크릿 키를 해쉬해서 authToken 만들기
         String secretKey = encryptUtil.getRandomKey();
-        String verificationToken = encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey);
+        String verificationToken = encryptUtil.hashEncrypt(groupId+memberId, secretKey);
+
+
 
         // 해쉬값 : 시크릿키 레디스에 저장
-        redisUtil.setValues(verificationToken, encryptUtil.aesEncrypt(secretKey), Duration.ofSeconds(60 * 30));
+        redisUtil.setValues(verificationToken, encryptUtil.aesEncrypt(secretKey), Duration.ofSeconds(60 * 10));
 
         // 회원의 계좌 가져오기
         List<AccountDTO> accountDTOs = accountRepositoryCustom.findAccountDTOByMemberId(memberId);
@@ -146,8 +148,9 @@ public class GroupMemberService {
 
         // 인증 토큰과 계좌 리스트 반환
         return VerifyInviteCodeResponse.builder()
-                .authToken(groupId + "-" + verificationToken)
+                .authToken(verificationToken)
                 .accounts(accountDTOs)
+                .groupId(groupId)
                 .build();
     }
 
@@ -157,21 +160,18 @@ public class GroupMemberService {
 
 
     // 그룹에 가입하기
-    public void joinGroup(String authToken, int accountId, String memberId) throws Exception {
+    public void joinGroup(String authToken, int groupId, int accountId, String memberId) throws Exception {
 
         // 초대코드 인증토큰 검증
-        String[] splitToken = authToken.split("-");
-        int groupId = Integer.parseInt(splitToken[0]);
-        String token = splitToken[1];
-
         // 토큰 인증 실패
-        if (!redisUtil.existKey(token))
+        if (!redisUtil.existKey(authToken))
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
 
-        String secretKey = encryptUtil.aesDecrypt(redisUtil.getValues(token));
+        String secretKey = encryptUtil.aesDecrypt(redisUtil.getValues(authToken));
+
 
         // 토큰 인증 실패
-        if (!token.equals(encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey)))
+        if (!authToken.equals(encryptUtil.hashEncrypt(groupId+memberId, secretKey)))
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
 
         // GroupMember 만들기 위한 엔티티 불러오기

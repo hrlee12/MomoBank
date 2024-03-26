@@ -84,7 +84,7 @@ public class GroupMemberController {
     })
     public ResponseEntity joinGroup(@RequestBody JoinGroupRequest request) throws Exception {
 
-        groupMemberService.joinGroup(request.getAuthToken(), request.getAccountId(), request.getMemberId());
+        groupMemberService.joinGroup(request.getAuthToken(), request.getGroupId(), request.getAccountId(), request.getMemberId());
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 가입 완료", null);
     }

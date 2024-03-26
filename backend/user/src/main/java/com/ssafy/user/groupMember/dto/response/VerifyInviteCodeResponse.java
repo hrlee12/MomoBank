@@ -9,5 +9,6 @@ import java.util.List;
 @Builder
 public class VerifyInviteCodeResponse {
     private String authToken;
+    private int groupId;
     private List<AccountDTO> accounts;
 }
