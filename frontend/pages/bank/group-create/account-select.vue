@@ -2,10 +2,18 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
+import Loading from "~/components/layout/Loading.vue";
 
 definePageMeta({
   layout: "action",
 });
+
+// 이미지 불러오는 메소드
+const getImageUrl = (imageName, idx) => {
+  if (idx == 0) return "/icon/" + imageName;
+  else if (idx === 1) return "/images/" + imageName;
+  else console.log("Image code error");
+};
 
 const accounts = ref([
   { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
@@ -23,6 +31,7 @@ const accounts = ref([
 const isSelected = ref(false);
 const selectedId = ref();
 const isLoading = ref(false); // 로딩 상태 관리
+const method = ref(-1);
 
 const selectAccount = (index) => {
   selectedId.value = index;
@@ -37,10 +46,10 @@ const loadData = async () => {
   isLoading.value = true; // 로딩 시작
   try {
     // 데이터 로딩 로직 (여기서는 setTimeout을 사용하여 시뮬레이션)
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // 2초 대기
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // 5초 대기
     // 데이터 로딩 완료
     isLoading.value = false; // 로딩 완료
-    router.push("/bank/card-select"); // 로딩 완료 후 card-select 페이지로 이동
+    router.push("/bank/group-create/card-select"); // 로딩 완료 후 card-select 페이지로 이동
   } catch (error) {
     console.error("데이터 로딩 중 오류 발생:", error);
     isLoading.value = false; // 에러 시 로딩 상태 해제
@@ -56,7 +65,20 @@ const goNext = () => {
   <div v-if="isLoading">
     <Loading />
   </div>
-  <div v-else class="account-container">
+
+  <div v-else-if="method == -1" class="account-container">
+    <div class="method-container">
+      <div class="method-content" @click="method = 0">
+        <img :src="getImageUrl('card-icon.png', 0)" alt="" />
+        <h3>기존 계좌 연결</h3>
+      </div>
+      <div class="method-content" @click="method = 1">
+        <img :src="getImageUrl('logo-icon.png', 0)" alt="" />
+        <h3>신규 계좌 연결</h3>
+      </div>
+    </div>
+  </div>
+  <div v-else-if="method == 0" class="account-container">
     <div
       v-for="(account, index) in accounts"
       :key="index"
@@ -79,6 +101,10 @@ const goNext = () => {
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
 @import "~/assets/css/action.scss";
+
+.method-container {
+  padding-top: 5vh;
+}
 
 .account-container {
   padding: 5%;

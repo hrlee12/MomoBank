@@ -65,6 +65,7 @@ button {
   border: 1px solid $primary-color;
   color: $primary-color;
   width: 100%;
+  background-color: rgba($secondary-color, $alpha: 0.05);
 }
 
 .selected {

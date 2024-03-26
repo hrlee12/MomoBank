@@ -1,6 +1,7 @@
 <script setup>
 import NoticeHome from "~/components/ui/NoticeHome.vue";
 import { useRoute } from "#vue-router";
+import { ref } from "vue";
 
 const goBack = () => {
   window.history.back();
@@ -15,14 +16,15 @@ const getImageUrl = (imageName, idx) => {
 
 const router = useRoute();
 
-const menuActive = ref(true);
-const sideMenuActive = ref(true);
-
 // 라우터 이름에 따른 타이틀 및 sideMenuActive 상태 매핑
 const NO_SIDE_MENU = 0;
 const FULL_MENU = 1;
 const ONLY_ARROW = 2;
 const routerNameToInfoMap = {
+  "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
+  "user-authenicate": { title: "본인확인", sideMenuActive: NO_SIDE_MENU },
+  "user-find-password": { title: "비밀번호찾기", sideMenuActive: NO_SIDE_MENU },
+
   "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
   "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
   "bank-history": { title: "거래내역", sideMenuActive: FULL_MENU },
@@ -38,9 +40,6 @@ const routerNameToInfoMap = {
   },
   "bank-remit": { title: "계좌개설", sideMenuActive: FULL_MENU },
   user: { title: "", sideMenuActive: ONLY_ARROW },
-  "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
-  "user-authenicate": { title: "본인확인", sideMenuActive: NO_SIDE_MENU },
-  "user-find-password": { title: "비밀번호찾기", sideMenuActive: NO_SIDE_MENU },
   "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
   "bank-group-create-account-select": {
     title: "계좌선택",

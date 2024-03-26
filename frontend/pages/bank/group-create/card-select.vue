@@ -1,13 +1,11 @@
-<template>
-  <div>
-    
-  </div>
-</template>
-
-<script lang="ts" setup>
-
+<script setup>
+definePageMeta({
+  layout: "action",
+});
 </script>
 
-<style>
+<template>
+  <div></div>
+</template>
 
-</style>
+<style lang="scss" scoped></style>
