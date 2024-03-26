@@ -28,7 +28,6 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
                                                 groupMember.member.sincerity))
                 .from(groupMember)
                 .join(groupMember.member, member)
-                .join(groupMember.groupInfo, group)
                 .where(group.groupId.eq(groupId)
                         .and(group.isDeleted.eq(false)
                         .and(groupMember.isDeleted.eq(false)
@@ -36,9 +35,5 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
                 .fetch();
     }
 
-//    List<GroupMember> findMyGroups(){
-//        return queryFactory.select(groupMember)
-//            .from(groupMember)
-//            .fetch();
-//    }
+
 }

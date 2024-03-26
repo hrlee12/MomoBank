@@ -10,15 +10,15 @@ import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
 import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepositoryImpl;
+import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.groupMember.domain.Invite;
-import com.ssafy.user.groupMember.domain.repository.GroupMemberRepositoryCustom;
-import com.ssafy.user.groupMember.domain.repository.GroupMemberRepositoryImpl;
-import com.ssafy.user.groupMember.domain.repository.InviteRepository;
-import com.ssafy.user.groupMember.domain.repository.InviteRepositoryCustom;
+import com.ssafy.user.groupMember.domain.repository.*;
 import com.ssafy.user.groupMember.dto.response.AccountDTO;
 import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.groupMember.dto.response.InviteLinkResponse;
 import com.ssafy.user.groupMember.dto.response.VerifyInviteCodeResponse;
+import com.ssafy.user.member.domain.Member;
+import com.ssafy.user.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,19 +36,23 @@ public class GroupMemberService {
 
     private final EncryptUtil encryptUtil;
     private final GroupMemberRepositoryImpl groupMemberRepositoryImpl;
+    private final GroupMemberRepository groupMemberRepository;
     private final AccountRepository accountRepository;
     private final AccountRepositoryCustom accountRepositoryCustom;
     private final GroupInfoRepository groupInfoRepository;
     private final InviteRepository inviteRepository;
     private final InviteRepositoryCustom inviteRepositoryCustom;
+    private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
     @Value("${user.url}")
     private String url;
 
 
+    // 모임원 보기
     public List<GroupMemberDTO> getAllGroupMembers(int groupId){
         List<GroupMemberDTO> groupMemberDTOs = groupMemberRepositoryImpl.getAllGroupMemberDTO(groupId);
 
+        // 모임원이 한명도 없다면 예외 처리
         if (groupMemberDTOs.size() == 0) {
             throw new CustomException(ErrorCode.NO_GROUP_MEMBER_INFO);
         }
@@ -61,30 +65,33 @@ public class GroupMemberService {
 
 
 
+    // 모임 초대코드 생성
     public String getInviteLink(int groupId) throws Exception {
 
+        // 시크릿 키 발급
         String secretKey = encryptUtil.getRandomKey();
 
 
-        GroupInfo group = groupInfoRepository.findById(groupId).orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
+        GroupInfo group = groupInfoRepository.findByGroupIdAndIsDeletedFalse(groupId).orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
 
-
+        // 초대 정보(그룹, 시크릿키, 만료일) 저장
         Invite invite = Invite.builder()
                 .group(group)
                 .expireDate(LocalDateTime.now().plusDays(7))
                 .identifier(encryptUtil.aesEncrypt(secretKey))
                 .build();
 
-
         inviteRepository.save(invite);
 
+        // 초대코드로 uri 생성
         String uri = "http://localhost:8082/api/user/groups/invite/" + groupId + "-" + encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey);
+
         return uri;
     }
 
 
     // 초대 코드 검증 후 인증 토큰, 계좌 반환
-    public VerifyInviteCodeResponse verifyInviteCode(String code, int memberId) throws Exception {
+    public VerifyInviteCodeResponse verifyInviteCode(String code, String memberId) throws Exception {
         
         // 초대 코드 검증
         // groupId-해쉬값
@@ -129,6 +136,50 @@ public class GroupMemberService {
                 .build();
     }
 
+    // 그룹에 가입하기
+    public void joinGroup(String authToken, int accountId, String memberId) throws Exception {
+
+        // 초대코드 인증토큰 검증
+        String[] splitToken = authToken.split("-");
+        int groupId = Integer.parseInt(splitToken[0]);
+        String token = splitToken[1];
+
+        // 토큰 인증 실패
+        if (!redisUtil.existKey(token))
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+
+        String secretKey = encryptUtil.aesDecrypt(redisUtil.getValues(token));
+
+        // 토큰 인증 실패
+        if (!token.equals(encryptUtil.hashEncrypt(String.valueOf(groupId), secretKey)))
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+
+        GroupInfo group = groupInfoRepository.findByGroupIdAndIsDeletedFalse(groupId)
+                            .orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
+
+        Account account = accountRepositoryCustom.findbyIdAndMemberId(accountId, memberId);
+
+        if (account == null) {
+            throw new CustomException(ErrorCode.NO_SUCH_ACCOUNT);
+        }
+
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                            .orElseThrow(()->new CustomException(ErrorCode.NO_MEMBER_INFO));
 
 
+        // 스키마 변경 후 account 포함 필요
+        GroupMember groupMember = GroupMember.builder()
+                .role(GroupMember.memberType.모임원)
+                .member(member)
+                .groupInfo(group)
+                .name(member.getName())
+                .totalFee(0)
+                .build();
+
+
+        groupMemberRepository.save(groupMember);
+
+
+        // ------------------------------------ 알람보내기 필요. -----------------------------------
+    }
 }

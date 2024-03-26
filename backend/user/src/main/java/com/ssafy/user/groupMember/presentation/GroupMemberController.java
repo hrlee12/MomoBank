@@ -78,13 +78,13 @@ public class GroupMemberController {
     @PostMapping("/invite/accounts")
     @Operation(summary = "연결할 계좌 선택하고 모임 가입", responses = {
             @ApiResponse(responseCode = "200", description = "모임 가입 완료"),
-            @ApiResponse(responseCode = "410", description = "유효하지 않은 토큰")
+            @ApiResponse(responseCode = "400", description = "인증정보 불일치 <br> 제공된 정보와 일치하는 회원 정보 없음 <br> 존재하지 않는 계좌입니다.<br> 주어진 아이디로 조회되는 그룹이 없습니다. 그룹 아이디를 확인해주세요.")
     })
-    public ResponseEntity joinGroup(@RequestBody JoinGroupRequest joinRequest) {
+    public ResponseEntity joinGroup(@RequestBody JoinGroupRequest request) throws Exception {
 
+        groupMemberService.joinGroup(request.getAuthToken(), request.getAccountId(), request.getMemberId());
 
-
-        return ResponseEntity.ok().build();
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 가입 완료", null);
     }
 
 

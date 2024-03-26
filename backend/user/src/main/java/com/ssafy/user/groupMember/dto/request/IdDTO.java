@@ -6,5 +6,5 @@ import lombok.ToString;
 @Getter
 @ToString
 public class IdDTO {
-    private int memberId;
+    private String memberId;
 }
