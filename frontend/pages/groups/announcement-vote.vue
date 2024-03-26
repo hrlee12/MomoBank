@@ -13,14 +13,6 @@ const voteList = [
   { name: "우리 이제 중국 여행 간다!" },
   { name: "우리 이제 중국 여행 간다!" },
 ];
-
-// Define a method to dynamically require images
-const getImageUrl = (imageName, idx) => {
-  // Note: You might need to adjust the path depending on your project structure
-  if (idx == 0) return "/icon/" + imageName;
-  else if (idx == 1) return "/images/" + imageName;
-  else console.log("Image code error");
-};
 </script>
 <template>
   <div class="h-screen bg-white">
@@ -37,11 +29,7 @@ const getImageUrl = (imageName, idx) => {
         <div>작성일:2024.3.12 화요일</div>
       </div>
       <div class="h-64 px-6 py-6 mb-4 overflow-y-auto border-2">
-        <div
-          class="py-2 text-xl font-bold"
-          v-for="item in voteList"
-          :key="item.id"
-        >
+        <div class="py-2 text-lg" v-for="item in voteList" :key="item.id">
           <input
             class="border-2 border-main-color"
             type="radio"
