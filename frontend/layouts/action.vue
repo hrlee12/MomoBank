@@ -13,13 +13,15 @@ import CommonHeader from "~/components/layout/CommonHeader.vue";
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
 * {
+  width: 100%;
   background-color: white;
 }
 
 .layout-container {
   background-color: white;
-  height: 100%;
   min-height: 92vh;
   padding: 0;
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -21,6 +21,8 @@ const accounts = ref([
   { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
   { accountName: "소이은행", accountNumber: "123-1234-12348", money: 100000 },
   { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
+  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
+  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
   {
     accountName: "민우은행",
     accountNumber: "123-1234-12349",
@@ -107,10 +109,12 @@ const goNext = () => {
 }
 
 .account-container {
-  padding: 5%;
+  padding: 3% 0;
   display: grid;
   grid-template-rows: repeat(auto, 1fr);
-  gap: 30px;
+  gap: 20px;
+  height: 100%;
+  width: 90%;
 }
 .account {
   border-radius: 20px;

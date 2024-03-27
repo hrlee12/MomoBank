@@ -129,6 +129,7 @@ const cardSelect = (id) => {
   padding: 10% 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   img {
     rotate: 70deg;
