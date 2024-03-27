@@ -10,6 +10,7 @@ import com.ssafy.user.bank.dto.response.AccountResponse;
 import com.ssafy.user.bank.dto.response.CardResponse;
 import com.ssafy.user.bank.dto.response.GetAccountProductListResponse;
 import com.ssafy.user.bank.dto.response.GetMyAccountListResponse;
+import com.ssafy.user.bank.dto.response.GetTransferListResponse;
 import com.ssafy.user.bank.dto.response.SearchAccountResponse;
 import com.ssafy.user.bank.dto.response.TransferResponse;
 import com.ssafy.user.common.CommonResponse;
@@ -52,7 +53,8 @@ public class BankController {
     @Operation(summary = "본인 계좌 거래 내역 조회", description = "사용자의 계좌 거래 내역을 조회합니다.")
     @GetMapping("/get-transfer")
     public ResponseEntity<?> getTransafer(@RequestBody GetAccountTransferRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 거래 내역 죄회 성공", null);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 거래 내역 죄회 성공",
+            new GetTransferListResponse());
     }
 
     @Operation(summary = "당행 계좌 생성", description = "모모뱅크의 계좌를 생성합니다.")

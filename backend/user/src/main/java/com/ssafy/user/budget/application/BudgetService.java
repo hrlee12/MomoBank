@@ -39,12 +39,15 @@ public class BudgetService {
     public GetBudgetResponse createNewBudget(int memberId, int groupInfoId, CreateNewBudgetRequest request) {
         Member member = memberCheck(memberId); // 모임장 권한 확인 필요
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
+
+        int monthlyFee = leftCollectionDate(request.monthlyDueDate(), LocalDate.now(), request.finalDueDate());
+
         Budget budget = Budget.builder()
             .monthlyDueDate(request.monthlyDueDate())
             .name(request.name())
             .dueDate(request.finalDueDate())
             .finalMoney(request.finalFee())
-            .monthlyFee(request.monthlyFee())
+            .monthlyFee(monthlyFee)
             .groupInfo(groupInfo)
             .build();
         budgetRepository.save(budget);
@@ -98,5 +101,24 @@ public class BudgetService {
             throw new CustomException(ErrorCode.DELETED_BUDGET);
         }
         return budget;
+    }
+
+    public static int leftCollectionDate(int day, LocalDate today, LocalDate lastDay) {
+        int cnt = 0;
+
+        LocalDate tempDate = today.withDayOfMonth(day);
+
+        if (tempDate.isBefore(today)) {
+            tempDate = tempDate.plusMonths(1);
+        }
+
+        while (!tempDate.isAfter(lastDay)) {
+            if (tempDate.getDayOfMonth() == day) {
+                cnt++;
+            }
+            tempDate = tempDate.plusMonths(1);
+        }
+
+        return cnt;
     }
 }

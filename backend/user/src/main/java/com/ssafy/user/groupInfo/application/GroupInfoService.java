@@ -2,11 +2,14 @@ package com.ssafy.user.groupInfo.application;
 
 import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.bank.domain.repository.AccountRepository;
+import com.ssafy.user.budget.domain.Budget;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
 import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;
+import com.ssafy.user.groupInfo.dto.request.UpdateGroupDescriptionRequest;
+import com.ssafy.user.groupInfo.dto.request.UpdateGroupNameRequest;
 import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
 import com.ssafy.user.groupInfo.dto.response.GetFeesListResponse;
 import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
@@ -88,24 +91,25 @@ public class GroupInfoService {
     // 모임 상세 정보
     public GroupResponse getGroupDetail(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
-
         return groupInfoRepository.findGroupResponseByGroup(groupInfoId, memberId);
     }
 
     // 모임 이름 수정
-    public GroupResponse updateGroupName(int memberId, int groupInfoId) {
+    public GroupResponse updateGroupName(int memberId, int groupInfoId, UpdateGroupNameRequest request) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-
-        return new GroupResponse();
+        groupInfo.updateGroupName(request.groupName());
+        groupInfoRepository.save(groupInfo);
+        return groupInfoRepository.findGroupResponseByGroup(groupInfoId, memberId);
     }
 
     // 모임 목적 수정
-    public GroupResponse updateGroupDescription(int memberId, int groupInfoId) {
+    public GroupResponse updateGroupDescription(int memberId, int groupInfoId, UpdateGroupDescriptionRequest request) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-
-        return new GroupResponse();
+        groupInfo.updateDescription(request.description());
+        groupInfoRepository.save(groupInfo);
+        return groupInfoRepository.findGroupResponseByGroup(groupInfoId, memberId);
     }
 
     // 모임 회비 분배
@@ -113,19 +117,22 @@ public class GroupInfoService {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
+        // groupmember 조회
         // 송금
 
         return new SplitBalanceResponse();
     }
 
     // 모임 삭제
-    public GetMyGruopResponse deleteGroup(int memberId, int groupInfoId) {
+    public void deleteGroup(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
+        groupInfo.deleteAccount();
+        for(Budget budget : groupInfo.getBudgets()) budget.softDelete();
+
         groupInfo.softDelete();
         groupInfoRepository.save(groupInfo);
-        return new GetMyGruopResponse();
     }
 
     private Member memberCheck(int memberId) {

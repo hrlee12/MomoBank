@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupInfo extends BaseEntity {
+public class  GroupInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,4 +62,6 @@ public class GroupInfo extends BaseEntity {
     public void updateDescription(String description){
         this.description = description;
     }
+
+    public void deleteAccount(){this.account = null; }
 }

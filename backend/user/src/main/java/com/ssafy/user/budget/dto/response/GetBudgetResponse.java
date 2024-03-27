@@ -41,32 +41,12 @@ public class GetBudgetResponse {
         return new GetBudgetResponse(
             budget.getBudgetId(),
             budget.getName(),
-            (budget.getFinalMoney() - budget.getCurrentMoney()) / leftCollectionDate(
-                budget.getMonthlyDueDate(), LocalDate.now(), budget.getDueDate()),
+            budget.getMonthlyFee(),
             budget.getCurrentMoney(),
             budget.getFinalMoney(),
             budget.getMonthlyDueDate(),
             budget.getDueDate(),
             true // status
         );
-    }
-
-    public static int leftCollectionDate(int day, LocalDate today, LocalDate lastDay) {
-        int cnt = 0;
-
-        LocalDate tempDate = today.withDayOfMonth(day);
-
-        if (tempDate.isBefore(today)) {
-            tempDate = tempDate.plusMonths(1);
-        }
-
-        while (!tempDate.isAfter(lastDay)) {
-            if (tempDate.getDayOfMonth() == day) {
-                cnt++;
-            }
-            tempDate = tempDate.plusMonths(1);
-        }
-
-        return cnt;
     }
 }

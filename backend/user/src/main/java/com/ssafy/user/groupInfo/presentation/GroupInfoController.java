@@ -78,14 +78,16 @@ public class GroupInfoController {
     @PostMapping("/{id}/name")
     public ResponseEntity<?> updateGroupName(@PathVariable int id,
         @RequestBody UpdateGroupNameRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 명 수정 성공", new GroupResponse());
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 명 수정 성공",
+            groupInfoService.updateGroupName(request.memberId(), id, request));
     }
 
     @Operation(summary = "모임 목적 수정", description = "모임의 목적 수정")
     @PostMapping("/{id}/description")
     public ResponseEntity<?> updateGroupDescription(@PathVariable int id,
         @RequestBody UpdateGroupDescriptionRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 목적 수정 성공", new GroupResponse());
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 목적 수정 성공",
+            groupInfoService.updateGroupDescription(request.memberId(), id, request));
     }
 
     @Operation(summary = "모임 회비 분배", description = "모임의 회비를 모임 구성원에게 분배")
@@ -99,6 +101,7 @@ public class GroupInfoController {
     @Operation(summary = "모임 삭제", description = "모임 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGroup(@PathVariable int id, @RequestBody GroupRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 삭제 성공", new GetMyGruopResponse());
+        groupInfoService.deleteGroup(request.memberId(), id);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 삭제 성공", null);
     }
 }

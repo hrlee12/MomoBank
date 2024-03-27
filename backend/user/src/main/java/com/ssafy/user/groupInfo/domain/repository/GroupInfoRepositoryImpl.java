@@ -30,16 +30,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
-                budget.finalMoney.add(budget.currentMoney.multiply(-1)).divide(
-                    leftCollectionDate(JPAExpressions
-                            .select(budget.monthlyDueDate)
-                            .from(budget)
-                            .fetchOne()
-                        , LocalDate.now(),
-                        JPAExpressions
-                            .select(budget.dueDate)
-                            .from(budget)
-                            .fetchOne())),
+                budget.monthlyFee,
                 groupInfo.groupMembers.size(),
                 Expressions.constant(true)))
             .from(groupInfo)
@@ -55,8 +46,8 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .select(new QGroupResponse(
                 groupInfo.groupName,
                 groupInfo.description,
-                groupInfo.account.balance, // 에서 budget 총합 빼기
-                groupMember.totalFee,//지금까지 낸(내야하는 금액)
+                groupInfo.account.balance.subtract(budget.currentMoney.sum()),
+                groupMember.totalFee,
                 budget.monthlyDueDate, // 가장 가까운 예산 납부 일?
                 groupInfo.account.balance,
                 groupInfo.groupMembers.size()
