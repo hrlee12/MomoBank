@@ -54,6 +54,7 @@ const getImageUrl = (imageName, idx) => {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      text-align: left;
     }
   }
 }

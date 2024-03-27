@@ -23,12 +23,28 @@ function onSlideChange(swiper) {
 
 // 슬라이드 데이터
 const accounts = ref([
-  { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
-  { accountName: "효리은행", accountNumber: "123-1234-12346", money: 2000000 },
-  { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
+  {
+    id: 0,
+    accountName: "저축은행",
+    accountNumber: "123-1234-12345",
+    money: 1000000,
+  },
+  {
+    id: 1,
+    accountName: "효리은행",
+    accountNumber: "123-1234-12346",
+    money: 2000000,
+  },
+  {
+    id: 2,
+    accountName: "성수은행",
+    accountNumber: "123-1234-12347",
+    money: 1000,
+  },
 ]);
 const isLastSlide = ref(false);
 
+// 각각의 그룹 페이지로 이동
 const goToGroup = (param) => {
   router.push(`/groups`);
 };
@@ -69,6 +85,7 @@ const goToGroup = (param) => {
     >
       <SwiperSlide v-for="(account, index) in accounts" :key="index">
         <BankAccount
+          :id="account.id"
           :accountName="account.accountName"
           :accountNumber="account.accountNumber"
           :money="account.money"

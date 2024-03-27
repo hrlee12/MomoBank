@@ -1,6 +1,7 @@
 <script setup>
 import KebabMenu from "@/components/ui/KebabMenu";
 defineProps({
+  id: Number,
   accountName: String,
   accountNumber: String,
   money: Number,
@@ -54,7 +55,7 @@ const hideActive = () => {
     </div>
 
     <div class="link-content">
-      <NuxtLink to="/bank/history">거래내역</NuxtLink>
+      <NuxtLink :to="`/bank/${id}`">거래내역 {{ id }}</NuxtLink>
       <NuxtLink to="/bank/remit">송금하기</NuxtLink>
     </div>
   </div>
