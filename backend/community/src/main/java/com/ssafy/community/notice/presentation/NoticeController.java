@@ -1,4 +1,4 @@
-package com.ssafy.community.notice.controller;
+package com.ssafy.community.notice.presentation;
 
 import com.ssafy.community.notice.dto.NoticeCreationRequest;
 import com.ssafy.community.notice.dto.NoticeDetailResponse;

@@ -1,6 +1,6 @@
 package com.ssafy.community.report.domain.entity;
 
-import com.ssafy.community.feed.entity.Users;
+import com.ssafy.community.feed.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class MemberRankings {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @Schema(description = "사용자 ID", example = "1")
-    private Users user;
+    private Member user;
 
     @Schema(description = "점수", example = "100")
     private Integer score;

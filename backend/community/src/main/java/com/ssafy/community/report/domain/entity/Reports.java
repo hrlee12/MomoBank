@@ -1,6 +1,6 @@
 package com.ssafy.community.report.domain.entity;
 
-import com.ssafy.community.feed.entity.GroupInfo;
+import com.ssafy.community.feed.domain.GroupInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
