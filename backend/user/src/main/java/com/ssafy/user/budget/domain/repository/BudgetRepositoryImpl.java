@@ -1,6 +1,8 @@
 package com.ssafy.user.budget.domain.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.budget.domain.QBudget;
@@ -22,20 +24,12 @@ public class BudgetRepositoryImpl implements BudgetRepositoryCustom {
 
     @Override
     public List<GetBudgetResponse> findBudgetResponseByGroupId(int groupInfoId) {
+        LocalDate today = LocalDate.now();
         return queryFactory
-            .select(new QGetBudgetResponse(
+            .select(Projections.constructor(GetBudgetResponse.class,
                 budget.budgetId,
                 budget.name,
-                budget.finalMoney.add(budget.currentMoney.multiply(-1)).divide(
-                    leftCollectionDate(JPAExpressions
-                            .select(budget.monthlyDueDate)
-                            .from(budget)
-                            .fetchOne()
-                        , LocalDate.now(),
-                        JPAExpressions
-                            .select(budget.dueDate)
-                            .from(budget)
-                            .fetchOne())),
+                budget.monthlyFee,
                 budget.currentMoney,
                 budget.finalMoney,
                 budget.monthlyDueDate,
@@ -45,25 +39,5 @@ public class BudgetRepositoryImpl implements BudgetRepositoryCustom {
             .leftJoin(budget.groupInfo, groupInfo)
             .where(groupInfo.groupInfoId.eq(groupInfoId))
             .fetch();
-    }
-
-
-    public static int leftCollectionDate(int day, LocalDate today, LocalDate lastDay) {
-        int cnt = 0;
-
-        LocalDate tempDate = today.withDayOfMonth(day);
-
-        if (tempDate.isBefore(today)) {
-            tempDate = tempDate.plusMonths(1);
-        }
-
-        while (!tempDate.isAfter(lastDay)) {
-            if (tempDate.getDayOfMonth() == day) {
-                cnt++;
-            }
-            tempDate = tempDate.plusMonths(1);
-        }
-
-        return cnt;
     }
 }

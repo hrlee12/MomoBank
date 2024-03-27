@@ -63,7 +63,7 @@ public class GroupInfoController {
     public ResponseEntity<?> getGroupDetail(@PathVariable int id, @RequestBody
     GroupRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 상세 조회 성공",
-            new GroupResponse());
+            groupInfoService.getGroupDetail(request.memberId(), id));
     }
 
     @Operation(summary = "모임 생성", description = "새 모임 생성")
@@ -71,7 +71,7 @@ public class GroupInfoController {
     public ResponseEntity<?> createNewGroup(
         @RequestBody CreateNewGroupRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "새 모임 생성 성공",
-            new CreateNewGroupResponse());
+            groupInfoService.createNewGroup(request.memberId(), request));
     }
 
     @Operation(summary = "모임 명 수정", description = "모임의 이름 수정")

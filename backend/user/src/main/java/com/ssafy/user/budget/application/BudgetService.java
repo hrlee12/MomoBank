@@ -2,6 +2,7 @@ package com.ssafy.user.budget.application;
 
 import com.ssafy.user.budget.domain.Budget;
 import com.ssafy.user.budget.domain.repository.BudgetRepository;
+import com.ssafy.user.budget.dto.request.CreateNewBudgetRequest;
 import com.ssafy.user.budget.dto.request.UpdateBudgetRequest;
 import com.ssafy.user.budget.dto.response.GetBudgetResponse;
 import com.ssafy.user.common.ErrorCode;
@@ -35,15 +36,15 @@ public class BudgetService {
         return responses;
     }
 
-    public GetBudgetResponse createNewBudget(int memberId, int groupInfoId, int monthlyDueDate,
-        String name, long finalFee, LocalDate finalDueDate) {
+    public GetBudgetResponse createNewBudget(int memberId, int groupInfoId, CreateNewBudgetRequest request) {
         Member member = memberCheck(memberId); // 모임장 권한 확인 필요
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
         Budget budget = Budget.builder()
-            .monthlyDueDate(monthlyDueDate)
-            .name(name)
-            .dueDate(finalDueDate)
-            .finalMoney(finalFee)
+            .monthlyDueDate(request.monthlyDueDate())
+            .name(request.name())
+            .dueDate(request.finalDueDate())
+            .finalMoney(request.finalFee())
+            .monthlyFee(request.monthlyFee())
             .groupInfo(groupInfo)
             .build();
         budgetRepository.save(budget);

@@ -7,6 +7,8 @@ public record CreateNewBudgetRequest(
     int monthlyDueDate,
     String name,
     long finalFee,
+
+    long monthlyFee,
     LocalDate finalDueDate
 ) {
 

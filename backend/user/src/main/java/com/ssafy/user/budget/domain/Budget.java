@@ -48,6 +48,10 @@ public class Budget extends BaseEntity {
     @ColumnDefault("0")
     private long currentMoney;
 
+    @Column(name = "monthly_fee")
+    @ColumnDefault("0")
+    private long monthlyFee;
+
     @ManyToOne
     @JoinColumn(name = "group_info_id")
     private GroupInfo groupInfo;
@@ -60,6 +64,7 @@ public class Budget extends BaseEntity {
         this.monthlyDueDate = request.monthlyDueDate();
         this.name = request.name();
         this.dueDate = request.finalDueDate();
+        this.monthlyFee = request.monthlyFee();
         this.finalMoney = request.finalFee();
     }
 }

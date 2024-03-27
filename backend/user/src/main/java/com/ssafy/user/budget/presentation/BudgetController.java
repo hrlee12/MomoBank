@@ -41,8 +41,7 @@ public class BudgetController {
     public ResponseEntity<?> createNewBudget(@PathVariable int id,
         @RequestBody CreateNewBudgetRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "예산 생성 성공",
-            budgetService.createNewBudget(request.memberId(), id, request.monthlyDueDate(),
-                request.name(), request.finalFee(), request.finalDueDate()));
+            budgetService.createNewBudget(request.memberId(), id, request));
     }
 
     @Operation(summary = "예산 수정", description = "기존 예산 상세 수정")

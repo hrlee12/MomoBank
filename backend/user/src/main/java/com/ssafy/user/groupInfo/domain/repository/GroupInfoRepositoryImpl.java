@@ -5,8 +5,11 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.budget.domain.QBudget;
 import com.ssafy.user.groupInfo.domain.QGroupInfo;
+import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
 import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
+import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.QGetMyGruopResponse;
+import com.ssafy.user.groupInfo.dto.response.QGroupResponse;
 import com.ssafy.user.groupMember.domain.QGroupMember;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,8 +43,29 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
                 groupInfo.groupMembers.size(),
                 Expressions.constant(true)))
             .from(groupInfo)
-            .leftJoin(groupInfo.groupMembers, groupMember).where(groupMember.groupMemberId.eq(memberId))
+            .leftJoin(groupInfo.groupMembers, groupMember)
+            .where(groupMember.groupMemberId.eq(memberId))
+            .leftJoin(groupInfo.budgets, budget)
+            .where(budget.groupInfo.eq(groupInfo))
             .fetch();
+    }
+
+    public GroupResponse findGroupResponseByGroup(int groupId, int memberId) {
+        return queryFactory
+            .select(new QGroupResponse(
+                groupInfo.groupName,
+                groupInfo.description,
+                groupInfo.account.balance, // 에서 budget 총합 빼기
+                groupMember.totalFee,//지금까지 낸(내야하는 금액)
+                budget.monthlyDueDate, // 가장 가까운 예산 납부 일?
+                groupInfo.account.balance,
+                groupInfo.groupMembers.size()
+                ))
+            .from(groupInfo)
+            .leftJoin(groupInfo.groupMembers, groupMember)
+            .leftJoin(groupInfo.budgets, budget)
+            .where(groupInfo.groupInfoId.eq(groupId), groupMember.groupMemberId.eq(memberId))
+            .fetchOne();
     }
 
     public static int leftCollectionDate(int day, LocalDate today, LocalDate lastDay) {

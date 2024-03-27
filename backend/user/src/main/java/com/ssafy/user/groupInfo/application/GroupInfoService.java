@@ -1,9 +1,12 @@
 package com.ssafy.user.groupInfo.application;
 
+import com.ssafy.user.bank.domain.Account;
+import com.ssafy.user.bank.domain.repository.AccountRepository;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
+import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;
 import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
 import com.ssafy.user.groupInfo.dto.response.GetFeesListResponse;
 import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
@@ -12,6 +15,7 @@ import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.SplitBalanceResponse;
 import com.ssafy.user.groupMember.domain.GroupMember;
+import com.ssafy.user.groupMember.domain.GroupMember.memberType;
 import com.ssafy.user.groupMember.domain.repository.GroupMemberRepository;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
@@ -28,6 +32,7 @@ public class GroupInfoService {
     private final GroupInfoRepository groupInfoRepository;
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final AccountRepository accountRepository;
 
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
@@ -55,67 +60,52 @@ public class GroupInfoService {
     }
 
     // 새 모임 생성
-    public CreateNewGroupResponse createNewGroup(int memberId) {
+    public CreateNewGroupResponse createNewGroup(int memberId, CreateNewGroupRequest request) {
         Member member = memberCheck(memberId);
-        // 그룹 생성
+        Account account = accountCheck(request.accountId());
+        Account myAccount = accountCheck(request.myAccountId());
 
-        // 모임장 참여자로 추가
+        GroupInfo groupInfo = GroupInfo.builder()
+            .groupName(request.groupName())
+            .description(request.description())
+            .member(member)
+            .account(account)
+            .build();
 
-        return new CreateNewGroupResponse();
+        GroupMember groupMember = GroupMember.builder()
+            .name(member.getName())
+            .role(memberType.모임장)
+            .groupInfo(groupInfo)
+            .member(member)
+            .account(myAccount)
+            .build();
+
+        groupInfoRepository.save(groupInfo);
+        groupMemberRepository.save(groupMember);
+        return CreateNewGroupResponse.from(groupInfo);
     }
 
     // 모임 상세 정보
     public GroupResponse getGroupDetail(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
 
-        GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-
-        GroupResponse groupResponse = GroupResponse.builder()
-            .name(groupInfo.getGroupName())
-            .description(groupInfo.getDescription())
-//            .availableBalance()
-//            .totalFee()
-//            .monthlyDueDate()
-            .totalBalance(groupInfo.getAccount().getBalance())
-//            .members()
-            .build();
-        return groupResponse;
+        return groupInfoRepository.findGroupResponseByGroup(groupInfoId, memberId);
     }
 
     // 모임 이름 수정
     public GroupResponse updateGroupName(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
-
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
-        GroupResponse groupResponse = GroupResponse.builder()
-            .name(groupInfo.getGroupName())
-            .description(groupInfo.getDescription())
-//            .availableBalance()
-//            .totalFee()
-//            .monthlyDueDate()
-            .totalBalance(groupInfo.getAccount().getBalance())
-//            .members()
-            .build();
-        return groupResponse;
+        return new GroupResponse();
     }
 
     // 모임 목적 수정
     public GroupResponse updateGroupDescription(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
-
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
-        GroupResponse groupResponse = GroupResponse.builder()
-            .name(groupInfo.getGroupName())
-            .description(groupInfo.getDescription())
-//            .availableBalance()
-//            .totalFee()
-//            .monthlyDueDate()
-            .totalBalance(groupInfo.getAccount().getBalance())
-//            .members()
-            .build();
-        return groupResponse;
+        return new GroupResponse();
     }
 
     // 모임 회비 분배
@@ -154,5 +144,14 @@ public class GroupInfoService {
             throw new CustomException(ErrorCode.DELETED_GROUP_INFO);
         }
         return groupInfo;
+    }
+
+    private Account accountCheck(int accountId) {
+        Account account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+        if (account.isDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_ACCOUNT);
+        }
+        return account;
     }
 }
