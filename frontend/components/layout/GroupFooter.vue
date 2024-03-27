@@ -1,4 +1,5 @@
 <script setup>
+// TODO : 생각해보니 Footer가 현재 바라보고 있는 모임 id를 기준으로 link가 설정되어야함.
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;

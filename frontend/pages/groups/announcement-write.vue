@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 
 import SelectAnnouncementType from "~/components/announcement-write/SelectAnnouncementType.vue";
 import CreateVoteType from "~/components/announcement-write/CreateVoteType.vue";

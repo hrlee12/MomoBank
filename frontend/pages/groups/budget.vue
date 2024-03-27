@@ -42,10 +42,17 @@ const calPercentage = (goalBudget, curBudget) => {
   <div class="bg-white h-44 rounded-b-[14px]">
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
-      <div class="flex flex-row justify-center">
+      <div class="flex flex-row justify-between">
+        <NuxtLink to="/groups/detail">
+          <div class="flex items-center justify-center w-10 h-6 ml-4">
+            <div></div>
+          </div>
+        </NuxtLink>
+
         <div class="items-center">
           <p class="text-positive-color text-[13px]">납부 완료</p>
         </div>
+        <div class="w-8 h-6 mr-4"></div>
       </div>
 
       <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->
@@ -56,16 +63,21 @@ const calPercentage = (goalBudget, curBudget) => {
       </div>
       <div class="flex justify-center">
         <div class="flex mt-3 w-80">
-          <div
-            class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color"
-          >
-            거래내역
-          </div>
-          <div
-            class="font-semibold text-[17px] w-40 text-center text-main-color"
-          >
-            예산
-          </div>
+          <nuxt-link to="/groups/transaction-history">
+            <div
+              class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color"
+            >
+              거래내역
+            </div>
+          </nuxt-link>
+
+          <nuxt-link to="/groups/budget">
+            <div
+              class="font-semibold text-[17px] w-40 text-center text-main-color"
+            >
+              예산
+            </div>
+          </nuxt-link>
         </div>
       </div>
     </div>
