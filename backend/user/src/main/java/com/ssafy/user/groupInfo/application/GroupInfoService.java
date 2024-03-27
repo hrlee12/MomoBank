@@ -32,14 +32,11 @@ public class GroupInfoService {
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
         Member member = memberCheck(memberId);
-        // 리스트 생성
-
-        return new GetMyGroupListResponse();
+        return new GetMyGroupListResponse(groupInfoRepository.findGroupInfoResponseByMember(memberId));
     }
 
     public List<GroupMember> getMyGroup(Member member) {
-        List<GroupMember> groupMembers = groupMemberRepository.findByMember(member);
-        return groupMembers;
+        return groupMemberRepository.findByMember(member);
     }
 
     // 선택된 모임 상세 조회
