@@ -21,6 +21,11 @@ spring:
         hibernate:
           format_sql: true
 
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: file:/uploads/feed/
 
 #logging
 logging:
