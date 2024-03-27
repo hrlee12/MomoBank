@@ -2,7 +2,6 @@
 defineProps({
   groupName: String,
   groupMoney: Number,
-  groupJoinDate: String,
   state: Boolean,
   delayDate: Number,
   groupDescription: String,
@@ -23,8 +22,7 @@ const getImageUrl = (imageName, idx) => {
       <h2>{{ groupName }}</h2>
       <h2>{{ groupMoney.toLocaleString("ko-KR") }}원</h2>
     </div>
-    <div class="item">
-      <p>가입날짜: {{ groupJoinDate }}</p>
+    <div class="item right">
       <p v-if="state" class="ok bold">납부 완료</p>
       <p v-else class="not-ok bold">미납 {{ delayDate }}일</p>
     </div>
@@ -78,5 +76,9 @@ const getImageUrl = (imageName, idx) => {
 
 img {
   height: 3vh;
+}
+
+.right {
+  justify-content: right !important;
 }
 </style>

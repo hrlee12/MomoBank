@@ -53,7 +53,6 @@ const groups = ref([
       <SimpleGroup
         :groupName="group.groupName"
         :groupMoney="group.groupMoney"
-        :groupJoinDate="group.groupJoinDate"
         :state="group.state"
         :delayDate="group.delayDate"
         :groupDescription="group.groupDescription"

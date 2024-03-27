@@ -109,7 +109,7 @@ const goNext = () => {
 }
 
 .account-container {
-  padding: 3% 0;
+  padding: 3% 0 7% 0;
   display: grid;
   grid-template-rows: repeat(auto, 1fr);
   gap: 20px;
