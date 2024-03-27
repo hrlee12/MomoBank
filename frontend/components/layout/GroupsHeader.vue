@@ -20,7 +20,11 @@ const groupsName = "5반5린이들";
 const pageTitle = computed(() => {
   noSideMenu.value = false;
   noArrowMenu.value = false;
-  if (route.name === "groups") {
+  if (
+    route.name === "groups" ||
+    route.name === "groups-budget" ||
+    route.name === "groups-transaction-history"
+  ) {
     return groupsName;
   } else if (route.name === "groups-detail") {
     return "모임 상세";
@@ -40,8 +44,13 @@ const pageTitle = computed(() => {
     return "공지사항";
   } else if (route.name === "groups-announcement-write") {
     noSideMenu.value = true;
-    noArrowMenu.value = true;
     return "공지사항";
+  } else if (
+    route.name == "groups-announcement-vote-edit" ||
+    route.name == "groups-announcement-normal-edit"
+  ) {
+    noSideMenu.value = true;
+    return "공지사항 수정";
   }
 });
 </script>

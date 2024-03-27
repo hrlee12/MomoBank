@@ -43,7 +43,7 @@ function removeVoteItem(itemId) {
       <input
         type="text"
         v-model="item.value"
-        :name="'voteItem' + item.id"
+        name="voteItem"
         :id="'voteItem' + item.id"
         placeholder="투표 항목"
         class="text-lg font-semibold text-gray-color"

@@ -1,4 +1,5 @@
 <script setup>
+// TODO: onMounted로 해당 모임 공지사항 리스트 불러오기
 const emit = defineEmits(["ok-button"]);
 
 function completeWrite() {
@@ -13,6 +14,12 @@ const modalTitle = computed(() => {
   if (route.name === "groups-announcement-write") {
     moveLink.value = "/groups/announcement";
     return "공지사항이 작성되었습니다";
+  } else if (
+    route.name === "groups-announcement-vote-edit" ||
+    route.name === "groups-announcement-normal-edit"
+  ) {
+    moveLink.value = "/groups/announcement";
+    return "공지사항이 수정되었습니다";
   }
 });
 </script>
