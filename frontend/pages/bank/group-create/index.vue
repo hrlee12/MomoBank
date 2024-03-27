@@ -55,4 +55,9 @@ const goNext = () => {
 .second-btn {
   border-radius: 15px !important;
 }
+
+.input-container {
+  height: 90%;
+  width: 95%;
+}
 </style>

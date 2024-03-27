@@ -29,7 +29,7 @@ const onPhone = () => {
 };
 
 const goEdit = (param) => {
-  var pageName = param == 0 ? "phoneEdit" : "passwordEdit";
+  var pageName = param == 0 ? "phone-edit" : "password-edit";
   router.push(`/bank/profile/${pageName}`);
 };
 
