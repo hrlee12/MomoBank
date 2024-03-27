@@ -1,11 +1,12 @@
 <script setup>
-import { useRoute } from "#vue-router";
-
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;
   else console.log("Image code error");
 };
+
+const noSideMenu = ref(false);
+const noArrowMenu = ref(false);
 
 const goBack = () => {
   window.history.back();
@@ -17,6 +18,8 @@ const groupsName = "5반5린이들";
 
 // TODO : pinia로 관리할지, Header에서 직접 관리할지.
 const pageTitle = computed(() => {
+  noSideMenu.value = false;
+  noArrowMenu.value = false;
   if (route.name === "groups") {
     return groupsName;
   } else if (route.name === "groups-detail") {
@@ -35,21 +38,33 @@ const pageTitle = computed(() => {
     route.name === "groups-announcement-vote"
   ) {
     return "공지사항";
+  } else if (route.name === "groups-announcement-write") {
+    noSideMenu.value = true;
+    noArrowMenu.value = true;
+    return "공지사항";
   }
 });
 </script>
 
 <template>
   <header class="flex flex-row justify-between pt-3 bg-white h-14">
-    <div @click="goBack">
-      <img
-        class="w-10 h-8 ml-4"
-        :src="getImageUrl('arrow-icon.png', 0)"
-        alt="arrow-icon 화살표 아이콘"
-      />
+    <div v-if="noArrowMenu === false">
+      <div @click="goBack">
+        <img
+          class="w-10 h-8 ml-4"
+          :src="getImageUrl('arrow-icon.png', 0)"
+          alt="arrow-icon 화살표 아이콘"
+        />
+      </div>
     </div>
+    <div v-if="noArrowMenu === true">
+      <div>
+        <div class="w-10 h-8 ml-6" alt="arrow-icon 화살표 아이콘"></div>
+      </div>
+    </div>
+
     <div class="ml-8 text-xl font-semibold">{{ pageTitle }}</div>
-    <div>
+    <div v-if="noSideMenu === false">
       <div class="flex">
         <img
           class="mr-4 w-7 h-7"
@@ -62,6 +77,10 @@ const pageTitle = computed(() => {
           alt="home-icon"
         />
       </div>
+    </div>
+    <div class="flex" v-if="noSideMenu === true">
+      <div class="mr-4 w-7 h-7"></div>
+      <div class="mr-4 w-7 h-7"></div>
     </div>
   </header>
 </template>
