@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: community
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: community
+  template:
+    metadata:
+      labels:
+        app: community
+    spec:
+      containers:
+        - name: community
+          image: minwoo540/momo:community-latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8083

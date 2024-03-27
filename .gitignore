@@ -35,3 +35,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+backend/community/src/main/resources/application-local.yml
+
+
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+backend/community/src/main/resources/application-local.yml
