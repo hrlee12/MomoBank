@@ -15,9 +15,11 @@ const getImageUrl = (imageName, idx) => {
   <div class="h-screen bg-white">
     <div class="flex justify-between">
       <div></div>
-      <div class="w-8 h-8 mt-4 mr-4">
-        <img :src="getImageUrl('add-icon2.png', 0)" alt="add-icon" />
-      </div>
+      <nuxt-link to="announcement-write">
+        <div class="w-6 h-6 mt-4 mr-4">
+          <img :src="getImageUrl('add-icon2.png', 0)" alt="add-icon" />
+        </div>
+      </nuxt-link>
     </div>
 
     <nuxt-link to="/groups/announcement-detail">
