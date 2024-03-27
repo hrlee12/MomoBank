@@ -22,7 +22,7 @@ public class BudgetRepositoryImpl implements BudgetRepositoryCustom {
 
     @Override
     public List<GetBudgetResponse> findBudgetResponseByGroupId(int groupInfoId) {
-        List<GetBudgetResponse> responses = queryFactory
+        return queryFactory
             .select(new QGetBudgetResponse(
                 budget.budgetId,
                 budget.name,
@@ -45,8 +45,6 @@ public class BudgetRepositoryImpl implements BudgetRepositoryCustom {
             .leftJoin(budget.groupInfo, groupInfo)
             .where(groupInfo.groupInfoId.eq(groupInfoId))
             .fetch();
-
-        return responses;
     }
 
 

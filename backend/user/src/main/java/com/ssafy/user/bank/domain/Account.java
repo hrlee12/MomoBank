@@ -2,6 +2,7 @@ package com.ssafy.user.bank.domain;
 
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
+import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.member.domain.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -56,6 +57,9 @@ public class Account extends BaseEntity {
 
     @OneToOne(mappedBy = "account")
     private GroupInfo groupInfo;
+
+    @OneToOne(mappedBy = "account")
+    private GroupMember groupMember;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
