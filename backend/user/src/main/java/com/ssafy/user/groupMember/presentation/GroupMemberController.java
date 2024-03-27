@@ -3,8 +3,9 @@ package com.ssafy.user.groupMember.presentation;
 
 import com.ssafy.user.common.CommonResponse;
 import com.ssafy.user.groupMember.application.GroupMemberService;
-import com.ssafy.user.groupMember.dto.request.IdDTO;
+import com.ssafy.user.groupMember.dto.request.GroupMemberIdDTO;
 import com.ssafy.user.groupMember.dto.request.JoinGroupRequest;
+import com.ssafy.user.groupMember.dto.request.MemberIdDTO;
 import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.groupMember.dto.response.GroupMemberListDTO;
 import com.ssafy.user.groupMember.dto.response.InviteLinkResponse;
@@ -39,7 +40,7 @@ public class GroupMemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모임원 목록 불러오기 성공",
             content = {@Content(schema = @Schema(implementation = GroupMemberListDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "조회되는 그룹 멤버가 없습니다. 그룹 아이디를 확인해주세요.")})
+            @ApiResponse(responseCode = "400", description = "조회되는 그룹 멤버가 없습니다.")})
     public ResponseEntity getGroupMembers(@PathVariable String groupId) {
 
         List<GroupMemberDTO> response = groupMemberService.getAllGroupMembers(Integer.parseInt(groupId));
@@ -68,7 +69,7 @@ public class GroupMemberController {
             @ApiResponse(responseCode = "404", description = "삭제된 모임"),
             @ApiResponse(responseCode = "409", description = "해당 모임에 이미 가입한 회원입니다.")
     })
-    public ResponseEntity verifyInviteCode(@PathVariable String inviteCode, @RequestBody IdDTO request) throws Exception {
+    public ResponseEntity verifyInviteCode(@PathVariable String inviteCode, @RequestBody MemberIdDTO request) throws Exception {
 
         VerifyInviteCodeResponse response = groupMemberService.verifyInviteCode(inviteCode, request.getMemberId());
 
@@ -94,12 +95,12 @@ public class GroupMemberController {
     @Operation(summary = "모임원 추방")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모임원 추방 완료"),
-            @ApiResponse(responseCode = "404", description = "해당 모임원 없음"),
-            @ApiResponse(responseCode = "400", description = "그룹장은 추방 불가")
+            @ApiResponse(responseCode = "400", description = "조회되는 그룹 멤버가 없습니다.<br>모임장은 탈퇴할 수 없습니다.")
     })
-    public ResponseEntity removeGroupMember(@PathVariable String groupId, @PathVariable String groupMemberId) {
-        // 로직 구현
-        return ResponseEntity.ok().build();
+    public ResponseEntity removeGroupMember(@PathVariable int groupId, @PathVariable int groupMemberId) {
+
+        groupMemberService.removeGroupMember(groupId, groupMemberId);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임원 추방 완료", null);
     }
 
 
@@ -107,11 +108,12 @@ public class GroupMemberController {
     @Operation(summary = "모임 탈퇴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모임 탈퇴 완료"),
-            @ApiResponse(responseCode = "404", description = "이미 삭제된 회원"),
-            @ApiResponse(responseCode = "400", description = "그룹장은 탈퇴 불가")
+            @ApiResponse(responseCode = "400", description = "조회되는 그룹 멤버가 없습니다.<br>모임장은 탈퇴할 수 없습니다.<br> 해당 회원의 그룹멤버 정보가 아닙니다. ")
     })
-    public ResponseEntity leaveGroup(@PathVariable String groupId) {
+    public ResponseEntity leaveGroup(@PathVariable int groupId, @RequestBody GroupMemberIdDTO request) {
         // 로직 구현
-        return ResponseEntity.ok().build();
+        groupMemberService.leaveGroup(groupId, request.getGroupMemberId(), request.getMemberId());
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 탈퇴 완료", null);
     }
 }

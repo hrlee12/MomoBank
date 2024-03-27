@@ -3,16 +3,7 @@ package com.ssafy.user.groupMember.domain;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.member.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,11 +34,11 @@ public class GroupMember extends BaseEntity {
     @ColumnDefault("0")
     private long totalFee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private GroupInfo groupInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

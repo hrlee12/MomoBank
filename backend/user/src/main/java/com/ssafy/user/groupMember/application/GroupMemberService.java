@@ -22,6 +22,8 @@ import com.ssafy.user.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -104,7 +106,7 @@ public class GroupMemberService {
         int groupId = Integer.parseInt(splitCode[0]);
         String hashCode = splitCode[1];
 
-        GroupMember alreadyGroupMember = groupMemberRepository.findByMember_IdAndGroupInfo_GroupId(memberId, groupId).orElse(null);
+        GroupMember alreadyGroupMember = groupMemberRepository.findByMember_IdAndGroupInfo_GroupIdAndIsDeletedFalse(memberId, groupId).orElse(null);
 
         if (alreadyGroupMember != null){
             throw new CustomException(ErrorCode.ALREADY_JOINED_MEMBER);
@@ -201,6 +203,58 @@ public class GroupMemberService {
         groupMemberRepository.save(groupMember);
 
 
-        // ------------------------------------ 알람보내기 필요. -----------------------------------
+        // -------------------------------- 그룹장에게 알람보내기 필요. -----------------------------------
+        // --------------------- 카프카로 community의 그룹알람 insert, 그룹멤버 insert 필요 --------
+    }
+
+
+    @Transactional
+    public void removeGroupMember(int groupId, int groupMemberId) {
+        GroupMember groupMember = groupMemberRepository.findByGroupMemberIdAndGroupInfo_GroupIdAndIsDeletedFalse(groupMemberId, groupId)
+                                .orElseThrow(()-> new CustomException(ErrorCode.NO_GROUP_MEMBER_INFO));
+
+        if (groupMember.getRole().equals(GroupMember.memberType.모임장)){
+            throw new CustomException(ErrorCode.GROUP_LEADER_CANNOT_RESIGN);
+        }
+
+
+        int memberId = groupMember.getMember().getMemberId();
+
+        groupMember.softDelete();
+
+
+
+        //------------------------ 강퇴된 회원에게 알림 보내기 -------------------------
+
+
+        // ----------- 카프카로 community의 그룹멤버 데이터 softDelete 해주기 -----------
+        // ----------- 카프카로 community의 그룹알림에도 데이터 insert 하기  ------------
+    }
+
+
+
+    @Transactional
+    public void leaveGroup(int groupId, int groupMemberId, String memberId) {
+
+        GroupMember groupMember = groupMemberRepository.findByGroupMemberIdAndGroupInfo_GroupIdAndIsDeletedFalse(groupMemberId, groupId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_MEMBER_INFO));
+
+
+        if (!memberId.equals(groupMember.getMember().getId()))
+            throw new CustomException(ErrorCode.NOT_OWN_GROUP_MEMBER);
+
+
+        if (groupMember.getRole().equals(GroupMember.memberType.모임장))
+            throw new CustomException(ErrorCode.GROUP_LEADER_CANNOT_RESIGN);
+
+
+
+        groupMember.softDelete();
+
+        // ------------- 그룹장에게 해당회원이 탈퇴했다는 알람 보내기 ----------------
+
+
+        // ----------- 카프카로 community의 그룹멤버 데이터 softDelete 해주기 -----------
+        // ----------- 카프카로 community의 그룹알림에도 데이터 insert 하기  ------------
     }
 }

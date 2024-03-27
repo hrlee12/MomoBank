@@ -1,10 +1,11 @@
 package com.ssafy.user.groupMember.dto.request;
 
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
 @Getter
-@ToString
-public class IdDTO {
+@Setter
+public class GroupMemberIdDTO {
     private String memberId;
+    private int groupMemberId;
 }
