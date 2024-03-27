@@ -1,0 +1,30 @@
+input {
+  height: 5vh;
+  border-radius: 10px;
+  border: 1px solid $gray-color;
+  padding: 0 1vh;
+  width: 100%;
+
+  &:focus {
+    outline: 2px solid $primary-color;
+  }
+}
+
+.login-container {
+  width: 90%;
+  height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.warning {
+  color: $negative-color;
+  font-size: medium;
+}
+
+.login-item {
+  margin: 0.5vh 0;
+  padding: 0 2vw;
+}
