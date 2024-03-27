@@ -29,11 +29,11 @@ const routerNameToInfoMap = {
   "bank-history": { title: "거래내역", sideMenuActive: FULL_MENU },
   "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
   "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
-  "bank-profile-phoneEdit": {
+  "bank-profile-phone-edit": {
     title: "전화번호수정",
     sideMenuActive: NO_SIDE_MENU,
   },
-  "bank-profile-passwordEdit": {
+  "bank-profile-password-edit": {
     title: "비밀번호수정",
     sideMenuActive: NO_SIDE_MENU,
   },
