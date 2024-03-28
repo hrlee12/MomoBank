@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface LikesRepository extends JpaRepository<Likes, Integer> {
     Likes findByFeedFeedId(int feedId);
+
+    @Query("DELETE FROM Likes l WHERE l.feed.feedId = :feedId AND l.groupMember.groupMemberId = :memberId")
+    void deleteByFeedFeedIdAndGroupMemberGroupMemberId(Integer feedId, Integer memberId);
 }
