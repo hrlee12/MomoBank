@@ -19,10 +19,10 @@ public class InviteRepositoryCustom {
     private final QInvite invite = QInvite.invite;
     private final QGroupInfo group = QGroupInfo.groupInfo;
 
-    public List<Invite> findByGroupIdAndExpiredDate(int groupId, LocalDateTime date) {
+    public List<Invite> findByGroupInfoIdAndExpiredDate(int groupId, LocalDateTime date) {
         return jpaQueryFactory.select(invite)
                 .from(invite)
-                .where(invite.isDeleted.eq(false).and(invite.group.groupId.eq(groupId).and(invite.expireDate.after(date))))
+                .where(invite.isDeleted.eq(false).and(invite.group.groupInfoId.eq(groupId).and(invite.expireDate.after(date))))
                 .fetch();
     }
 

@@ -1,5 +1,6 @@
 package com.ssafy.user.groupMember.domain;
 
+import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.member.domain.Member;
@@ -41,6 +42,10 @@ public class GroupMember extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public enum memberType {
         모임장, 모임원

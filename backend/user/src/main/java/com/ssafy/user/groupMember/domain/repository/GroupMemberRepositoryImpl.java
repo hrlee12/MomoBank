@@ -28,7 +28,7 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
                                                 groupMember.member.sincerity))
                 .from(groupMember)
                 .join(groupMember.member, member)
-                .where(group.groupId.eq(groupId)
+                .where(group.groupInfoId.eq(groupId)
                         .and(group.isDeleted.eq(false)
                         .and(groupMember.isDeleted.eq(false)
                         .and(member.isDeleted.eq(false)))))

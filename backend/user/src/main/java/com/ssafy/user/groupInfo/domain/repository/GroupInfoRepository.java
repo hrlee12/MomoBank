@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface GroupInfoRepository extends JpaRepository<GroupInfo, Integer>, GroupInfoRepositoryCustom {
 
-    Optional<GroupInfo> findByGroupIdAndIsDeletedFalse(int groupId);
+    Optional<GroupInfo> findByGroupInfoIdAndIsDeletedFalse(int groupId);
 }

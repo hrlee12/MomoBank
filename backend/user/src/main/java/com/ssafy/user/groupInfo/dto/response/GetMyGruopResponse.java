@@ -23,7 +23,7 @@ public class GetMyGruopResponse {
 
     @QueryProjection
     public GetMyGruopResponse(GroupMember groupMember){
-        this.groupId = groupMember.getGroupInfo().getGroupId();
+        this.groupId = groupMember.getGroupInfo().getGroupInfoId();
         this.name = groupMember.getMember().getName();
 //        this.monthlyFee =
         this.joinDate = Date.valueOf(groupMember.getCreatedAt().toLocalDate());

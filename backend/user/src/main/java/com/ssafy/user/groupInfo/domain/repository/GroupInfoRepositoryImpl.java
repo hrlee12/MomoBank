@@ -29,7 +29,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
     public GroupInfo getGroupInfoById(int groupInfoId){
         return queryFactory.select(group)
                 .from(group)
-                .where(group.groupId.eq(groupInfoId).and(group.isDeleted.eq(false)))
+                .where(group.groupInfoId.eq(groupInfoId).and(group.isDeleted.eq(false)))
                 .join(group.account, account)
                 .fetchJoin()
                 .where(account.isDeleted.eq(false))

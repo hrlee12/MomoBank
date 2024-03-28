@@ -19,14 +19,19 @@ import com.ssafy.user.groupMember.dto.response.InviteLinkResponse;
 import com.ssafy.user.groupMember.dto.response.VerifyInviteCodeResponse;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
+import com.ssafy.user.member.dto.kafka.InsertGroupMemberVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -43,6 +48,7 @@ public class GroupMemberService {
     private final InviteRepositoryCustom inviteRepositoryCustom;
     private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     @Value("${user.url}")
     private String url;
 
@@ -74,7 +80,7 @@ public class GroupMemberService {
         String secretKey = encryptUtil.getRandomKey();
 
 
-        GroupInfo group = groupInfoRepository.findByGroupIdAndIsDeletedFalse(groupId).orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
+        GroupInfo group = groupInfoRepository.findByGroupInfoIdAndIsDeletedFalse(groupId).orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
 
         // 초대 정보(그룹, 시크릿키, 만료일) 저장
         Invite invite = Invite.builder()
@@ -106,7 +112,7 @@ public class GroupMemberService {
         int groupId = Integer.parseInt(splitCode[0]);
         String hashCode = splitCode[1];
 
-        GroupMember alreadyGroupMember = groupMemberRepository.findByMember_IdAndGroupInfo_GroupIdAndIsDeletedFalse(memberId, groupId).orElse(null);
+        GroupMember alreadyGroupMember = groupMemberRepository.findByMember_IdAndGroupInfo_GroupInfoIdAndIsDeletedFalse(memberId, groupId).orElse(null);
 
         if (alreadyGroupMember != null){
             throw new CustomException(ErrorCode.ALREADY_JOINED_MEMBER);
@@ -117,7 +123,7 @@ public class GroupMemberService {
         // groupId-해쉬값
         // DB의 groupId와 identifier로 해쉬한 값
 
-        List<Invite> invites = inviteRepositoryCustom.findByGroupIdAndExpiredDate(groupId, LocalDateTime.now());
+        List<Invite> invites = inviteRepositoryCustom.findByGroupInfoIdAndExpiredDate(groupId, LocalDateTime.now());
 
 
         Boolean isCodeExist = false;
@@ -161,7 +167,10 @@ public class GroupMemberService {
 
 
 
+
+
     // 그룹에 가입하기
+    @Transactional
     public void joinGroup(String authToken, int groupId, int accountId, String memberId) throws Exception {
 
         // 초대코드 인증토큰 검증
@@ -177,7 +186,7 @@ public class GroupMemberService {
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
 
         // GroupMember 만들기 위한 엔티티 불러오기
-        GroupInfo group = groupInfoRepository.findByGroupIdAndIsDeletedFalse(groupId)
+        GroupInfo group = groupInfoRepository.findByGroupInfoIdAndIsDeletedFalse(groupId)
                             .orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
 
         Account account = accountRepositoryCustom.findbyIdAndMemberId(accountId, memberId);
@@ -196,6 +205,7 @@ public class GroupMemberService {
                 .member(member)
                 .groupInfo(group)
                 .name(member.getName())
+                .account(account)
                 .totalFee(0)
                 .build();
 
@@ -205,12 +215,15 @@ public class GroupMemberService {
 
         // -------------------------------- 그룹장에게 알람보내기 필요. -----------------------------------
         // --------------------- 카프카로 community의 그룹알람 insert, 그룹멤버 insert 필요 --------
+
+
+        kafkaTemplate.send("insertGroupMember", new InsertGroupMemberVO(memberId, groupId));
     }
 
 
     @Transactional
     public void removeGroupMember(int groupId, int groupMemberId) {
-        GroupMember groupMember = groupMemberRepository.findByGroupMemberIdAndGroupInfo_GroupIdAndIsDeletedFalse(groupMemberId, groupId)
+        GroupMember groupMember = groupMemberRepository.findByGroupMemberIdAndGroupInfo_GroupInfoIdAndIsDeletedFalse(groupMemberId, groupId)
                                 .orElseThrow(()-> new CustomException(ErrorCode.NO_GROUP_MEMBER_INFO));
 
         if (groupMember.getRole().equals(GroupMember.memberType.모임장)){
@@ -218,15 +231,18 @@ public class GroupMemberService {
         }
 
 
-        int memberId = groupMember.getMember().getMemberId();
+
 
         groupMember.softDelete();
 
-
+        LinkedHashMap<String, Object> data = new LinkedHashMap<>();
+        data.put("groupMemberId", groupMemberId);
+        data.put("groupId", groupId);
 
         //------------------------ 강퇴된 회원에게 알림 보내기 -------------------------
 
 
+        kafkaTemplate.send("deleteGroupMember", data);
         // ----------- 카프카로 community의 그룹멤버 데이터 softDelete 해주기 -----------
         // ----------- 카프카로 community의 그룹알림에도 데이터 insert 하기  ------------
     }
@@ -236,7 +252,7 @@ public class GroupMemberService {
     @Transactional
     public void leaveGroup(int groupId, int groupMemberId, String memberId) {
 
-        GroupMember groupMember = groupMemberRepository.findByGroupMemberIdAndGroupInfo_GroupIdAndIsDeletedFalse(groupMemberId, groupId)
+        GroupMember groupMember = groupMemberRepository.findByGroupMemberIdAndGroupInfo_GroupInfoIdAndIsDeletedFalse(groupMemberId, groupId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_MEMBER_INFO));
 
 
@@ -250,6 +266,15 @@ public class GroupMemberService {
 
 
         groupMember.softDelete();
+
+
+
+        LinkedHashMap<String, Object> data = new LinkedHashMap<>();
+        data.put("groupMemberId", groupMemberId);
+        data.put("groupId", groupId);
+
+
+        kafkaTemplate.send("deleteGroupMember", data);
 
         // ------------- 그룹장에게 해당회원이 탈퇴했다는 알람 보내기 ----------------
 

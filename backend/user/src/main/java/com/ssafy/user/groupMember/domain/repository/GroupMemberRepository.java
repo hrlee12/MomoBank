@@ -12,7 +12,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Intege
 
     List<GroupMember> findByMember(Member member);
 
-    Optional<GroupMember> findByMember_IdAndGroupInfo_GroupIdAndIsDeletedFalse(String memberId, int groupId);
+    Optional<GroupMember> findByMember_IdAndGroupInfo_GroupInfoIdAndIsDeletedFalse(String memberId, int groupId);
 
-    Optional<GroupMember> findByGroupMemberIdAndGroupInfo_GroupIdAndIsDeletedFalse(int groupMemberId, int groupId);
+    Optional<GroupMember> findByGroupMemberIdAndGroupInfo_GroupInfoIdAndIsDeletedFalse(int groupMemberId, int groupId);
 }

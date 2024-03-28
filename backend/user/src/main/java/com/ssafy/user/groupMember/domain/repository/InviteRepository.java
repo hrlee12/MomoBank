@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InviteRepository extends JpaRepository<Invite, Integer> {
-    Optional<List<Invite>> findByExpireDateAfterAndGroup_GroupIdAndIsDeletedFalse(LocalDateTime date, int groupId);
+    Optional<List<Invite>> findByExpireDateAfterAndGroup_GroupInfoIdAndIsDeletedFalse(LocalDateTime date, int groupId);
 
 }

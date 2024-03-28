@@ -4,6 +4,7 @@ import com.ssafy.user.bank.entity.Account;
 import com.ssafy.user.budget.entity.Budget;
 import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupMember.domain.GroupMember;
+import com.ssafy.user.member.domain.Member;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,12 +19,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupInfo extends BaseEntity {
+public class  GroupInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_info_id")
-    private int groupId;
+    private int groupInfoId;
 
     @Column(length = 255, name = "group_name")
     private String groupName;
@@ -31,8 +32,9 @@ public class GroupInfo extends BaseEntity {
     @Column(length = 500, name = "description")
     private String description;
 
-    @Column(name = "created_by")
-    private int createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -43,4 +45,14 @@ public class GroupInfo extends BaseEntity {
 
     @OneToMany(mappedBy = "groupInfo", cascade = CascadeType.REFRESH)
     private List<GroupMember> groupMembers;
+
+    public void updateGroupName(String groupName){
+        this.groupName = groupName;
+    }
+
+    public void updateDescription(String description){
+        this.description = description;
+    }
+
+    public void deleteAccount(){this.account = null; }
 }
