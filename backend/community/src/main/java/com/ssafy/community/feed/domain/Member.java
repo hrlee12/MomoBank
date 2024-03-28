@@ -1,49 +1,90 @@
 package com.ssafy.community.feed.domain;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import com.ssafy.community.common.BaseEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
-
-@Getter
-@Setter
 @Entity
-@Table(name = "users")
-@Schema(description = "사용자 정보")
-public class Member {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "사용자 ID", example = "1")
-    private Integer userId;
+    private int memberId;
 
-    @Column(unique = true)
-    @Schema(description = "사용자 고유 ID", example = "user123")
+    @Size(min = 0, max = 100)
+    @Column(nullable = false, length = 100)
     private String id;
 
-    @Schema(description = "이름", example = "홍길동")
+
+    @Size(min = 0, max = 50)
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @Schema(description = "이메일", example = "user123@example.com")
-    private String email;
+    @Size(min = 0, max = 100)
+    @Column(nullable = false, length = 100)
+    private String password;
 
-    @Schema(description = "FCM 토큰", example = "abcdef123456")
+    @Size(min = 0, max = 50)
+    @Column(nullable = false, length = 50)
+    private String phoneNumber;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(nullable = false)
+    private LocalDateTime birthDate;
+
     private String fcmToken;
 
-    @Schema(description = "성실도 점수", example = "100")
-    private Integer sincerity;
+    @Size(min = 0, max = 50)
+    @Column(length = 50)
+    @ColumnDefault("\"momo\"")
+    private String provider;
 
-    @Column(nullable = false)
-    @Schema(description = "생성일", example = "2023-03-15T12:00:00")
-    private LocalDateTime createdAt;
+    @ColumnDefault("50")
+    private int sincerity;
 
-    @Column(nullable = false)
-    @Schema(description = "업데이트 일자", example = "2023-03-16T12:00:00")
-    private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
+    private List<GroupMember> groupMembers;
 
-    @Schema(description = "삭제 여부", example = "0")
-    private Boolean isDeleted;
+    public void changeProvider() {
+        this.provider = "kakao";
+    }
+
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+
+    @Builder
+    public Member(String id, String name, String password, String phoneNumber,
+                  LocalDateTime birthDate) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.sincerity = 50;
+    }
+
+
 }
