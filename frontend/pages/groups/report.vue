@@ -194,11 +194,17 @@ definePageMeta({
 
       <div style="margin-top: -40px;">
         <h1 class="stylish-title">베스트 멤버</h1>
-        <p class="description">회비 납부 및 활동 참여도를 기반으로 베스트 멤버를 선정합니다.</p>
+        <p>회비 납부 및 활동 참여도를 기반으로 베스트 멤버를 선정합니다.</p>
+
+
+
+        <div class="image-container">
+          <div class="centered-text">{{ reportAndBestMember.bestMember.bestMember.name }}</div>
+        </div>
 
 
         <div class="best-member">
-          <img src="/icon/good.png" alt="" class="icon">
+          <img src="/images/good.png" alt="" class="icon">
           <div class="content">
             <h3>{{ reportAndBestMember.bestMember.bestMember.name }}님 축하드립니다!</h3>
             <p>{{ reportAndBestMember.bestMember.reason }}</p>
@@ -249,19 +255,18 @@ definePageMeta({
 
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap');
+
 .recommendations-container {
   display: flex;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding: 5px;
-  /* 내부 여백 추가 */
   scrollbar-width: none;
-  /* Firefox */
 }
 
 .recommendations-container::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari, Opera */
 }
 
 .recommendation-item {
@@ -337,17 +342,11 @@ definePageMeta({
 
 .description {
   text-align: center;
-  /* 중앙 정렬 */
   color: #666;
-  /* 글자 색상 */
   font-size: 18px;
-  /* 글자 크기 */
   max-width: 80%;
-  /* 최대 너비 */
   margin: 0 auto 30px;
-  /* 자동 마진으로 중앙 정렬 및 하단 여백 */
   line-height: 1.6;
-  /* 줄 간격 */
 }
 
 
@@ -358,35 +357,54 @@ definePageMeta({
 .best-member {
   display: flex;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .best-member .icon {
   width: 50px;
-  /* 아이콘 크기 조정 */
   margin-right: 20px;
-  /* 아이콘과 텍스트 사이 간격 */
 }
 
 .best-member .content h3 {
   margin: 0;
   color: #007bff;
-  /* 제목 색상 */
 }
 
 .best-member .content p {
   margin: 5px 0 0;
-  /* 상단 여백 조정 */
   color: #333;
-  /* 텍스트 색상 */
 }
 
 .makdown-crontent {
   padding-bottom: 200px;
   margin-left: 7.5%;
   width: 85%;
+}
+
+.image-container {
+  position: relative;
+  text-align: center;
+  color: white;
+  width: 100%;
+  padding-top: 100%;
+  margin: 30px 0 30px 0;
+  background-image: url('/images/best-member.png');
+  background-size: cover;
+  background-position: center;
+}
+
+
+
+.centered-text {
+  color: #000;
+  position: absolute;
+  top: 44%;
+  left: 52%;
+  font-family: 'Nanum Myeongjo', serif;
+  font-weight: 900;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
 }
 </style>
