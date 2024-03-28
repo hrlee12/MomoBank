@@ -2,6 +2,7 @@ package com.ssafy.user.member.domain;
 
 import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.common.BaseEntity;
+import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -65,6 +66,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<GroupMember> groupMembers;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
+    private List<GroupInfo> groupInfos;
 
     public void changeProvider() {
         this.provider = "kakao";

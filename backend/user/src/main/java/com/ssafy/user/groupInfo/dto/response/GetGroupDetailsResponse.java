@@ -1,5 +1,6 @@
 package com.ssafy.user.groupInfo.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ public class GetGroupDetailsResponse {
     private boolean status;
     private String accountNumber;
     private long balance;
-
     public static GetGroupDetailsResponse from(GroupInfo groupInfo){
         return new GetGroupDetailsResponse(
             groupInfo.getGroupName(),

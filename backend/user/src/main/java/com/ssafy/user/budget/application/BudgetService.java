@@ -2,18 +2,19 @@ package com.ssafy.user.budget.application;
 
 import com.ssafy.user.budget.domain.Budget;
 import com.ssafy.user.budget.domain.repository.BudgetRepository;
+import com.ssafy.user.budget.dto.request.CreateNewBudgetRequest;
 import com.ssafy.user.budget.dto.request.UpdateBudgetRequest;
-import com.ssafy.user.budget.dto.response.GetBudgetListResponse;
 import com.ssafy.user.budget.dto.response.GetBudgetResponse;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
 import com.ssafy.user.groupMember.domain.repository.GroupMemberRepository;
-import com.ssafy.user.member.entity.Member;
-import com.ssafy.user.member.repository.MemberRepository;
+import com.ssafy.user.member.domain.Member;
+import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,23 +28,26 @@ public class BudgetService {
     private final GroupMemberRepository groupMemberRepository;
     private final BudgetRepository budgetRepository;
 
-    public GetBudgetListResponse getBudgetsList(int memberId, int groupInfoId) {
+    public List<GetBudgetResponse> getBudgetsList(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-        // 리스트 생성
-
-        return new GetBudgetListResponse();
+        List<GetBudgetResponse> responses = budgetRepository.findBudgetResponseByGroupId(
+            groupInfoId);
+        return responses;
     }
 
-    public GetBudgetResponse createNewBudget(int memberId, int groupInfoId, int monthlyDueDate,
-        String name, long finalFee, Date finalDueDate) {
+    public GetBudgetResponse createNewBudget(int memberId, int groupInfoId, CreateNewBudgetRequest request) {
         Member member = memberCheck(memberId); // 모임장 권한 확인 필요
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
+
+        int monthlyFee = (int) (request.finalFee()/leftCollectionDate(request.monthlyDueDate(), LocalDate.now(), request.finalDueDate()));
+
         Budget budget = Budget.builder()
-            .monthlyDueDate(monthlyDueDate)
-            .name(name)
-            .dueDate(finalDueDate)
-            .finalMoney(finalFee)
+            .monthlyDueDate(request.monthlyDueDate())
+            .name(request.name())
+            .dueDate(request.finalDueDate())
+            .finalMoney(request.finalFee())
+            .monthlyFee(monthlyFee)
             .groupInfo(groupInfo)
             .build();
         budgetRepository.save(budget);
@@ -97,5 +101,24 @@ public class BudgetService {
             throw new CustomException(ErrorCode.DELETED_BUDGET);
         }
         return budget;
+    }
+
+    public static int leftCollectionDate(int day, LocalDate today, LocalDate lastDay) {
+        int cnt = 0;
+
+        LocalDate tempDate = today.withDayOfMonth(day);
+
+        if (tempDate.isBefore(today)) {
+            tempDate = tempDate.plusMonths(1);
+        }
+
+        while (!tempDate.isAfter(lastDay)) {
+            if (tempDate.getDayOfMonth() == day) {
+                cnt++;
+            }
+            tempDate = tempDate.plusMonths(1);
+        }
+
+        return cnt;
     }
 }

@@ -1,17 +1,27 @@
 package com.ssafy.user.bank.dto.response;
 
-import lombok.AllArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
+import com.ssafy.user.bank.domain.Account.AccountType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class AccountResponse {
+
     private int accountId;
-    private String productType;
-    private String productName;
+    private AccountType accountType;
+    private String accountName;
     private String accountNumber;
     private long balance;
-    private int cardId;
+
+    @QueryProjection
+    public AccountResponse(int accountId, AccountType productType, String productName,
+        String accountNumber, long balance) {
+        this.accountId = accountId;
+        this.accountType = productType;
+        this.accountName = productName;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
 }

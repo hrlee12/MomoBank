@@ -1,7 +1,7 @@
 package com.ssafy.user.groupMember.domain.repository;
 
 import com.ssafy.user.groupMember.domain.GroupMember;
-import com.ssafy.user.member.entity.Member;
+import com.ssafy.user.member.domain.Member;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
