@@ -1,3 +1,11 @@
+buildscript {
+	ext {
+		querydslVer = '5.0.0'
+		querydslPluginVer = '1.0.10'
+	}
+}
+
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.3'
