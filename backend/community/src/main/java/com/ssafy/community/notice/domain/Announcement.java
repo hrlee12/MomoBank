@@ -1,4 +1,4 @@
-package com.ssafy.community.feed.entity;
+package com.ssafy.community.notice.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

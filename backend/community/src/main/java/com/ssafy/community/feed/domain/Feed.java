@@ -1,4 +1,4 @@
-package com.ssafy.community.feed.entity;
+package com.ssafy.community.feed.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -41,6 +42,9 @@ public class Feed {
     @Schema(description = "삭제 여부", example = "false")
     private Boolean isDeleted;
 
-    @Schema(description = "그룹 멤버 ID", example = "1")
-    private Integer groupMemberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_member_id")
+    private GroupMember groupMember;
+
+
 }

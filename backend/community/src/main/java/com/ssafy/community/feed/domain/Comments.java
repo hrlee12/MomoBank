@@ -1,4 +1,4 @@
-package com.ssafy.community.feed.entity;
+package com.ssafy.community.feed.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -11,23 +11,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "media")
-@Schema(description = "미디어 정보")
-public class Media {
+@Table(name = "comments")
+@Schema(description = "댓글 정보")
+public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "미디어 ID", example = "1")
-    private Integer mediaId;
+    @Schema(description = "댓글 ID", example = "1")
+    private Integer commentId;
 
-    @Schema(description = "순서", example = "1")
-    private Integer sequence;
-
-    @Schema(description = "미디어 타입 (예: 이미지, 비디오)", example = "image")
-    private String mediaType;
-
-    @Schema(description = "미디어 URL", example = "http://example.com/image.jpg")
-    private String mediaUrl;
+    @Schema(description = "댓글 내용", example = "정말 멋진 사진이네요!")
+    private String content;
 
     @Column(nullable = false, updatable = false)
     @Schema(description = "생성일", example = "2023-03-15T12:00:00")
@@ -44,4 +38,9 @@ public class Media {
     @JoinColumn(name = "feed_id")
     @Schema(description = "소속 피드 ID", example = "1")
     private Feed feed;
+
+    @ManyToOne
+    @JoinColumn(name = "group_member_id")
+    @Schema(description = "댓글 작성자 ID", example = "1")
+    private GroupMember groupMember;
 }
