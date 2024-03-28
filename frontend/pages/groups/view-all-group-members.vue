@@ -17,7 +17,7 @@ const getImageUrl = (imageName, idx) => {
     <!-- 플러스 아이콘 -->
     <div class="flex justify-between">
       <div></div>
-      <div class="w-8 h-8 mt-4 mr-4">
+      <div class="w-6 h-6 mt-4 mr-4">
         <img :src="getImageUrl('add-icon2.png', 0)" alt="add-icon" />
       </div>
     </div>
@@ -26,7 +26,7 @@ const getImageUrl = (imageName, idx) => {
         class="flex flex-row items-center w-11/12 h-8 mt-4 font-bold rounded-3xl pl-7 bg-light-gray-color"
       >
         <div class="basis-1/4">이름</div>
-        <div class="basis-2/3">신용점수</div>
+        <div class="basis-2/3">신뢰도</div>
         <div class="basis-1/4">총 6명</div>
       </div>
     </div>

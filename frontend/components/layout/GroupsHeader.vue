@@ -51,12 +51,15 @@ const pageTitle = computed(() => {
   ) {
     noSideMenu.value = true;
     return "공지사항 수정";
+  } else if (route.name === "groups-feed-write") {
+    noSideMenu.value = true;
+    return "새 게시물";
   }
 });
 </script>
 
 <template>
-  <header class="flex flex-row justify-between pt-3 bg-white h-14">
+  <header class="flex items-center justify-between pt-1 bg-white h-14">
     <div v-if="noArrowMenu === false">
       <div @click="goBack">
         <img
@@ -80,11 +83,13 @@ const pageTitle = computed(() => {
           :src="getImageUrl('bell-icon.png', 0)"
           alt="bell-icon"
         />
-        <img
-          class="mr-4 w-7 h-7"
-          :src="getImageUrl('home-icon.png', 0)"
-          alt="home-icon"
-        />
+        <nuxt-link to="/bank">
+          <img
+            class="mr-4 w-7 h-7"
+            :src="getImageUrl('home-icon.png', 0)"
+            alt="home-icon"
+          />
+        </nuxt-link>
       </div>
     </div>
     <div class="flex" v-if="noSideMenu === true">

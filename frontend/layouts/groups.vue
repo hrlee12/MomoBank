@@ -4,7 +4,7 @@ import GroupFooter from "~/components/layout/GroupFooter.vue";
 </script>
 
 <template>
-  <GroupsHeader />
+  <GroupsHeader/>
   <NuxtPage></NuxtPage>
   <GroupFooter />
 </template>
