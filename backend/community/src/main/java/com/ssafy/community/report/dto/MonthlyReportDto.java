@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class MonthlyReportDto {
 
-    private List<String> memberList;
+    private List<MemberIdName> memberList;
     private Map<String, String> unpaidFees;
     private List<Map<String, Object>> popularPosts;
     private Map<String, Integer> userPostCounts;
@@ -53,7 +53,11 @@ public class MonthlyReportDto {
     public static MonthlyReportDto createExample() {
         MonthlyReportDto dto = new MonthlyReportDto();
 
-        dto.memberList = List.of("홍길동", "김철수", "이영희");
+
+        dto.memberList = List.of(
+                new MemberIdName(1, "홍길동"),
+                new MemberIdName(2, "김철수"),
+                new MemberIdName(3, "이영희"));
 
         dto.unpaidFees = Map.of(
                 "홍길동", "완납",
