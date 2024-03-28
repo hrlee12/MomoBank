@@ -46,7 +46,7 @@ const hideActive = () => {
     </div>
     <div class="money-content">
       <h1 v-if="!hide">{{ money.toLocaleString("ko-KR") }}원</h1>
-      <h2 v-if="hide">잔액 숨김 중</h2>
+      <h1 v-if="hide">잔액 숨김 중</h1>
 
       <button @click="hideActive()">
         <p v-if="!hide">숨김</p>
@@ -55,7 +55,7 @@ const hideActive = () => {
     </div>
 
     <div class="link-content">
-      <NuxtLink :to="`/bank/${id}`">거래내역 {{ id }}</NuxtLink>
+      <NuxtLink :to="`/bank/${id}`">거래내역</NuxtLink>
       <NuxtLink to="/bank/remit">송금하기</NuxtLink>
     </div>
   </div>
