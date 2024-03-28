@@ -1,51 +1,49 @@
 package com.ssafy.community.feed.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.ssafy.community.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDateTime;
-
-@Getter
-@Setter
 @Entity
 @Table(name = "group_member")
-@Schema(description = "그룹 멤버 정보")
-public class GroupMember {
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class GroupMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "그룹 멤버 ID", example = "1")
-    private Integer groupMemberId;
+    @Column(name = "group_member_id")
+    private int groupMemberId;
 
-     @ManyToOne
-     @JoinColumn(name = "user_id")
-     @Schema(description = "사용자 ID", example = "1")
-     private Users user;
+    @Column(length = 50, name = "name", nullable = false)
+    private String name;
 
-    @ManyToOne
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private memberType role;
+
+    @Column(name = "total_fee", nullable = false)
+    @ColumnDefault("0")
+    private long totalFee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    @Schema(description = "그룹 ID", example = "1")
     private GroupInfo groupInfo;
 
-    @Schema(description = "역할", example = "회원")
-    private String role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Schema(description = "총 회비", example = "100000")
-    private Long totalFee;
 
-    @Column(nullable = false, updatable = false)
-    @Schema(description = "생성일", example = "2023-03-15T12:00:00")
-    private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    @Schema(description = "업데이트 일자", example = "2023-03-16T12:00:00")
-    private LocalDateTime updatedAt;
 
-    @Schema(description = "삭제 여부", example = "false")
-    private Boolean isDeleted;
-
-    @Schema(description = "이름", example = "홍길동")
-    private String name;
+    public enum memberType {
+        모임장, 모임원
+    }
 }

@@ -1,6 +1,6 @@
 package com.ssafy.community.report.dto;
 
-import com.ssafy.community.feed.entity.Users;
+import com.ssafy.community.feed.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class MemberRankingsDto {
     private Integer rankingId;
 
     @Schema(description = "사용자 ID", example = "1")
-    private Users user;
+    private Member member;
 
     @Schema(description = "점수", example = "100")
     private Integer score;

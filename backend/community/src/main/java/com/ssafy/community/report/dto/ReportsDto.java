@@ -1,5 +1,6 @@
 package com.ssafy.community.report.dto;
 
+
 import com.ssafy.community.feed.entity.GroupInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
