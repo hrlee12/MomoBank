@@ -40,7 +40,7 @@ public class BudgetService {
         Member member = memberCheck(memberId); // 모임장 권한 확인 필요
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
-        int monthlyFee = leftCollectionDate(request.monthlyDueDate(), LocalDate.now(), request.finalDueDate());
+        int monthlyFee = (int) (request.finalFee()/leftCollectionDate(request.monthlyDueDate(), LocalDate.now(), request.finalDueDate()));
 
         Budget budget = Budget.builder()
             .monthlyDueDate(request.monthlyDueDate())

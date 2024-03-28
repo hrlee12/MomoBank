@@ -43,10 +43,6 @@ public class GroupInfoService {
         return new GetMyGroupListResponse(groupInfoRepository.findGroupInfoResponseByMember(memberId));
     }
 
-    public List<GroupMember> getMyGroup(Member member) {
-        return groupMemberRepository.findByMember(member);
-    }
-
     // 선택된 모임 상세 조회
     public GetGroupDetailsResponse getGroupDetails(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
@@ -129,7 +125,9 @@ public class GroupInfoService {
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
 
         groupInfo.deleteAccount();
-        for(Budget budget : groupInfo.getBudgets()) budget.softDelete();
+        for(Budget budget : groupInfo.getBudgets()) {
+            if(!budget.isDeleted())budget.softDelete();
+        }
 
         groupInfo.softDelete();
         groupInfoRepository.save(groupInfo);

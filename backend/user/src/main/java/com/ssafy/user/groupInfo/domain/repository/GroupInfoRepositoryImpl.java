@@ -1,7 +1,6 @@
 package com.ssafy.user.groupInfo.domain.repository;
 
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.budget.domain.QBudget;
 import com.ssafy.user.groupInfo.domain.QGroupInfo;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
     public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId) {
         QBudget budget = QBudget.budget;
         QGroupInfo groupInfo = QGroupInfo.groupInfo;
@@ -28,14 +28,12 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
-                budget.monthlyFee,
+                budget.monthlyFee.sum(),
                 groupInfo.groupMembers.size(),
                 Expressions.constant(true)))
             .from(groupInfo)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
-            .where(groupMember.groupMemberId.eq(memberId),
-                budget.groupInfo.eq(groupInfo))
             .fetch();
     }
 
@@ -50,7 +48,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
                 groupInfo.description,
                 groupInfo.account.balance.subtract(budget.currentMoney.sum()),
                 groupMember.totalFee,
-                budget.monthlyFee.sum().coalesce(0L),
+                budget.monthlyFee.sum().coalesce(0L).as("monthlyFee"),
                 groupInfo.account.balance,
                 groupInfo.groupMembers.size()
             ))
