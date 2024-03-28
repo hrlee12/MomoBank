@@ -1,18 +1,17 @@
 package com.ssafy.user.bank.presentation;
 
+import com.ssafy.user.bank.application.BankCallService;
 import com.ssafy.user.bank.application.BankService;
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
+import com.ssafy.user.bank.dto.request.CreateCardInfoRequest;
+import com.ssafy.user.bank.dto.request.DeleteAccountRequest;
 import com.ssafy.user.bank.dto.request.GetAccountDetailRequest;
 import com.ssafy.user.bank.dto.request.GetAccountTransferRequest;
 import com.ssafy.user.bank.dto.request.GetMyAccountRequest;
 import com.ssafy.user.bank.dto.request.SearchAccountRequest;
 import com.ssafy.user.bank.dto.request.TransferRequest;
-import com.ssafy.user.bank.dto.response.AccountResponse;
 import com.ssafy.user.bank.dto.response.CardResponse;
-import com.ssafy.user.bank.dto.response.GetAccountProductListResponse;
-import com.ssafy.user.bank.dto.response.GetMyAccountListResponse;
 import com.ssafy.user.bank.dto.response.GetTransferListResponse;
-import com.ssafy.user.bank.dto.response.SearchAccountResponse;
 import com.ssafy.user.bank.dto.response.TransferResponse;
 import com.ssafy.user.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "은행", description = "은행의 계좌, 카드, 송금, 조회 기능")
 public class BankController {
     private final BankService bankService;
+    private final BankCallService bankCallService;
 
     @Operation(summary = "당행 계좌 상품 목록", description = "모모뱅크의 계좌 상품 목록을 조회합니다.")
     @GetMapping("/account-products")
@@ -65,25 +65,26 @@ public class BankController {
     @Operation(summary = "당행 계좌 생성", description = "모모뱅크의 계좌를 생성합니다.")
     @PostMapping("/create-account")
     public ResponseEntity<?> createAccount(@RequestBody CreateAccountRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌를 생성했습니다.", new AccountResponse());
+        return bankCallService.createAccount(request);
     }
 
     @Operation(summary = "계좌 삭제", description = "사용자의 계좌를 삭제합니다.")
     @DeleteMapping("/delete-account")
-    public ResponseEntity<?> deleteAccount() {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌를 삭제했습니다.", new AccountResponse());
+    public ResponseEntity<?> deleteAccount(@RequestBody DeleteAccountRequest request) {
+        return bankCallService.deleteAccount(request);
     }
 
     @Operation(summary = "당행 카드 생성", description = "모모뱅크의 카드를 생성합니다.")
     @PostMapping("/create-card")
-    public ResponseEntity<?> createCard() {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 생성했습니다.", new CardResponse());
+    public ResponseEntity<?> createCard(@RequestBody CreateCardInfoRequest request) {
+        return bankCallService.createCard(request);
     }
 
     @Operation(summary = "카드 삭제", description = "사용자의 카드를 삭제합니다.")
     @DeleteMapping("/delete-card")
     public ResponseEntity<?> deleteCard() {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 삭제했습니다.", new CardResponse());
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 삭제했습니다.",
+            new CardResponse());
     }
 
     @Operation(summary = "송금", description = "송금")
