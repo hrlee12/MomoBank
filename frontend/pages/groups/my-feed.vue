@@ -1,16 +1,10 @@
 <script setup>
-import { ref } from "vue";
-
 const feedTab = ref("feed");
 
 const totalPay = "2,000,000원";
 
 function selectTab(selectedTab) {
   feedTab.value = selectedTab;
-
-  if (feedTab.value === "feed") {
-  } else if (feedTab.value === "myInfo") {
-  }
 }
 
 const feedList = [
@@ -56,38 +50,40 @@ const getImageUrl = (imageName, idx) => {
       <div></div>
       <!-- pl을 선언한것은 +아이콘의 크기만큼 우측으로 이동 시켜서 중앙 정렬하게하기 위함이다. -->
       <div class="pl-11 text-gray-color">가입날짜: 2024-03-22</div>
-      <div class="pr-3">
-        <div
-          class="flex items-center justify-center w-8 h-8 border-2 rounded-md border-gray-color"
-        >
-          <img
-            class="w-5 h-5"
-            :src="getImageUrl('add-icon2.png', 0)"
-            alt="add-icon2"
-          />
+      <nuxt-link to="/groups/feed-write">
+        <div class="pr-3">
+          <div
+            class="flex items-center justify-center w-8 h-8 border-2 rounded-md border-gray-color"
+          >
+            <img
+              class="w-5 h-5"
+              :src="getImageUrl('add-icon2.png', 0)"
+              alt="add-icon2"
+            />
+          </div>
         </div>
-      </div>
+      </nuxt-link>
     </div>
 
     <!-- 게시글, 정보 탭-->
     <div class="flex justify-center mt-4">
       <button
-        class="w-1/2 pb-2 font-bold border-b-[1px] border-main-color"
+        class="w-1/2 pb-2 border-b-[1px] border-main-color"
         :class="
           feedTab === 'feed'
             ? 'w-1/2 pb-2 font-bold border-b-[1px] border-main-color'
-            : 'w-1/2 font-bold border-transparent'
+            : 'w-1/2 border-transparent'
         "
         @click="selectTab('feed')"
       >
         게시글
       </button>
       <button
-        class="w-1/2 pb-2 font-bold border-b-[1px] border-main-color"
+        class="w-1/2 pb-2 border-b-[1px] border-main-color"
         :class="
-          feedTab === 'info'
+          feedTab === 'myInfo'
             ? 'w-1/2 pb-2 font-bold border-b-[1px] border-main-color'
-            : 'w-1/2 font-bold border-transparent'
+            : 'w-1/2  border-transparent'
         "
         @click="selectTab('myInfo')"
       >
