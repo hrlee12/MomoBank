@@ -2,10 +2,10 @@
 - DB 데이터 연결
 - NuxtLink 연결
 - 피드 게시글 상세보기 눌렀을 떄 다른 게시글까지 변경되는거 수정
-- api 연동할 때 파일면 변경하기
+- api 연동할 때 파일명 변경하기
+- 예산, 거래내역 링크 연결 모두 id로 연결되기 때문에 link 설정 다 동적으로 변경해줘야함.
 -->
 <script setup>
-import { ref, computed } from "vue";
 import AccountInformation from "~/components/group/AccountInformation.vue";
 
 definePageMeta({
@@ -41,6 +41,7 @@ const toggleText = () => {
 </script>
 
 <template>
+  
   <div class="bg-white h-44 rounded-b-[14px]">
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
@@ -73,16 +74,21 @@ const toggleText = () => {
       </div>
       <div class="flex justify-center">
         <div class="flex mt-3 w-80">
-          <div
-            class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color"
-          >
-            거래내역
-          </div>
-          <div
-            class="font-semibold text-[17px] w-40 text-center text-main-color"
-          >
-            예산
-          </div>
+          <nuxt-link to="/groups/transaction-history">
+            <div
+              class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color"
+            >
+              거래내역
+            </div>
+          </nuxt-link>
+
+          <nuxt-link to="/groups/budget">
+            <div
+              class="font-semibold text-[17px] w-40 text-center text-main-color"
+            >
+              예산
+            </div>
+          </nuxt-link>
         </div>
       </div>
     </div>
