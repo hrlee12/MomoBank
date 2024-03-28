@@ -44,12 +44,12 @@ public class FeedService {
      * - 피드 목록을 조회할 때, 미디어 파일 URL 리스트를 함께 조회한다.
      * - 피드 목록을 조회할 때, 그룹 멤버 ID와 이름을 함께 조회한다. (프로필 이미지는 없음)
      * @param pageable 페이징 정보
-     * @param userId 사용자 ID
+     * @param memberId 사용자 ID
      * @return 피드 목록
      */
-    public Page<FeedListResponse> getFeeds(Pageable pageable, int userId) {
+    public Page<FeedListResponse> getFeeds(Pageable pageable, int memberId) {
         // 사용자 ID로 그룹 ID 조회
-        Integer groupId = groupMemberRepository.findGroupIdByUserId(userId);
+        Integer groupId = groupMemberRepository.findGroupIdByMemberId(memberId);
 
         // 그룹에 속한 피드 목록 조회
         Page<Feed> feeds = feedRepository.findByGroupId(groupId,pageable);
@@ -68,7 +68,7 @@ public class FeedService {
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
             Likes likes = likesRepository.findByFeedFeedId(feed.getFeedId());
-            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == userId;
+            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == memberId;
             dto.setLikedByUser(likedByUser);
 
             // 피드 댓글 조회
@@ -168,19 +168,26 @@ public class FeedService {
     }
 
     @Transactional
-    public void addLike(Integer feedId, Integer userId) {
+    public void addLike(Integer feedId, Integer memberId) {
         Likes likes = new Likes();
         likes.setCreatedAt(LocalDateTime.now());
+        likes.setGroupMember(groupMemberRepository.findGroupMemberByMemberId(memberId));
 
 
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new RuntimeException("Feed not found"));
+
+        likes.setFeed(feed);
+        likesRepository.save(likes);
+
         feed.setLikesCount(feed.getLikesCount() + 1);
         feedRepository.save(feed);
     }
 
     @Transactional
-    public void removeLike(Integer feedId) {
+    public void removeLike(Integer feedId, Integer memberId) {
+        likesRepository.deleteByFeedFeedIdAndGroupMemberGroupMemberId(feedId, memberId);
+
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new RuntimeException("Feed not found"));
         feed.setLikesCount(feed.getLikesCount() - 1);

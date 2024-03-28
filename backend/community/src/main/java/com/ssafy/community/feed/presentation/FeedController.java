@@ -33,8 +33,8 @@ public class FeedController {
             @ApiResponse(responseCode = "200", description = "피드 목록 조회 성공",
                     content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<Page<FeedListResponse>> getFeeds(@ParameterObject Pageable pageable, int userId) {
-        Page<FeedListResponse> feeds = feedService.getFeeds(pageable, userId);
+    public ResponseEntity<Page<FeedListResponse>> getFeeds(@ParameterObject Pageable pageable, int memberId) {
+        Page<FeedListResponse> feeds = feedService.getFeeds(pageable, memberId);
         return ResponseEntity.ok(feeds);
     }
 
@@ -83,8 +83,8 @@ public class FeedController {
     @Operation(summary = "피드에 좋아요 추가", responses = {
             @ApiResponse(responseCode = "200", description = "좋아요 추가 성공", content = @Content(schema = @Schema(implementation = LikeDto.class)))
     })
-    public ResponseEntity<String> addLike(@PathVariable Integer feedId, Integer userId) {
-        feedService.addLike(feedId, userId);
+    public ResponseEntity<String> addLike(@PathVariable Integer feedId, Integer memberId) {
+        feedService.addLike(feedId, memberId);
         return ResponseEntity.ok("좋아요를 추가했습니다.");
     }
 
@@ -92,8 +92,8 @@ public class FeedController {
     @Operation(summary = "피드에 추가된 좋아요 취소", responses = {
             @ApiResponse(responseCode = "200", description = "좋아요 취소 성공")
     })
-    public ResponseEntity<String> removeLike(@PathVariable Integer feedId) {
-        feedService.removeLike(feedId);
+    public ResponseEntity<String> removeLike(@PathVariable Integer feedId, Integer memberId) {
+        feedService.removeLike(feedId, memberId);
         return ResponseEntity.ok("좋아요를 취소했습니다.");
     }
 

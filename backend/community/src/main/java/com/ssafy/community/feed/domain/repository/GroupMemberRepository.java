@@ -6,6 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Integer> {
 
-    @Query("SELECT gm.groupInfo.groupId FROM GroupMember gm WHERE gm.groupMemberId = :userId")
-    Integer findGroupIdByUserId(Integer userId);
+    @Query("SELECT gm.groupInfo.groupId FROM GroupMember gm WHERE gm.groupMemberId = :memberId")
+    Integer findGroupIdByMemberId(Integer memberId);
+
+
+    @Query("SELECT gm FROM GroupMember gm WHERE gm.groupMemberId = :memberId")
+    GroupMember findGroupMemberByMemberId(Integer memberId);
+
+
+;
 }
