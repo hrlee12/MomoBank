@@ -16,3 +16,20 @@ openapi:
   service:
     # API Gateway 포트
     url: http://localhost:8081
+spring:
+  profiles:
+    active: local
+  config:
+    jpa:
+      hibernate:
+        ddl-auto: create
+      properties:
+        hibernate:
+          format_sql: true
+
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: trace

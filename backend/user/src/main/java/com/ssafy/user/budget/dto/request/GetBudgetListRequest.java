@@ -1,0 +1,7 @@
+package com.ssafy.user.budget.dto.request;
+
+public record GetBudgetListRequest (
+    int memberId
+){
+
+}
