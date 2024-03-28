@@ -68,7 +68,7 @@ public class FeedService {
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
             Likes likes = likesRepository.findByFeedFeedId(feed.getFeedId());
-            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId().equals(userId);
+            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == userId;
             dto.setLikedByUser(likedByUser);
 
             // 피드 댓글 조회
@@ -100,7 +100,7 @@ public class FeedService {
      * @param feedCreateRequest 피드 생성 요청 DTO
      */
     @Transactional
-    public void createFeed(FeedCreateRequest feedCreateRequest) {
+    public void createFeed(FeedCreateRequest feedCreateRequest, List<MultipartFile> files) {
         GroupMember groupMember = groupMemberRepository.findById(feedCreateRequest.getGroupMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("GroupMember not found with id " + feedCreateRequest.getGroupMemberId()));
 
@@ -115,7 +115,7 @@ public class FeedService {
 
         // 파일 처리 로직
         int sequence = 1; // 파일 순서를 위한 변수
-        for (MultipartFile file : feedCreateRequest.getFiles()) {
+        for (MultipartFile file : files) {
             String fileName = saveFileOnServer(file, String.valueOf(feed.getFeedId()));
             Media media = new Media();
             media.setFeed(feed);

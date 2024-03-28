@@ -21,7 +21,7 @@ public class FeedCreateRequest {
 
     // ################## 첨부 파일 ##################
 
-    private List<MultipartFile> files;
+//    private List<MultipartFile> files;
 
 
 

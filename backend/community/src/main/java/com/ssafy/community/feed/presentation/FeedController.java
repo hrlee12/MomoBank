@@ -11,9 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/feeds")
@@ -46,12 +50,14 @@ public class FeedController {
 //        return ResponseEntity.ok(feedDetail);
 //    }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "피드 등록", responses = {
             @ApiResponse(responseCode = "201", description = "피드 등록 성공")
     })
-    public ResponseEntity<String> createFeed(@RequestBody FeedCreateRequest feedRequestDto) {
-        feedService.createFeed(feedRequestDto);
+    public ResponseEntity<String> createFeed(@RequestPart("freeCreateRequest") FeedCreateRequest feedCreateRequest,
+                                             @RequestPart(required = false) List<MultipartFile> files) {
+//        feedCreateRequest.setFiles(files);
+        feedService.createFeed(feedCreateRequest, files);
         return ResponseEntity.ok("피드가 성공적으로 등록되었습니다.");
     }
 
