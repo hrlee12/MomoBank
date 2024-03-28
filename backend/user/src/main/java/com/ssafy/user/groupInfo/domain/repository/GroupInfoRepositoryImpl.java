@@ -48,7 +48,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
                 groupInfo.description,
                 groupInfo.account.balance.subtract(budget.currentMoney.sum()),
                 groupMember.totalFee,
-                budget.monthlyFee.sum().coalesce(0L).as("monthlyFee"),
+                budget.monthlyFee.sum().coalesce(0L),
                 groupInfo.account.balance,
                 groupInfo.groupMembers.size()
             ))

@@ -1,5 +1,6 @@
 package com.ssafy.user.bank.presentation;
 
+import com.ssafy.user.bank.application.BankService;
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
 import com.ssafy.user.bank.dto.request.GetAccountDetailRequest;
 import com.ssafy.user.bank.dto.request.GetAccountTransferRequest;
@@ -31,23 +32,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("bank")
 @Tag(name = "은행", description = "은행의 계좌, 카드, 송금, 조회 기능")
 public class BankController {
+    private final BankService bankService;
 
     @Operation(summary = "당행 계좌 상품 목록", description = "모모뱅크의 계좌 상품 목록을 조회합니다.")
     @GetMapping("/account-products")
-    public ResponseEntity<?> getAccountProduct() {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "당행 계좌 상품 목록 조회 성공", new GetAccountProductListResponse());
+    public ResponseEntity<?> getAccountProduct(@RequestBody GetMyAccountRequest request) {
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "당행 계좌 상품 목록 조회 성공",
+            bankService.getMyAccount(request.memberId()));
     }
 
     @Operation(summary = "본인 계좌 조회", description = "사용자의 계좌를 조회합니다.")
     @GetMapping("/my-accounts")
     public ResponseEntity<?> getMyAccount(@RequestBody GetMyAccountRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "사용자 계좌 조회 성공", new GetMyAccountListResponse());
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "사용자 계좌 조회 성공",
+            bankService.getMyAccount(request.memberId()));
     }
 
     @Operation(summary = "계좌 상세 조회", description = "특정 계좌 상세를 조회합니다.")
     @GetMapping("/account-detail")
     public ResponseEntity<?> getAccountDetail(@RequestBody GetAccountDetailRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 상세 죄회 성공", new AccountResponse());
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 상세 죄회 성공",
+            bankService.getAccountDetail(request.memberId(), request.accountId()));
     }
 
     @Operation(summary = "본인 계좌 거래 내역 조회", description = "사용자의 계좌 거래 내역을 조회합니다.")
@@ -88,9 +93,10 @@ public class BankController {
     }
 
     @Operation(summary = "계좌 조회", description = "계좌 조회")
-    @PostMapping("/account-search")
+    @GetMapping("/account-search")
     public ResponseEntity<?> searchAccount(@RequestBody SearchAccountRequest request) {
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 조회 성공", new SearchAccountResponse());
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 조회 성공",
+            bankService.searchAccount(request.bank(), request.accountNumber()));
     }
 
 //    @Operation(summary = "신분증 진위 확인", description = "사용자의 신분증 진위를 확인합니다.")
