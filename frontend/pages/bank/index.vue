@@ -24,22 +24,25 @@ function onSlideChange(swiper) {
 // 슬라이드 데이터
 const accounts = ref([
   {
-    id: 0,
+    accountId: 0,
+    accountType: "입출금",
     accountName: "저축은행",
     accountNumber: "123-1234-12345",
-    money: 1000000,
+    balance: 1000000,
   },
   {
-    id: 1,
+    accountId: 1,
+    accountType: "입출금",
     accountName: "효리은행",
-    accountNumber: "123-1234-12346",
-    money: 2000000,
+    accountNumber: "123-1234-12345",
+    balance: 2000000,
   },
   {
-    id: 2,
-    accountName: "성수은행",
-    accountNumber: "123-1234-12347",
-    money: 1000,
+    accountId: 2,
+    accountType: "입출금",
+    accountName: "소이은행",
+    accountNumber: "123-1234-12345",
+    balance: 3000000,
   },
 ]);
 const isLastSlide = ref(false);
@@ -84,12 +87,7 @@ const goToGroup = (param) => {
       class="mySwiper"
     >
       <SwiperSlide v-for="(account, index) in accounts" :key="index">
-        <BankAccount
-          :id="account.id"
-          :accountName="account.accountName"
-          :accountNumber="account.accountNumber"
-          :money="account.money"
-        />
+        <BankAccount :accountInfo="account" />
       </SwiperSlide>
 
       <SwiperSlide>
@@ -149,6 +147,10 @@ const goToGroup = (param) => {
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
 @import "@/assets/css/content.scss";
+
+.account-content {
+  border: 1px solid #a3a3a3;
+}
 
 h1 {
   padding-top: 0.5vh;

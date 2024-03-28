@@ -1,10 +1,18 @@
 <script setup>
 import KebabMenu from "@/components/ui/KebabMenu";
+import { useRoute } from "#vue-router";
+import { ref } from "vue";
+
+const router = useRoute();
+
+const historyMenuActive = ref(true);
+const id = router.params.id;
+if (id && router.name.startsWith("bank-")) {
+  historyMenuActive.value = false;
+}
+
 defineProps({
-  id: Number,
-  accountName: String,
-  accountNumber: String,
-  money: Number,
+  accountInfo: Object,
 });
 
 // 이미지 불러오는 메소드
@@ -31,13 +39,13 @@ const hideActive = () => {
 </script>
 
 <template>
-  <div v-if="accountName" class="content account-content">
+  <div v-if="accountInfo" class="content account-content">
     <div class="account-item">
       <div class="account-info">
-        <h2>{{ accountName }}</h2>
+        <h2>{{ accountInfo.accountName }}</h2>
         <div class="account-no">
-          <p @click="copyTextToClipboard(accountNumber)">
-            입출금 {{ accountNumber }}
+          <p @click="copyTextToClipboard(accountInfo.accountNumber)">
+            {{ accountInfo.accountType }} {{ accountInfo.accountNumber }}
           </p>
         </div>
       </div>
@@ -45,7 +53,7 @@ const hideActive = () => {
       <KebabMenu />
     </div>
     <div class="money-content">
-      <h1 v-if="!hide">{{ money.toLocaleString("ko-KR") }}원</h1>
+      <h1 v-if="!hide">{{ accountInfo.balance.toLocaleString("ko-KR") }}원</h1>
       <h1 v-if="hide">잔액 숨김 중</h1>
 
       <button @click="hideActive()">
@@ -55,8 +63,12 @@ const hideActive = () => {
     </div>
 
     <div class="link-content">
-      <NuxtLink :to="`/bank/${id}`">거래내역</NuxtLink>
-      <NuxtLink to="/bank/remit">송금하기</NuxtLink>
+      <NuxtLink :to="`/bank/${accountInfo.accountId}`" v-if="historyMenuActive"
+        >거래내역</NuxtLink
+      >
+      <NuxtLink to="/bank/remit" :accountId="accountInfo.accountId"
+        >송금하기</NuxtLink
+      >
     </div>
   </div>
   <div v-else class="content account-content">
@@ -73,7 +85,6 @@ const hideActive = () => {
 .account-content {
   min-height: 200px;
   padding: 2vh 3vw 2vh 3vw;
-  border: 1px solid #a3a3a3 !important;
 
   height: 25vh;
 
@@ -84,7 +95,6 @@ const hideActive = () => {
     justify-content: space-between;
     width: 100%;
     padding: 0 5% 0 5%;
-    text-align: left;
 
     .account-no {
       display: flex;
@@ -119,15 +129,20 @@ const hideActive = () => {
     display: flex;
     justify-content: space-around;
     border-top: 1px solid $light-gray-color;
-    width: 90%;
+    width: 100%;
     align-self: center;
     padding-top: 2vh;
+
+    a + a {
+      border-left: 1px solid $light-gray-color;
+    }
   }
 }
 a {
   color: $primary-color;
   font-weight: bold;
   text-align: center;
+  width: 50%;
 
   div {
     margin-top: 6vh;
