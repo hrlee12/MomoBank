@@ -49,7 +49,7 @@ public class MemberController {
     @PutMapping("/passwords")
     public ResponseEntity updatePassword(@RequestBody PasswordUpdateRequest request) {
 
-        memberService.updatePassword(request.getId(), request.getCurrentPassword(), request.getNewPassword());
+        memberService.updatePassword(request);
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "비밀번호 변경 완료", null);
     }
@@ -64,7 +64,7 @@ public class MemberController {
     @PutMapping("/temporary-passwords")
     public ResponseEntity sendNewPassword(@RequestBody Map<String, String> request) {
 
-        memberService.sendNewPassword(request.get("id"), request.get("phoneNumber"), request.get("newPassword"));
+        memberService.sendNewPassword(request);
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "임시비밀번호 저장", null);
     }
@@ -78,7 +78,7 @@ public class MemberController {
     @PutMapping("/phone-numbers")
     public ResponseEntity updatePhoneNumber(@RequestBody Map<String, String> request) {
 
-        memberService.updatePhoneNumber(request.get("id"), request.get("newPhoneNumber"));
+        memberService.updatePhoneNumber(request);
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "임시비밀번호 저장", null);
     }
