@@ -1,6 +1,8 @@
 package com.ssafy.bank.card.dto.response;
 
-import com.querydsl.core.annotations.QueryProjection;
+import com.ssafy.bank.account.domain.Account;
+import com.ssafy.bank.account.domain.AccountProduct;
+import com.ssafy.bank.account.dto.response.AccountResponse;
 import com.ssafy.bank.card.domain.CardInfo;
 
 public record CardInfoResponse(
@@ -12,15 +14,15 @@ public record CardInfoResponse(
     String cardDescription,
     String CompanyName
 ) {
-
-    @QueryProjection
-    public CardInfoResponse (CardInfo cardInfo, String companyName){
-        this(cardInfo.getAccount().getAccountId(),
+    public static CardInfoResponse from(CardInfo cardInfo, String companyName) {
+        return new CardInfoResponse(
+            cardInfo.getAccount().getAccountId(),
             cardInfo.getCardInfoId(),
             cardInfo.getCardProduct().getCardInfoImg(),
             cardInfo.getCardProduct().getName(),
             cardInfo.getCardInfoNum(),
             cardInfo.getCardProduct().getDescription(),
-            companyName);
+            companyName
+        );
     }
 }

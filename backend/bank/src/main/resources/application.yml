@@ -15,7 +15,7 @@ server:
 
 spring:
   config:
-    import: classpath:application-private.yml
+    import: classpath:application.properties
   jpa:
     hibernate:
       ddl-auto: update

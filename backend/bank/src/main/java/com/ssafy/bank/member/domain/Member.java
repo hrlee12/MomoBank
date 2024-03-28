@@ -51,7 +51,6 @@ public class Member extends BaseEntity {
 
     @Size(min = 0, max = 50)
     @Column(length = 50)
-    @ColumnDefault("\"momo\"")
     private String provider;
 
     @ColumnDefault("50")

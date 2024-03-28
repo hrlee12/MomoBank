@@ -53,9 +53,9 @@ public class CardInfoService {
     cardInfoRepository.save(cardInfo);
 
     if(cardInfo.getCardProduct().getBank() != null){
-      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
+      return CardInfoResponse.from(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
     }else{
-      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
+      return CardInfoResponse.from(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
     }
   }
 
@@ -66,10 +66,11 @@ public class CardInfoService {
       throw new CustomException(ErrorCode.DELETED_CARD_INFO);
     }
     cardInfo.softDelete();
+
     if(cardInfo.getCardProduct().getBank() != null){
-      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
+      return CardInfoResponse.from(cardInfo, cardInfo.getCardProduct().getBank().getBankName());
     }else{
-      return new CardInfoResponse(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
+      return CardInfoResponse.from(cardInfo, cardInfo.getCardProduct().getCard().getCardName());
     }
   }
 }
