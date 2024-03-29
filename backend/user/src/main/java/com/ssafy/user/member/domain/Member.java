@@ -74,6 +74,8 @@ public class Member extends BaseEntity {
         this.provider = "kakao";
     }
 
+    public void changePhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+
 
     public void changePassword(String password) {
         this.password = password;
