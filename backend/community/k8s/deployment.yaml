@@ -20,7 +20,7 @@ spec:
             - containerPort: 8083
           volumeMounts:
           - name: community-volume
-          mountPath: "/uploads"
+            mountPath: "/uploads"
       volumes:
       - name: community-volume
         persistentVolumeClaim:
