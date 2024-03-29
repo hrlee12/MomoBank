@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import BottomSheetModal from "~/components/layout/BottomSheetModal.vue";
 
 defineProps({
   accountId: Number,
@@ -10,45 +11,45 @@ definePageMeta({
   layout: "action",
 });
 
-const groupName = ref("");
-const groupDesc = ref("");
-
+const accountNumber = ref();
+const bankName = ref("");
+const menuIndex = ref(0);
 const router = useRouter();
+const isModalVisible = ref(false);
 
 const goNext = () => {
-  router.push(`/bank/group-create/account-select/`);
+  menuIndex.value += 1;
 };
 </script>
 
 <template>
   <div class="input-container">
     <div class="input-content">
+      <h1>어떤 계좌로 보낼까요?</h1>
       <div class="input-item">
-        <label for="groupName"><h1>모임명</h1></label
-        ><input
-          type="text"
-          id="groupName"
-          v-model="groupName"
-          placeholder="ex) 모모"
-        />
+        <input type="text" v-model="accountNumber" placeholder="계좌번호" />
       </div>
-      <div class="input-item">
-        <label for="groupDesc"><h1>모임설명</h1></label
-        ><input
+      <div class="input-item" @click="isModalVisible = true">
+        <input
           type="text"
-          id="groupDesc"
-          v-model="groupDesc"
-          placeholder="한 줄 요약 설명"
+          v-model="bankName"
+          placeholder="은행 선택"
+          readonly
         />
       </div>
     </div>
     <div class="btn-container">
-      <button v-if="groupName == '' || groupDesc == ''" class="second-btn">
+      <button v-if="accountNumber == '' || bankName == ''" class="second-btn">
         다음
       </button>
       <button v-else class="prime-btn" @click="goNext()">다음</button>
     </div>
   </div>
+  <BottomSheetModal
+    :isVisible="isModalVisible"
+    @update:isVisible="isModalVisible = $event"
+  />
+  <div v-if="isModalVisible" class="modal-bg"></div>
 </template>
 
 <style lang="scss" scoped>
@@ -63,5 +64,20 @@ const goNext = () => {
 .input-container {
   height: 90%;
   width: 95%;
+}
+
+.input-content {
+  padding-top: 5vh;
+}
+
+//----------------
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
 }
 </style>
