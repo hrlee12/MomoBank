@@ -2,7 +2,7 @@ package com.ssafy.user.groupInfo.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import java.sql.Date;
-import lombok.AllArgsConstructor;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +21,11 @@ public class GetMyGruopResponse {
     @QueryProjection
     public GetMyGruopResponse(int groupId, String name, long monthlyFee,
         int joinMembers,
-        Boolean status) {
+        Boolean state) {
         this.groupId = groupId;
         this.name = name;
         this.monthlyFee = monthlyFee;
         this.joinMembers = joinMembers;
-        this.status = status;
+        this.status = state;
     }
 }
