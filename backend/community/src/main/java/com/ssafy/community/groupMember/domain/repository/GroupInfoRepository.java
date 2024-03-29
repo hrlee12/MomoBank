@@ -1,6 +1,6 @@
 package com.ssafy.community.groupMember.domain.repository;
 
-import com.ssafy.community.feed.entity.GroupInfo;
+import com.ssafy.community.feed.domain.GroupInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.swing.*;

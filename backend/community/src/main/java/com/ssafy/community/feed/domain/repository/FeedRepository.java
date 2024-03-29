@@ -15,7 +15,7 @@ public interface FeedRepository extends JpaRepository<Feed, Integer> {
 //    @Query("SELECT f FROM Feed f WHERE f.isDeleted = false")
 //    Page<Feed> findAll(Pageable pageable);
 
-    @Query("SELECT f FROM Feed f WHERE f.groupMember.groupInfo.groupId = :groupId AND f.isDeleted = false")
+    @Query("SELECT f FROM Feed f WHERE f.groupMember.groupInfo.groupInfoId = :groupId AND f.isDeleted = false")
     Page<Feed> findByGroupId(@Param("groupId") Integer groupId, Pageable pageable);
 
     Optional<Feed> findByFeedId(Integer feedId);

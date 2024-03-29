@@ -1,10 +1,10 @@
 package com.ssafy.community.groupMember.application;
 
-import com.ssafy.community.feed.entity.GroupInfo;
-import com.ssafy.community.feed.entity.GroupMember;
-import com.ssafy.community.feed.entity.Member;
+import com.ssafy.community.feed.domain.GroupInfo;
+import com.ssafy.community.feed.domain.GroupMember;
+import com.ssafy.community.feed.domain.Member;
+import com.ssafy.community.feed.domain.repository.GroupMemberRepository;
 import com.ssafy.community.groupMember.domain.repository.GroupInfoRepository;
-import com.ssafy.community.groupMember.domain.repository.GroupMemberRepository;
 import com.ssafy.community.groupMember.domain.repository.MemberRepository;
 import com.ssafy.community.groupMember.dto.InsertGroupMemberVO;
 import com.ssafy.user.common.exception.CustomException;
