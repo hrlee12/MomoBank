@@ -23,6 +23,19 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final GroupMemberRepository groupMemberRepository;
 
+    // 공지사항 리스트 조회
+    public List<NoticeListResponse> getNoticeList() {
+        List<Notice> notices = noticeRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
+        return notices.stream()
+                .map(notice -> NoticeListResponse.builder()
+                        .title(notice.getTitle())
+                        .content(notice.getContent())
+                        .createdAt(notice.getCreatedAt())
+                        .updatedAt(notice.getUpdatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     // 공지사항 작성
     @Transactional
     public void createNotice(NoticeCreationRequest request) {
@@ -74,16 +87,4 @@ public class NoticeService {
                 .build();
     }
 
-    // 공지사항 리스트 조회
-    public List<NoticeListResponse> getNoticeList() {
-        List<Notice> notices = noticeRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
-        return notices.stream()
-                .map(notice -> NoticeListResponse.builder()
-                        .title(notice.getTitle())
-                        .content(notice.getContent())
-                        .createdAt(notice.getCreatedAt())
-                        .updatedAt(notice.getUpdatedAt())
-                        .build())
-                .collect(Collectors.toList());
-    }
 }
