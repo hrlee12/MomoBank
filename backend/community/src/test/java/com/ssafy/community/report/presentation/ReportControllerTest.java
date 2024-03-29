@@ -124,7 +124,7 @@ class ReportControllerTest {
         String responseBody = result.getResponse().getContentAsString();
 
 
-        System.out.println(responseBody);
+        System.out.println(result.getResponse());
 
 
     }

@@ -1,6 +1,5 @@
 package com.ssafy.community.report.dto;
 
-import com.ssafy.community.feed.domain.GroupInfo;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,10 +10,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportsDto {
-    private GroupInfo groupInfo;
+    private Integer groupId;
     private Integer reportYear;
     private Integer reportMonth;
     private String content;
     private LocalDateTime createdAt;
-    private BestMemberDto bestMemberDto;
+    private BestMemberDto bestMember;
 }

@@ -1,5 +1,6 @@
 package com.ssafy.community.report.presentation;
 
+import com.ssafy.community.report.domain.entity.MonthlyReports;
 import com.ssafy.community.report.dto.*;
 import com.ssafy.community.report.application.ReportService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/reports")
@@ -96,15 +96,26 @@ public class ReportController {
         BestMemberDto bestMemberDto = reportService.getBestMember(monthlyReportDto, reportStr);
 
         ReportsDto reportsDto = new ReportsDto();
+        reportsDto.setGroupId(1);
         reportsDto.setReportMonth(3);
         reportsDto.setReportYear(2024);
-        reportsDto.setBestMemberDto(bestMemberDto);
+        reportsDto.setBestMember(bestMemberDto);
         reportsDto.setContent(reportStr);
+
+
+        MonthlyReports monthlyReports = new MonthlyReports();
+        monthlyReports.setGroupId(reportsDto.getGroupId());
+        monthlyReports.setReportMonth(reportsDto.getReportMonth());
+        monthlyReports.setReportYear(reportsDto.getReportYear());
+        monthlyReports.setBestMemberName(reportsDto.getBestMember().getBestMember().getName());
+        monthlyReports.setBestMemberId(reportsDto.getBestMember().getBestMember().getId());
+        monthlyReports.setBestMemberReason(reportsDto.getBestMember().getReason());
+        monthlyReports.setContent(reportsDto.getContent());
+
+        reportService.saveReports(monthlyReports);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        
-
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(reportsDto);

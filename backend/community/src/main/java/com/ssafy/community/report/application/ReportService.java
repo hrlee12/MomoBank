@@ -2,6 +2,8 @@ package com.ssafy.community.report.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.community.report.domain.entity.MonthlyReports;
+import com.ssafy.community.report.domain.repository.MonthlyReportsRepository;
 import com.ssafy.community.report.dto.BestMemberDto;
 import com.ssafy.community.report.dto.MemberIdName;
 import com.ssafy.community.report.dto.MonthlyReportDto;
@@ -12,6 +14,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,6 +35,12 @@ public class ReportService {
     @Value("${gpt.token}")
     String gptToken;
 
+    private final MonthlyReportsRepository monthlyReportsRepository;
+
+    @Autowired
+    public ReportService(MonthlyReportsRepository monthlyReportsRepository) {
+        this.monthlyReportsRepository = monthlyReportsRepository;
+    }
 
 
 
@@ -182,5 +192,14 @@ public class ReportService {
     }
 
 
+    public void saveReports(MonthlyReports monthlyReports) {
+        Optional<MonthlyReports> existingReport = monthlyReportsRepository.findByGroupIdAndReportYearAndReportMonth(
+                monthlyReports.getGroupId(),
+                monthlyReports.getReportYear(),
+                monthlyReports.getReportMonth()
+        );
+        existingReport.ifPresent(report -> monthlyReportsRepository.delete(report));
 
+        monthlyReportsRepository.save(monthlyReports);
+    }
 }
