@@ -22,7 +22,7 @@ spring:
       group-id: "myGroup"
 
   config:
-    import: classpath:application-private.yml
+    import: classpath:application-user-private-aws.yml
   jpa:
     hibernate:
       ddl-auto: update
