@@ -6,9 +6,7 @@ defineProps({
   targetBankInfo: Object, // 목표 은행 정보
 });
 
-const moenyInput = ref();
-
-const goNext = () => {};
+const moneyInput = ref();
 </script>
 
 <template>
@@ -19,23 +17,34 @@ const goNext = () => {};
     </div>
     <div class="input-item">
       <h1>{{ targetAccountInfo.userName }}계좌로</h1>
-      <p>{{ targetBankInfo.bankName }} {{ targetAccountInfo.accountNumber }}</p>
+      <p>{{ targetBankInfo.name }} {{ targetAccountInfo.accountNumber }}</p>
     </div>
     <div class="input-item">
       <!-- 계좌번호 입력란 -->
       <input
         type="number"
-        v-model="moenyInput"
+        v-model="moneyInput"
         placeholder="얼마나 보낼까요?"
       />
-      <p v-if="moenyInput">{{ moenyInput.toLocaleString("ko-KR") }}원</p>
+      <h1 v-if="moneyInput">{{ moneyInput.toLocaleString("ko-KR") }}원</h1>
     </div>
   </div>
 
   <!-- 다음 버튼 -->
   <div class="btn-container">
-    <button v-if="moenyInput == 0" class="second-btn">다음</button>
-    <button v-else class="prime-btn" @click="goNext()">다음</button>
+    <button v-if="moneyInput == null" class="second-btn">다음</button>
+    <button v-else class="prime-btn">
+      <NuxtLink
+        :to="{
+          path: '/bank/remit/confirm-remit',
+          query: {
+            myAccountName: myAccountInfo.name,
+            money: moneyInput,
+          },
+        }"
+        >다음</NuxtLink
+      >
+    </button>
   </div>
 </template>
 

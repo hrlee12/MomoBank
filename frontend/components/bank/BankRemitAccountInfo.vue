@@ -1,5 +1,5 @@
 <script setup>
-import BottomSheetModal from "~/components/layout/BottomSheetModal.vue";
+import BankBottomSheetModal from "~/components/layout/BankBottomSheetModal.vue";
 
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
@@ -34,11 +34,7 @@ const goNext = () => {
     <h1>어떤 계좌로 보낼까요?</h1>
     <!-- 계좌번호 입력란 -->
     <div class="input-item">
-      <input
-        type="number"
-        v-model="targetAccountNumber"
-        placeholder="계좌번호"
-      />
+      <input type="text" v-model="targetAccountNumber" placeholder="계좌번호" />
     </div>
     <!-- 은행사 선택란 -->
     <div class="input-item" @click="isModalVisible = true">
@@ -63,13 +59,20 @@ const goNext = () => {
     <button v-else class="prime-btn" @click="goNext()">다음</button>
   </div>
   <!-- 모달 -->
-  <BottomSheetModal :isVisible="isModalVisible" @update="handleUpdate" />
+  <BankBottomSheetModal :isVisible="isModalVisible" @update="handleUpdate" />
   <div v-if="isModalVisible" class="modal-bg"></div>
 </template>
 
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
 @import "~/assets/css/action.scss";
+
+// input type number 오른쪽 화살표 제거
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 .prime-btn,
 .second-btn {

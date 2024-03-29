@@ -69,17 +69,15 @@ const selectedBank = (bankInfo) => {
 
 <template>
   <transition name="slide">
-    <div
-      v-if="isVisible"
-      class="modal-overlay"
-      @click="close('')"
-      @mousedown="startDrag"
-      @touchstart="startDrag"
-    >
+    <div v-if="isVisible" class="modal-overlay" @click="close('')">
       <div class="modal-container" @click.stop>
         <!-- Modal Content Here -->
         <!-- 끌어내릴 수 있다는 표시 -->
-        <div class="drag-icon"></div>
+        <div
+          class="drag-icon"
+          @mousedown="startDrag"
+          @touchstart="startDrag"
+        ></div>
         <div class="method-container">
           <!-- 은행사 리스트 -->
           <div

@@ -28,6 +28,10 @@ const targetBankInfo = ref({
 
 const router = useRouter();
 
+function formatWithHyphens(str) {
+  return str.replace(/(\d{3})(\d{2})(\d{5})/, "$1-$2-$3");
+}
+
 const handleUpdate = (eventPayload) => {
   // 올바른 계좌 정보인지 확인하는 API
   // { accountId, eventPayload.bankInfo.value.bankId, eventPayload.targetAccountNumber.value }
@@ -35,8 +39,9 @@ const handleUpdate = (eventPayload) => {
   // 인증이 성공적이라면 데이터 업데이트 (메뉴 인덱스 변경 및 목표 계좌번호 및 은행사 정보)
   // 인증이 실패라면 통과
   menuIndex.value = eventPayload.menuIndex;
-  targetAccountInfo.value.accountNumber =
-    eventPayload.targetAccountNumber.value;
+  targetAccountInfo.value.accountNumber = formatWithHyphens(
+    eventPayload.targetAccountNumber.value
+  );
   targetBankInfo.value = eventPayload.bankInfo.value;
 
   myAccountInfo.value.name = "저축은행";

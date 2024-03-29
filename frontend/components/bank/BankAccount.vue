@@ -83,7 +83,7 @@ const hideActive = () => {
 @import "@/assets/css/main.scss";
 
 .account-content {
-  min-height: 200px;
+  min-height: 100px;
   padding: 2vh 3vw 2vh 3vw;
 
   height: 25vh;
@@ -94,7 +94,7 @@ const hideActive = () => {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 0 5% 0 5%;
+    padding: 0 5%;
 
     .account-no {
       display: flex;
