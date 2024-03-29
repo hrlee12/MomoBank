@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Configuration
+@Slf4j
 class RestTemplateConfig {
 
 
@@ -46,6 +47,7 @@ class RestTemplateConfig {
             try {
                 return retryTemplate.execute(context -> execution.execute(request, body));
             } catch (HttpServerErrorException e) {
+                log.info("hello");
                 throw new ApiException(ErrorResponse.builder()
                                 .status(e.getStatusCode().value())
                                 .message(e.getMessage())
