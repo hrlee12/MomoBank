@@ -110,6 +110,8 @@ public class FeedService {
         feed.setCreatedAt(LocalDateTime.now());
         feed.setUpdatedAt(LocalDateTime.now());
         feed.setIsDeleted(false);
+        feed.setLikesCount(0);
+        feed.setCommentsCount(0);
 
         feed = feedRepository.save(feed); // 피드 정보 먼저 저장
 
@@ -138,12 +140,20 @@ public class FeedService {
      * @param feedId 피드 ID
      * @return 파일명
      */
-    private String saveFileOnServer(MultipartFile file, String feedId) {
+    private String saveFileOnServer(MultipartFile file, String feedId)  {
         String originalFileName = file.getOriginalFilename();
 
         // 파일명에 피드 ID와 원래 파일명을 조합
         String fileName = "Feed" + feedId + "_" + originalFileName;
         Path targetLocation = Paths.get(uploadDir).resolve(fileName);
+        if(!Files.exists(targetLocation)) {
+            try {
+                Files.createDirectories(targetLocation.getParent());
+            } catch (IOException e) {
+                throw new RuntimeException("createDirectories Error",e);
+            }
+        }
+
         try {
             // 파일 저장 로직
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
