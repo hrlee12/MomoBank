@@ -122,7 +122,7 @@ public class FeedService {
             Media media = new Media();
             media.setFeed(feed);
             media.setSequence(sequence++);
-            media.setMediaUrl("http://j10a505.p.ssafy.io/static/images/" + fileName);
+            media.setMediaUrl("http://j10a505.p.ssafy.io/api/community/static/" + fileName);
             media.setMediaType(file.getContentType()); // 파일 타입 결정 로직
             media.setCreatedAt(LocalDateTime.now());
             media.setUpdatedAt(LocalDateTime.now());
