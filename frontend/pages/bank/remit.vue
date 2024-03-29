@@ -1,83 +1,76 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import BottomSheetModal from "~/components/layout/BottomSheetModal.vue";
 
 defineProps({
-  accountId: Number,
+  accountId: Number, // 내 계좌 아이디
 });
 
 definePageMeta({
   layout: "action",
 });
 
-const accountNumber = ref();
-const bankName = ref("");
-const menuIndex = ref(0);
-const router = useRouter();
-const isModalVisible = ref(false);
+const menuIndex = ref(0); // 메뉴 인덱스 변수
+const myAccountInfo = ref({
+  name: String,
+  balance: Number,
+}); // 내 계좌 정보 (내 계좌 이름, 계좌 잔액)
+const targetAccountInfo = ref({
+  id: Number,
+  accountNumber: String,
+  userName: String,
+}); // 송금 목표 정보 (계좌 아이디, 계좌번호, 계좌 소유자 이름)
+const targetBankInfo = ref({
+  bankId: Number,
+  bankName: String,
+  bankLogoUrl: String,
+}); // 목표 계좌 은행 정보
 
-const goNext = () => {
-  menuIndex.value += 1;
+const router = useRouter();
+
+const handleUpdate = (eventPayload) => {
+  // 올바른 계좌 정보인지 확인하는 API
+  // { accountId, eventPayload.bankInfo.value.bankId, eventPayload.targetAccountNumber.value }
+  // -> { myAccountName, myAccountBalance, targetAccountId, targetUserName }
+  // 인증이 성공적이라면 데이터 업데이트 (메뉴 인덱스 변경 및 목표 계좌번호 및 은행사 정보)
+  // 인증이 실패라면 통과
+  menuIndex.value = eventPayload.menuIndex;
+  targetAccountInfo.value.accountNumber =
+    eventPayload.targetAccountNumber.value;
+  targetBankInfo.value = eventPayload.bankInfo.value;
+
+  myAccountInfo.value.name = "저축은행";
+  myAccountInfo.value.balance = 1000000;
+  targetAccountInfo.value.id = 10;
+  targetAccountInfo.value.userName = "명소이";
+
+  // 로그 확인
+  console.log(targetAccountInfo.value.accountNumber);
+  console.log(targetBankInfo.value);
 };
 </script>
 
 <template>
   <div class="input-container">
-    <div class="input-content">
-      <h1>어떤 계좌로 보낼까요?</h1>
-      <div class="input-item">
-        <input type="text" v-model="accountNumber" placeholder="계좌번호" />
-      </div>
-      <div class="input-item" @click="isModalVisible = true">
-        <input
-          type="text"
-          v-model="bankName"
-          placeholder="은행 선택"
-          readonly
-        />
-      </div>
-    </div>
-    <div class="btn-container">
-      <button v-if="accountNumber == '' || bankName == ''" class="second-btn">
-        다음
-      </button>
-      <button v-else class="prime-btn" @click="goNext()">다음</button>
-    </div>
+    <BankRemitAccountInfo
+      v-if="menuIndex == 0"
+      @update:menuIndex="handleUpdate"
+    />
+    <BankRemitMoneyInput
+      v-if="menuIndex == 1"
+      :myAccountInfo="myAccountInfo"
+      :targetAccountInfo="targetAccountInfo"
+      :targetBankInfo="targetBankInfo"
+    />
   </div>
-  <BottomSheetModal
-    :isVisible="isModalVisible"
-    @update:isVisible="isModalVisible = $event"
-  />
-  <div v-if="isModalVisible" class="modal-bg"></div>
 </template>
 
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
 @import "~/assets/css/action.scss";
 
-.prime-btn,
-.second-btn {
-  border-radius: 15px !important;
-}
-
 .input-container {
   height: 90%;
   width: 95%;
-}
-
-.input-content {
-  padding-top: 5vh;
-}
-
-//----------------
-.modal-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 999;
 }
 </style>

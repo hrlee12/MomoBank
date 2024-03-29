@@ -12,9 +12,11 @@ const getImageUrl = (imageName, idx) => {
 const props = defineProps({
   isVisible: Boolean,
 });
-const emit = defineEmits(["update:isVisible"]);
-const close = () => {
-  emit("update:isVisible", false);
+const emit = defineEmits(["update"]);
+// 모달 종료 함수
+const close = (bankInfo) => {
+  // emit으로 isVisible, bank 정보 반환
+  emit("update", { isVisible: false, bankInfo });
 };
 
 // 드래그 감지 함수
@@ -36,7 +38,7 @@ const dragging = (event) => {
 const stopDrag = () => {
   if (endY.value - startY.value > 50) {
     // If dragged down significantly
-    close();
+    close("");
   }
   document.removeEventListener("mouseup", stopDrag);
   document.removeEventListener("mousemove", dragging);
@@ -46,41 +48,48 @@ const stopDrag = () => {
 
 // 임시 데이터
 const bankList = ref([
-  { bankId: 0, bankTitle: "모모은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 1, bankTitle: "모뭬은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 2, bankTitle: "모무은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 3, bankTitle: "모먀은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 4, bankTitle: "모묘은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 5, bankTitle: "모미은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 6, bankTitle: "모뫄은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 7, bankTitle: "모므은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 8, bankTitle: "모머은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 9, bankTitle: "모먀은행", bankLogoUrl: "logo-icon.png" },
-  { bankId: 10, bankTitle: "모며은행", bankLogoUrl: "logo-icon.png" },
+  { id: 0, name: "모모은행", bankLogoUrl: "logo-icon.png" },
+  { id: 1, name: "모뭬은행", bankLogoUrl: "logo-icon.png" },
+  { id: 2, name: "모무은행", bankLogoUrl: "logo-icon.png" },
+  { id: 3, name: "모먀은행", bankLogoUrl: "logo-icon.png" },
+  { id: 4, name: "모묘은행", bankLogoUrl: "logo-icon.png" },
+  { id: 5, name: "모미은행", bankLogoUrl: "logo-icon.png" },
+  { id: 6, name: "모뫄은행", bankLogoUrl: "logo-icon.png" },
+  { id: 7, name: "모므은행", bankLogoUrl: "logo-icon.png" },
+  { id: 8, name: "모머은행", bankLogoUrl: "logo-icon.png" },
+  { id: 9, name: "모먀은행", bankLogoUrl: "logo-icon.png" },
+  { id: 10, name: "모며은행", bankLogoUrl: "logo-icon.png" },
 ]);
+
+// 은행 선택시 함수
+const selectedBank = (bankInfo) => {
+  close(bankInfo);
+};
 </script>
 
 <template>
   <transition name="slide">
-    <div v-if="isVisible" class="modal-overlay" @click="close">
+    <div
+      v-if="isVisible"
+      class="modal-overlay"
+      @click="close"
+      @mousedown="startDrag"
+      @touchstart="startDrag"
+    >
       <div class="modal-container" @click.stop>
         <!-- Modal Content Here -->
         <!-- 끌어내릴 수 있다는 표시 -->
-        <div
-          class="drag-icon"
-          @mousedown="startDrag"
-          @touchstart="startDrag"
-        ></div>
+        <div class="drag-icon"></div>
         <div class="method-container">
           <!-- 은행사 리스트 -->
           <div
             v-for="(bank, index) in bankList"
             :key="index"
             class="method-content"
-            @click="method = bank.bankId"
+            @click="selectedBank(bank)"
           >
             <img :src="getImageUrl(`${bank.bankLogoUrl}`, 0)" alt="" />
-            <p>{{ bank.bankTitle }}</p>
+            <p>{{ bank.name }}</p>
           </div>
         </div>
       </div>
