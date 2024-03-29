@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,5 +41,11 @@ public class AccountController {
     @RequestBody DeleteAccountRequest request) {
         AccountResponse accountResponse = accountService.deleteAccount(request);
         return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌를 삭제했습니다.", accountResponse);
+    }
+
+    @GetMapping("/account-products")
+    public ResponseEntity<?> getAccountProducts(){
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌 상품을 조회했습니다.",
+            accountService.getAccountProducts());
     }
 }

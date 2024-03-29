@@ -7,6 +7,7 @@ import com.ssafy.bank.account.domain.repository.AccountRepository;
 import com.ssafy.bank.account.dto.request.CreateAccountRequest;
 import com.ssafy.bank.account.dto.request.DeleteAccountRequest;
 import com.ssafy.bank.account.dto.response.AccountResponse;
+import com.ssafy.bank.account.dto.response.GetAllAccountProductResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
@@ -68,6 +69,10 @@ public class AccountService {
 
         account.softDelete();
         return AccountResponse.from(account, accountProduct);
+    }
+
+    public GetAllAccountProductResponse getAccountProducts(){
+        return new GetAllAccountProductResponse(accountRepository.findProductListByType());
     }
 
     private Member memberCheck(int memberId) {
