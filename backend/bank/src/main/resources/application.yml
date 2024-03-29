@@ -15,3 +15,13 @@ server:
 openapi:
   service:
     url: http://j10a505.p.ssafy.io/api/bank
+
+spring:
+  config:
+    import: classpath:application-bank-priavte.yml
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
