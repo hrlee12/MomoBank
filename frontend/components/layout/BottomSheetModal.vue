@@ -72,7 +72,7 @@ const selectedBank = (bankInfo) => {
     <div
       v-if="isVisible"
       class="modal-overlay"
-      @click="close"
+      @click="close('')"
       @mousedown="startDrag"
       @touchstart="startDrag"
     >
