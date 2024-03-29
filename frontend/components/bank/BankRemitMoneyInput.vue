@@ -28,7 +28,7 @@ const goNext = () => {};
         v-model="moenyInput"
         placeholder="얼마나 보낼까요?"
       />
-      <p v-if="moenyInput">{{ moenyInput.toLocaleString("ko-KR") }}원</p>
+      <h1 v-if="moenyInput">{{ moenyInput.toLocaleString("ko-KR") }}원</h1>
     </div>
   </div>
 
