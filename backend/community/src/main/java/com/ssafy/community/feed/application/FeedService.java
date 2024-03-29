@@ -9,6 +9,7 @@ import com.ssafy.community.feed.dto.response.FeedListResponse;
 import com.ssafy.community.feed.dto.response.MediaResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class FeedService {
     private final FeedRepository feedRepository;
     private final LikesRepository likesRepository;
@@ -48,6 +50,7 @@ public class FeedService {
      * @return 피드 목록
      */
     public Page<FeedListResponse> getFeeds(Pageable pageable, int groupId) {
+        log.info("groupId: {}", groupId);
         // 그룹에 속한 피드 목록 조회
         Page<Feed> feeds = feedRepository.findByGroupId(groupId,pageable);
 
@@ -100,6 +103,8 @@ public class FeedService {
     public void createFeed(FeedCreateRequest feedCreateRequest, List<MultipartFile> files) {
         GroupMember groupMember = groupMemberRepository.findById(feedCreateRequest.getGroupMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("GroupMember not found with id " + feedCreateRequest.getGroupMemberId()));
+
+        log.info("groupMemberId: {}", feedCreateRequest.getGroupMemberId());
 
         Feed feed = new Feed();
         feed.setContent(feedCreateRequest.getContent());
