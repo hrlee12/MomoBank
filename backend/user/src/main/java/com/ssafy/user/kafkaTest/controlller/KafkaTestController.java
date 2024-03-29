@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class KafkaTestController {
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @GetMapping("/send")
     public String sendMessage() {
