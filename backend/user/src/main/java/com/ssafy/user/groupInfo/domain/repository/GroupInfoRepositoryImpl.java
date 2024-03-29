@@ -9,16 +9,12 @@ import com.ssafy.user.groupMember.domain.QGroupMember;
 import com.ssafy.user.member.domain.QMember;
 import lombok.RequiredArgsConstructor;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.budget.domain.QBudget;
-import com.ssafy.user.groupInfo.domain.QGroupInfo;
 import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.QGetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.QGroupResponse;
-import com.ssafy.user.groupMember.domain.QGroupMember;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,6 +22,15 @@ import org.springframework.stereotype.Repository;
 public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    private QGroupInfo group = QGroupInfo.groupInfo;
+    private QGroupMember groupMember = QGroupMember.groupMember;
+    private QMember member = new QMember("member");
+    private QMember accountMember = new QMember("accountMember");
+    private QAccount account = QAccount.account;
+    private QTransfer fromTransfer = new QTransfer("fromTransfer");
+    private QTransfer toTransfer = new QTransfer("toTransfer");
+
 
     public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId) {
         QBudget budget = QBudget.budget;
@@ -66,5 +71,20 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .where(groupInfo.groupInfoId.eq(groupId),
                 groupMember.groupMemberId.eq(memberId))
             .fetchOne();
+    }
+
+
+
+    public GroupInfo getGroupInfoById(int groupInfoId){
+        return queryFactory.select(group)
+                .from(group)
+                .where(group.groupInfoId.eq(groupInfoId).and(group.isDeleted.eq(false)))
+                .join(group.account, account)
+                .fetchJoin()
+                .where(account.isDeleted.eq(false))
+                .join(account.member, accountMember)
+                .fetchJoin()
+                .where(accountMember.isDeleted.eq(false))
+                .fetchOne();
     }
 }

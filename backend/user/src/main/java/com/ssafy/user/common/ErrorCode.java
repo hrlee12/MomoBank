@@ -20,7 +20,7 @@ public enum ErrorCode {
     PROBLEM_DURING_SENDING_SMS(BAD_GATEWAY, "sms를 보내는 과정에서 문제 발생"),
     INCORRECT_CERTIFICATION_INFO(BAD_REQUEST, "인증정보 불일치"),
     EXPIRED_CERTIFICATION(BAD_REQUEST, "존재하지 않는 인증정보. 휴대전화 번호가 정확한지 확인 요망"),
-    NO_MEMBER_INFO(NOT_FOUND, "제공된 정보와 일치하는 회원 정보 없음"),
+    NO_MEMBER_INFO(BAD_REQUEST, "제공된 정보와 일치하는 회원 정보 없음"),
     INCORRECT_PASSWORD(BAD_REQUEST, "현재 비밀번호 불일치"),
     NO_MEMBER_TO_UPDATE_FCM_TOKEN(BAD_REQUEST, "fcm 토큰을 갱신할 회원 정보 없음"),
     NO_SUCH_ACCOUNT(FORBIDDEN, "존재하지 않는 계좌입니다."),
@@ -38,7 +38,13 @@ public enum ErrorCode {
     DELETED_GROUP_INFO(FORBIDDEN, "이미 삭제 된 모임입니다."),
     DELETED_BUDGET(FORBIDDEN, "이미 삭제 된 예산입니다."),
     YET_TO_BE_DELETED(FORBIDDEN, "잔액이 남아 계좌를 삭제할 수 없습니다."),
-    ERROR_IN_INTERNAL_MICRO_SERVER(INTERNAL_SERVER_ERROR, "안쪽 마이크로 서버의 에러");
+    ERROR_IN_INTERNAL_MICRO_SERVER(INTERNAL_SERVER_ERROR, "안쪽 마이크로 서버의 에러"),
+    NO_GROUP_MEMBER_INFO(BAD_REQUEST, "조회되는 그룹 멤버가 없습니다."),
+    NO_GROUP_INFO(BAD_REQUEST, "주어진 아이디로 조회되는 그룹이 없습니다. 그룹 아이디를 확인해주세요."),
+    NO_INVITE_LINK(BAD_REQUEST, "해당 초대링크가 존재하지 않습니다. 만료된 링크인지 확인해주세요."),
+    ALREADY_JOINED_MEMBER(CONFLICT, "해당 모임에 이미 가입한 회원입니다."),
+    GROUP_LEADER_CANNOT_RESIGN(BAD_REQUEST, "모임장은 탈퇴할 수 없습니다."),
+    NOT_OWN_GROUP_MEMBER(BAD_REQUEST, "해당 회원의 그룹 멤버 정보가 아닙니다.");
     private final HttpStatus status;
     private final String message;
 

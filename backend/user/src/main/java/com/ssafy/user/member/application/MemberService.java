@@ -5,6 +5,7 @@ import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.ApiException;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.exception.ErrorResponse;
+import com.ssafy.user.common.util.EncryptUtil;
 import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.common.util.RestTemplateUtil;
 import com.ssafy.user.member.dto.request.JoinRequest;
@@ -53,21 +54,16 @@ import java.util.*;
 @Slf4j
 public class MemberService {
     private final DefaultMessageService messageService;
-    private final MemberRepository memberRepository;
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final RedisUtil redisUtil;
     private final RestTemplateUtil restTemplateUtil;
-    private final ObjectMapper objectMapper;
+    private final EncryptUtil encryptUtil;
 
     @Value("${bank.url}")
     private String bankUrl;
-    private String alg = "HmacSHA256";
     @Value("${sms.from-number}")
     private String fromNumber;
-    @Value("${encrypt.secret-key}")
-    private String aesSecretKey;
-    private final IvParameterSpec iv = new IvParameterSpec(new byte[16]);
-    private final String aesAlg = "AES/CBC/PKCS5Padding";
+
 
 
     // 전화번호 인증코드 생성
@@ -97,7 +93,7 @@ public class MemberService {
         sendSms(phoneNumber, message);
 
         // redis에 저장
-        redisUtil.setValues(phoneNumber, aesEncrypt(verificationNumber), Duration.ofSeconds(60 * 3));
+        redisUtil.setValues(phoneNumber, encryptUtil.aesEncrypt(verificationNumber), Duration.ofSeconds(60 * 3));
 
         return;
     }
@@ -110,13 +106,13 @@ public class MemberService {
         verifyCode(code, phoneNumber);
 
         // 전화번호 인증 토큰 생성
-        String secretKey = getRandomKey();
+        String secretKey = encryptUtil.getRandomKey();
 
         // (전화번호 : 시크릿 키) 저장
         // 만료시간을 지정하기 위해 레디스에 저장.
-        redisUtil.setValues(phoneNumber, aesEncrypt(secretKey), Duration.ofSeconds(20 * 60));
+        redisUtil.setValues(phoneNumber, encryptUtil.aesEncrypt(secretKey), Duration.ofSeconds(20 * 60));
 
-        return hashEncrypt(phoneNumber, secretKey);
+        return encryptUtil.hashEncrypt(phoneNumber, secretKey);
     }
 
 
@@ -256,13 +252,13 @@ public class MemberService {
     private void verifyCode(String code, String phoneNumber) throws Exception {
 
         // 레디스에 저장된 인증정보 가져오기
-        String correctCode = redisUtil.getValues(phoneNumber);
+        String correctCode = (String)redisUtil.getValues(phoneNumber);
 
         // 없으면 예외처리
         if (correctCode == null)
             throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
 
-        correctCode = aesDecrypt(correctCode);
+        correctCode = encryptUtil.aesDecrypt(correctCode);
 
         // 코드가 틀리면 예외처리
         if (!correctCode.equals(code))
@@ -278,34 +274,21 @@ public class MemberService {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
 
-        String secretKey = redisUtil.getValues(phoneNumber);
+        String secretKey = (String)redisUtil.getValues(phoneNumber);
 
         if (secretKey == null) {
             throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
         }
 
-        secretKey = aesDecrypt(secretKey);
+        secretKey = encryptUtil.aesDecrypt(secretKey);
 
 
-        if (!hashEncrypt(phoneNumber, secretKey).equals(token)) {
+        if (!encryptUtil.hashEncrypt(phoneNumber, secretKey).equals(token)) {
             throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
         }
     }
 
 
-    private String getRandomKey() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder(10);
-
-        for (int i = 0; i < 10; i++) {
-            int index = random.nextInt(chars.length());
-            sb.append(chars.charAt(index));
-        }
-
-        return sb.toString();
-    }
 
 
     private String getRandomPassword() {
@@ -329,38 +312,7 @@ public class MemberService {
     }
 
 
-    private String hashEncrypt(String word, String key) throws NoSuchAlgorithmException, InvalidKeyException {
-        SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), alg);
 
-        Mac hasher = Mac.getInstance(alg);
-        hasher.init(secretKey);
-        byte[] hash = hasher.doFinal(word.getBytes());
-        String hashed = HexUtils.toHexString(hash);
-
-        return hashed;
-    }
-
-
-    public String aesEncrypt(String s) throws Exception {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
-
-        Cipher cipher = Cipher.getInstance(aesAlg);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, iv);
-        byte[] encrypted = cipher.doFinal(s.getBytes("UTF-8"));
-
-        return Base64.getEncoder().encodeToString(encrypted);
-    }
-
-
-    public String aesDecrypt(String s) throws Exception {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(aesSecretKey.getBytes(), "AES");
-
-        Cipher cipher = Cipher.getInstance(aesAlg);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
-        byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(s));
-
-        return new String(decrypted, "UTF-8");
-    }
 
 
     private void sendSms(String toPhoneNumber, String content) {

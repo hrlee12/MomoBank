@@ -22,7 +22,7 @@ spring:
       group-id: "myGroup"
 
   config:
-    import: classpath:application-user-private-aws.yml
+    import: classpath:application-private.yml
   jpa:
     hibernate:
       ddl-auto: update
@@ -38,9 +38,3 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
 
 
-
-
-openapi:
-  service:
-    # API Gateway 포트
-    url: http://j10a505.p.ssafy.io/api/user

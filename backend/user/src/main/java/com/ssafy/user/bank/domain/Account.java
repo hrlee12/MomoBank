@@ -4,19 +4,8 @@ import com.ssafy.user.common.BaseEntity;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.member.domain.Member;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,13 +51,13 @@ public class Account extends BaseEntity {
     @OneToMany(mappedBy = "toAccount", cascade = CascadeType.REFRESH)
     private List<Transfer> toTransfers;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private GroupInfo groupInfo;
 
     @OneToMany(mappedBy = "account")
     private List<GroupMember> groupMember;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
