@@ -14,12 +14,12 @@ public class KafkaTestController {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @GetMapping("/send")
-    public String sendMessage(@PathVariable String message) {
-        kafkaTemplate.send("testTopic", message);
+    public String sendMessage() {
+        kafkaTemplate.send("testTopic", "hello");
         return "Message sent to the Kafka Topic testTopic Successfully";
     }
     @GetMapping("/text")
-    public String sendText(@PathVariable String message) {
+    public String sendText() {
         return "this is text!!!!";
     }
 
