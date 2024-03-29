@@ -1,4 +1,3 @@
-
 springdoc:
   api-docs:
     enabled: true
@@ -15,15 +14,13 @@ server:
 spring:
   kafka:
     producer:
-      bootstrap-servers: my-kafka.default.svc.cluster.local:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
     consumer:
-      bootstrap-servers: my-kafka.default.svc.cluster.local:9092
-      group-id: myGroup
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+      group-id: "myGroup"
+
   config:
     import: classpath:application-user-private-aws.yml
   jpa:

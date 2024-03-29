@@ -1,4 +1,5 @@
 package com.ssafy.user.kafkaTest.controlller;
+import com.ssafy.user.groupInfo.dto.response.GetFeesPerMonthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class KafkaTestController {
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @GetMapping("/send")
     public String sendMessage() {
-        kafkaTemplate.send("testTopic", "hello");
+        kafkaTemplate.send("testTopic", new GetFeesPerMonthResponse(23,34));
         return "Message sent to the Kafka Topic testTopic Successfully";
     }
     @GetMapping("/text")

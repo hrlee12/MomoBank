@@ -65,8 +65,8 @@ public class Account extends BaseEntity {
     @OneToOne(mappedBy = "account")
     private GroupInfo groupInfo;
 
-    @OneToOne(mappedBy = "account")
-    private GroupMember groupMember;
+    @OneToMany(mappedBy = "account")
+    private List<GroupMember> groupMember;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

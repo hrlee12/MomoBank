@@ -7,4 +7,7 @@ import java.util.List;
 public interface GroupInfoRepositoryCustom {
     public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId);
     public GroupResponse findGroupResponseByGroup(int groupId, int memberId);
+
+    public GroupInfo getGroupInfoById(int groupInfoId);
+
 }
