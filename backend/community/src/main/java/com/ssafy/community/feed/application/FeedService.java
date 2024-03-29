@@ -44,13 +44,10 @@ public class FeedService {
      * - 피드 목록을 조회할 때, 미디어 파일 URL 리스트를 함께 조회한다.
      * - 피드 목록을 조회할 때, 그룹 멤버 ID와 이름을 함께 조회한다. (프로필 이미지는 없음)
      * @param pageable 페이징 정보
-     * @param memberId 사용자 ID
+     * @param groupId 그룹 ID
      * @return 피드 목록
      */
-    public Page<FeedListResponse> getFeeds(Pageable pageable, int memberId) {
-        // 사용자 ID로 그룹 ID 조회
-        Integer groupId = groupMemberRepository.findGroupIdByMemberId(memberId);
-
+    public Page<FeedListResponse> getFeeds(Pageable pageable, int groupId) {
         // 그룹에 속한 피드 목록 조회
         Page<Feed> feeds = feedRepository.findByGroupId(groupId,pageable);
 
@@ -68,7 +65,7 @@ public class FeedService {
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
             Likes likes = likesRepository.findByFeedFeedId(feed.getFeedId());
-            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == memberId;
+            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == groupId;
             dto.setLikedByUser(likedByUser);
 
             // 피드 댓글 조회
