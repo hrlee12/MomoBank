@@ -12,7 +12,9 @@ import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
 import com.ssafy.bank.member.domain.repository.MemberRepository;
+import com.ssafy.bank.account.dto.response.BankResponse;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,7 @@ public class AccountService {
         Account account = Account.builder()
             .accountProduct(accountProduct)
             .accountNumber("505-01-"
-                + String.format("%08d", accountProduct.getAccountProductId()))
+                + String.format("%06d", accountProduct.getAccountProductId()))
             .accountPassword(request.accountPassword())
             .member(member)
             .build();
@@ -73,6 +75,10 @@ public class AccountService {
 
     public GetAllAccountProductResponse getAccountProducts(){
         return new GetAllAccountProductResponse(accountRepository.findProductListByType());
+    }
+
+    public List<BankResponse> getBanks(){
+        return accountRepository.getBank();
     }
 
     private Member memberCheck(int memberId) {

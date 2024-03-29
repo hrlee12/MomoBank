@@ -48,4 +48,16 @@ public class AccountController {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌 상품을 조회했습니다.",
             accountService.getAccountProducts());
     }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<?> transfer(){
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 송금했습니다.",
+            null);
+    }
+
+    @GetMapping("/bank-list")
+    public ResponseEntity<?> getBankList(){
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 은행사를 조회했습니다.",
+            accountService.getBanks());
+    }
 }
