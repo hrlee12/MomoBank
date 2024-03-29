@@ -38,6 +38,8 @@ spring:
     resources:
       static-locations: file:/uploads/feed/
 
+
+
 #logging
 logging:
   level:
