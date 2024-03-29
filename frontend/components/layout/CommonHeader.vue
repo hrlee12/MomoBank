@@ -48,7 +48,11 @@ const pageTitle = computed(() => {
       title: "비밀번호수정",
       sideMenuActive: NO_SIDE_MENU,
     },
-    "bank-remit": { title: "계좌개설", sideMenuActive: FULL_MENU },
+    "bank-remit": { title: "송금", sideMenuActive: NO_SIDE_MENU },
+    "bank-remit-confirm-remit": {
+      title: "송금확인",
+      sideMenuActive: NO_SIDE_MENU,
+    },
     user: { title: "", sideMenuActive: ONLY_ARROW },
     "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
     "bank-group-create-account-select": {
