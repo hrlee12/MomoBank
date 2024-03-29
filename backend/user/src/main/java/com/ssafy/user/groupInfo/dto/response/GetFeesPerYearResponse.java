@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetFeesPerYearResponse {
-    private List<GetFeesPerMonthResponse> getFeesPerMonthList;
+    private List<GetFeesPerMonthResponse> feesPerMonthList;
     private int totalAmmount;
 }

@@ -13,4 +13,9 @@ public class CustomExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e){
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
+
+    @ExceptionHandler(ApiException.class)
+    protected ResponseEntity<ErrorResponse>  handleApiException(ApiException e) {
+        return ErrorResponse.toResponseEntity(e.getErrorResponse());
+    }
 }
