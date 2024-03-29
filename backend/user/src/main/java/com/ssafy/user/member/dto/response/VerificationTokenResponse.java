@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class VerificationTokenResponse {
-    @Schema(description = "휴대전화/초대링크 인증 토큰")
+    @Schema(description = "휴대전화 인증 토큰")
     private String authToken;
 }
