@@ -1,15 +1,16 @@
 package com.ssafy.user.groupMember.application;
 
-import com.ssafy.user.bank.entity.Account;
-import com.ssafy.user.bank.entity.repository.AccountRepository;
-import com.ssafy.user.bank.entity.repository.AccountRepositoryCustom;
+import com.ssafy.user.bank.domain.Account;
+import com.ssafy.user.bank.domain.repository.AccountRepository;
+import com.ssafy.user.bank.domain.repository.AccountRepositoryCustom;
+import com.ssafy.user.bank.domain.repository.AccountRepositoryImpl;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.util.EncryptUtil;
 import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
-import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepositoryImpl;
+//import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepositoryImpl;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.groupMember.domain.Invite;
 import com.ssafy.user.groupMember.domain.repository.*;
@@ -42,7 +43,7 @@ public class GroupMemberService {
     private final GroupMemberRepositoryImpl groupMemberRepositoryImpl;
     private final GroupMemberRepository groupMemberRepository;
     private final AccountRepository accountRepository;
-    private final AccountRepositoryCustom accountRepositoryCustom;
+    private final AccountRepositoryImpl accountRepositoryCustomImpl;
     private final GroupInfoRepository groupInfoRepository;
     private final InviteRepository inviteRepository;
     private final InviteRepositoryCustom inviteRepositoryCustom;
@@ -127,7 +128,7 @@ public class GroupMemberService {
 
 
         Boolean isCodeExist = false;
-        
+
         // 각 초대 정보에 대해 groupId와 identifier로 해쉬해서 일치하는지 확인
         for (Invite invite : invites) {
             String salt = encryptUtil.aesDecrypt(invite.getIdentifier());
@@ -140,7 +141,7 @@ public class GroupMemberService {
         if (!isCodeExist)
             throw new CustomException(ErrorCode.NO_INVITE_LINK);
 
-        
+
         // 그룹Id + 멤버Id + 시크릿 키를 해쉬해서 authToken 만들기
         String secretKey = encryptUtil.getRandomKey();
         String verificationToken = encryptUtil.hashEncrypt(groupId+memberId, secretKey);
@@ -151,7 +152,7 @@ public class GroupMemberService {
         redisUtil.setValues(verificationToken, encryptUtil.aesEncrypt(secretKey), Duration.ofSeconds(60 * 10));
 
         // 회원의 계좌 가져오기
-        List<AccountDTO> accountDTOs = accountRepositoryCustom.findAccountDTOByMemberId(memberId);
+        List<AccountDTO> accountDTOs = accountRepositoryCustomImpl.findAccountDTOByMemberId(memberId);
 
 
         // 인증 토큰과 계좌 리스트 반환
@@ -189,7 +190,7 @@ public class GroupMemberService {
         GroupInfo group = groupInfoRepository.findByGroupInfoIdAndIsDeletedFalse(groupId)
                             .orElseThrow(() -> new CustomException(ErrorCode.NO_GROUP_INFO));
 
-        Account account = accountRepositoryCustom.findbyIdAndMemberId(accountId, memberId);
+        Account account = accountRepositoryCustomImpl.findAccountByIdAndMemberId(accountId, memberId);
 
         if (account == null) {
             throw new CustomException(ErrorCode.NO_SUCH_ACCOUNT);

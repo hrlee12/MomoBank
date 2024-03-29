@@ -1,7 +1,6 @@
 package com.ssafy.user.groupMember.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.user.bank.entity.QAccount;
 import com.ssafy.user.groupInfo.domain.QGroupInfo;
 import com.ssafy.user.groupMember.domain.Invite;
 import com.ssafy.user.groupMember.domain.QInvite;

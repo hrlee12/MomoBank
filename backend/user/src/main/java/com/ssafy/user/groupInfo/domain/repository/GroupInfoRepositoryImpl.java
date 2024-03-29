@@ -1,8 +1,8 @@
 package com.ssafy.user.groupInfo.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.user.bank.entity.QAccount;
-import com.ssafy.user.bank.entity.QTransfer;
+import com.ssafy.user.bank.domain.QAccount;
+import com.ssafy.user.bank.domain.QTransfer;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.QGroupInfo;
 import com.ssafy.user.groupMember.domain.QGroupMember;

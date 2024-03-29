@@ -10,6 +10,6 @@ public interface GroupInfoRepositoryCustom {
     public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId);
     public GroupResponse findGroupResponseByGroup(int groupId, int memberId);
 
-    GroupInfo getGroupInfoById(int groupInfoId);
+    public GroupInfo getGroupInfoById(int groupInfoId);
 
 }

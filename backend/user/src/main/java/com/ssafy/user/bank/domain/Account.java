@@ -54,9 +54,8 @@ public class Account extends BaseEntity {
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private GroupInfo groupInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OneToOne(mappedBy = "account")
-    private GroupMember groupMember;
+    @OneToMany(mappedBy = "account")
+    private List<GroupMember> groupMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

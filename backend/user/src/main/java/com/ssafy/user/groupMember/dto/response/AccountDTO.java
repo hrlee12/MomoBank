@@ -1,7 +1,6 @@
 package com.ssafy.user.groupMember.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.user.bank.entity.Transfer;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.member.domain.Member;
 import jakarta.persistence.*;
