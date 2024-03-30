@@ -6,12 +6,6 @@ import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;
 import com.ssafy.user.groupInfo.dto.request.GroupRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupDescriptionRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupNameRequest;
-import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
-import com.ssafy.user.groupInfo.dto.response.GetFeesListResponse;
-import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
-import com.ssafy.user.groupInfo.dto.response.GetMyGroupListResponse;
-import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
-import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.SplitBalanceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,7 +49,7 @@ public class GroupInfoController {
     GroupRequest request) {
 
         return CommonResponse.toResponseEntity(HttpStatus.OK, "해당 모임원 납입금액 조회 성공",
-            new GetFeesListResponse());
+            groupInfoService.getFeesPerMonth(request.memberId(), id));
     }
 
     @Operation(summary = "모임 상세 조회", description = "모임 상세 페이지를 통한 모임 상세 조회")
