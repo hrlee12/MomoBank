@@ -8,6 +8,8 @@ definePageMeta({
 
 const completeWrite = ref(false);
 
+const alongButton = ref(true);
+
 const goBack = () => {
   window.history.back();
 };
@@ -98,6 +100,7 @@ function okButton(changeComplte) {
       </div>
       <CompleteModal
         v-if="completeWrite === true"
+        :alongButton="alongButton"
         @ok-button="okButton"
       ></CompleteModal>
     </div>
