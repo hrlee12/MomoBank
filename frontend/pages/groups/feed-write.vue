@@ -59,7 +59,7 @@ function removeImage(fileUrl) {
           name="contents"
           id="contents"
           placeholder="이 사진에 대해 이야기해주세요..."
-          class="w-full overflow-hidden text-base resize-none"
+          class="w-full overflow-hidden text-base border-none resize-none"
         ></textarea>
       </div>
       <div v-for="fileUrl in files" :key="fileUrl" class="bg-white">

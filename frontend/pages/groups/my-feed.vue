@@ -95,11 +95,13 @@ const getImageUrl = (imageName, idx) => {
     <div v-if="feedTab === 'feed'" class="container px-2 pt-4 mx-auto bg-white">
       <div class="grid grid-cols-3 gap-[0.15rem]">
         <div v-for="item in feedList" :key="item.id" class="aspect-square">
-          <img
-            class="object-cover w-full h-full"
-            :src="getImageUrl(item.img, 1)"
-            :alt="item.img"
-          />
+          <nuxt-link to="/groups/feed-detail">
+            <img
+              class="object-cover w-full h-full"
+              :src="getImageUrl(item.img, 1)"
+              :alt="item.img"
+            />
+          </nuxt-link>
         </div>
       </div>
     </div>

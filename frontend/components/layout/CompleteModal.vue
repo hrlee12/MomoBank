@@ -1,14 +1,29 @@
 <script setup>
 // TODO: onMounted로 해당 모임 공지사항 리스트 불러오기
-const emit = defineEmits(["ok-button"]);
+
+const props = defineProps({
+  cancelButton: Boolean,
+});
+
+if (props.cancelButton === undefined) {
+  const cancelButton = ref(false);
+}
+
+const emit = defineEmits(["ok-button", "visible-modal"]);
 
 function completeWrite() {
   emit("ok-button", false);
 }
 
+function isVisibleModal() {
+  emit("visible-modal", false);
+}
+
 const moveLink = ref("");
 
 const route = useRoute();
+
+// TODO : 생각해보니 글을 수정하거나 삭제하고 나서 이동할 떄 해당 id가 필요해서 그걸 이 컴포넌트에 props 해줘야 할 것 같음.
 
 const modalTitle = computed(() => {
   if (route.name === "groups-announcement-write") {
@@ -20,6 +35,9 @@ const modalTitle = computed(() => {
   ) {
     moveLink.value = "/groups/announcement";
     return "공지사항이 수정되었습니다";
+  } else if (route.name === "groups-feed-detail") {
+    moveLink.value = "/groups/my-feed";
+    return "정말로 삭제하시겠습니까?";
   }
 });
 </script>
@@ -36,14 +54,27 @@ const modalTitle = computed(() => {
       >
         {{ modalTitle }}
       </div>
-      <nuxt-link :to="moveLink">
-        <button
-          @click="completeWrite"
-          class="px-4 py-2 mt-4 rounded text-main-color"
+      <div v-if="!cancelButton">
+        <nuxt-link :to="moveLink">
+          <button @click="completeWrite" class="px-4 mt-4 text-main-color">
+            확인
+          </button>
+        </nuxt-link>
+      </div>
+      <div v-if="cancelButton" class="flex justify-center w-full">
+        <nuxt-link :to="moveLink" class="w-1/2">
+          <div @click="completeWrite" class="text-center text-main-color">
+            확인
+          </div>
+        </nuxt-link>
+
+        <div
+          @click="isVisibleModal"
+          class="w-1/2 text-center text-negative-color"
         >
-          확인
-        </button>
-      </nuxt-link>
+          취소
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -8,6 +8,7 @@ definePageMeta({
 
 const completeWrite = ref(false);
 
+
 const goBack = () => {
   window.history.back();
 };
