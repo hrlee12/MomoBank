@@ -154,14 +154,7 @@ public class MemberService {
             throw new ApiException(errorResponse);
         }
 
-        // fcm토큰은 계정계에 저장하지 않음.
-        // -> 채널계에서 따로 저장해주기
-        Member member = memberRepositoryCustom.findMemberById(request.getId());
 
-        if (member == null)
-            throw new CustomException(ErrorCode.NO_MEMBER_TO_UPDATE_FCM_TOKEN);
-
-        member.changeFcmToken(request.getFcmToken());
     }
 
 
@@ -325,19 +318,24 @@ public class MemberService {
 
         message.setText(content);
 
-        SingleMessageSentResponse smsResponse;
+        SingleMessageSentResponse smsResponse = null;
 
         try {
             // sms 보내기
             smsResponse = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         } catch (Exception e) {
+
+            log.info(e.getMessage());
+
+
             throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
         }
 
 
         // 2000코드 : 잘 접수됨.
         // 아닌 경우
-        if (!smsResponse.getStatusCode().equals("2000")) {
+        if (smsResponse != null && !smsResponse.getStatusCode().equals("2000")) {
+            log.info("sms 오류 발생 - code : " + smsResponse.getStatusCode() + " " + smsResponse.getStatusMessage());
             throw new CustomException(ErrorCode.PROBLEM_DURING_SENDING_SMS);
         }
     }
