@@ -15,14 +15,14 @@ const getImageUrl = (imageName, idx) => {
   <div class="h-screen bg-white">
     <div class="flex justify-between">
       <div></div>
-      <nuxt-link to="announcement-write">
+      <nuxt-link to="/groups/announcement/write">
         <div class="w-6 h-6 mt-4 mr-4">
           <img :src="getImageUrl('add-icon2.png', 0)" alt="add-icon" />
         </div>
       </nuxt-link>
     </div>
 
-    <nuxt-link to="/groups/announcement-detail">
+    <nuxt-link to="/groups/detail">
       <div class="flex justify-center">
         <div
           class="flex flex-col justify-center-center w-11/12 h-11 mt-8 pl-5 border-b-[1px] border-light-gray-color"
@@ -44,7 +44,7 @@ const getImageUrl = (imageName, idx) => {
         </div>
       </div>
     </nuxt-link>
-    <nuxt-link to="/groups/announcement-vote">
+    <nuxt-link to="/groups/announcement/vote">
       <div class="flex justify-center">
         <div
           class="flex flex-col justify-center-center w-11/12 h-11 mt-8 pl-5 border-b-[1px] border-light-gray-color"

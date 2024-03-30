@@ -1,4 +1,6 @@
 <script setup>
+import GroupsBottomSheetModal from "~/components/layout/GroupsBottomSheetModal.vue";
+
 definePageMeta({
   layout: "no-footer-bank",
 });
@@ -14,10 +16,18 @@ const budgetGoal = ref("");
 const targetAmount = ref("");
 
 // 이체주기 선택
-const selectFrequency = ref(false);
+const visibleFrequency = ref(false);
 
-const selectFrequencyClick = () => {
-  selectFrequency.value = true;
+const visibleBottomModal = ref(false);
+
+const visibleBottomModalClick = () => {
+  visibleBottomModal.value = true;
+  visibleFrequency.value = true;
+};
+
+const handleUpdate = (event) => {
+  visibleBottomModal.value = event.isVisible;
+  visibleFrequency.value = event.budgetAddVisible;
 };
 </script>
 <template>
@@ -50,19 +60,29 @@ const selectFrequencyClick = () => {
         <input type="date" class="border-none" />
       </div>
       <div class="py-3 text-xl font-bold">며칟날 입금할 건가요?</div>
-      <div
-        v-if="!selectFrequency"
-        class="flex items-center"
-        @click="selectFrequencyClick"
-      >
-        <div>이체주기 선택</div>
+      <div class="flex items-center">
+        <div @click="visibleBottomModalClick">이체주기 선택</div>
         <div class="w-5 h-5 rotate-180">
           <img :src="getImageUrl('arrow-icon.png', 0)" alt="arrow-icon" />
         </div>
       </div>
-      <div v-if="selectFrequency">
-        
-      </div>
     </div>
+    <GroupsBottomSheetModal
+      :isFrequency="visibleFrequency"
+      :isVisible="visibleBottomModal"
+      @budget-add-update="handleUpdate"
+    ></GroupsBottomSheetModal>
+    <div v-if="visibleBottomModal" class="modal-bg"></div>
   </div>
 </template>
+<style lang="scss" scoped>
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
+</style>

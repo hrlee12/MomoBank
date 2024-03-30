@@ -47,7 +47,7 @@ const toggleText = () => {
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
       <div class="flex flex-row justify-between">
-        <NuxtLink to="/groups/detail">
+        <NuxtLink to="/groups/budget/detail">
           <div
             class="flex items-center justify-center w-10 h-6 ml-4 bg-light-gray-color rounded-xl"
           >

@@ -27,12 +27,19 @@ const getImageUrl = (imageName, idx) => {
 // 모달이 켜졌는지 꺼졌는지 props 및 emit
 const props = defineProps({
   isVisible: Boolean,
+  isComments: Boolean,
+  isFrequency: Boolean,
 });
-const emit = defineEmits(["update"]);
+const emit = defineEmits(["comments-update", "budget-add-update"]);
 // 모달 종료 함수
 const close = (data) => {
   // emit으로 isVisible, bank 정보 반환
-  emit("update", { isVisible: false, data });
+  emit("comments-update", { commentsVisible: false, isVisible: false, data });
+  emit("budget-add-update", {
+    budgetAddVisible: false,
+    isVisible: false,
+    data,
+  });
 };
 
 // 드래그 감지 함수
@@ -61,6 +68,46 @@ const stopDrag = () => {
   document.removeEventListener("touchend", stopDrag);
   document.removeEventListener("touchmove", dragging);
 };
+
+// 이체주기 변수
+const days = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26",
+  "27",
+  "28",
+  "29",
+  "30",
+  "말일",
+];
+
+const activeDay = ref(days[0]);
+const setActiveDay = (day) => {
+  activeDay.value = day;
+};
 </script>
 
 <template>
@@ -74,7 +121,7 @@ const stopDrag = () => {
           @mousedown="startDrag"
           @touchstart="startDrag"
         ></div>
-        <div class="max-h-[50vh] overflow-auto">
+        <div v-if="props.isComments" class="max-h-[50vh] overflow-auto">
           <div class="comments">댓글</div>
           <div v-if="route.name === 'groups-feed-detail'">
             <div
@@ -109,6 +156,29 @@ const stopDrag = () => {
               id="comments"
               placeholder="댓글 추가.."
             />
+          </div>
+        </div>
+        <div v-if="props.isFrequency">
+          <div class="flex items-center justify-around px-6">
+            <div class="text-3xl font-bold">매월</div>
+
+            <div
+              class="relative flex items-center justify-center overflow-hidden picker-container"
+            >
+              <ul
+                class="flex flex-col overflow-y-scroll picker snap-y snap-mandatory h-36"
+              >
+                <li
+                  v-for="day in days"
+                  :key="day"
+                  :class="{ active: activeDay === day }"
+                  @click="setActiveDay(day)"
+                  class="day"
+                >
+                  {{ day }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -181,5 +251,58 @@ const stopDrag = () => {
   width: 2.75rem;
   height: 2.75rem;
   margin-right: 0.5rem;
+}
+.picker-container {
+  height: 144px; // 높이는 세 개의 항목 높이의 합과 같아야 합니다.
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+
+  .picker {
+    display: flex;
+    flex-direction: column;
+    snap-type: y mandatory;
+    height: 36px * 3; // 36px 항목 높이 * 3개의 항목
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none; // 크롬, 사파리용 스크롤바 숨기기
+    }
+
+    scrollbar-width: none; // 파이어폭스용 스크롤바 숨기기
+
+    li {
+      snap-align: center;
+      font-size: 1.25rem; // 선택되지 않은 항목의 기본 크기
+      color: #64748b; // 선택되지 않은 항목의 색상
+      opacity: 0.3; // 선택되지 않은 항목의 불투명도
+      transition: font-size 0.3s, opacity 0.3s;
+      height: 36px; // 항목 높이
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:target {
+        // 선택된 항목의 스타일
+        font-size: 1.5rem;
+        color: #000;
+        opacity: 1;
+      }
+    }
+
+    .day {
+      transition: font-size 0.3s, opacity 0.3s;
+      font-size: 1.5rem;
+    }
+
+    .active {
+      font-size: 1.8rem;
+      opacity: 1;
+      color: #000;
+    }
+  }
 }
 </style>
