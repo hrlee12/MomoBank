@@ -3,6 +3,7 @@ package com.ssafy.user.bank.application;
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
 import com.ssafy.user.bank.dto.request.CreateCardInfoRequest;
 import com.ssafy.user.bank.dto.request.DeleteAccountRequest;
+import com.ssafy.user.bank.dto.request.DeleteCardRequest;
 import com.ssafy.user.bank.dto.request.PasswordConfirmRequest;
 import com.ssafy.user.bank.dto.request.TransferRequest;
 import com.ssafy.user.common.exception.ApiException;
@@ -78,7 +79,7 @@ public class BankCallService {
         return response;
     }
 
-    // 당행 카드 생성
+//    // 당행 카드 생성
 //    public ResponseEntity createCard(CreateCardInfoRequest request) {
 //        ResponseEntity response;
 //        try {
@@ -90,7 +91,7 @@ public class BankCallService {
 //        }
 //        return response;
 //    }
-    // 카드 삭제
+//    // 카드 삭제
 //    public ResponseEntity deleteCard(DeleteCardRequest request) {
 //        ResponseEntity response;
 //        try {
