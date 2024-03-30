@@ -12,6 +12,7 @@ import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
 import com.ssafy.bank.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.security.SecureRandom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +45,14 @@ public class CardInfoService {
             throw new CustomException(ErrorCode.DELETED_CARD_PRODUCT);
         }
 
+        SecureRandom secureRandom = new SecureRandom();
+
+        int secureRandomNumber = secureRandom.nextInt(1000);
+
         CardInfo cardInfo = CardInfo.builder()
-            .cardInfoNum("505-01")
+            .cardInfoNum("505-01-"
+                + String.format("%03d", (cardProduct.getCardProductId()* member.getMemberId())%1000)
+                + String.format("%03d", secureRandomNumber))
             .cardProduct(cardProduct)
             .account(account)
             .build();

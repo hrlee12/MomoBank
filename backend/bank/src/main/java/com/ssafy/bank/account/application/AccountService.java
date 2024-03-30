@@ -7,13 +7,14 @@ import com.ssafy.bank.account.domain.repository.AccountRepository;
 import com.ssafy.bank.account.dto.request.CreateAccountRequest;
 import com.ssafy.bank.account.dto.request.DeleteAccountRequest;
 import com.ssafy.bank.account.dto.response.AccountResponse;
+import com.ssafy.bank.account.dto.response.BankResponse;
 import com.ssafy.bank.account.dto.response.GetAllAccountProductResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
 import com.ssafy.bank.member.domain.repository.MemberRepository;
-import com.ssafy.bank.account.dto.response.BankResponse;
 import jakarta.transaction.Transactional;
+import java.security.SecureRandom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,10 +38,17 @@ public class AccountService {
             throw new CustomException(ErrorCode.DELETED_ACCOUNT_PRODUCT);
         }
 
+        SecureRandom secureRandom = new SecureRandom();
+
+        int secureRandomNumber = secureRandom.nextInt(1000);
+
+        System.out.println("SecureRandom을 사용한 랜덤한 3자리 숫자: " + secureRandomNumber);
+
         Account account = Account.builder()
             .accountProduct(accountProduct)
             .accountNumber("505-01-"
-                + String.format("%06d", accountProduct.getAccountProductId()))
+                + String.format("%03d", (accountProduct.getAccountProductId() * member.getMemberId())%1000)
+                + String.format("%03d", secureRandomNumber))
             .accountPassword(request.accountPassword())
             .member(member)
             .build();
@@ -73,11 +81,11 @@ public class AccountService {
         return AccountResponse.from(account, accountProduct);
     }
 
-    public GetAllAccountProductResponse getAccountProducts(){
+    public GetAllAccountProductResponse getAccountProducts() {
         return new GetAllAccountProductResponse(accountRepository.findProductListByType());
     }
 
-    public List<BankResponse> getBanks(){
+    public List<BankResponse> getBanks() {
         return accountRepository.getBank();
     }
 
