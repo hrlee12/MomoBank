@@ -28,7 +28,8 @@ public enum ErrorCode {
     EXPIRED_CERTIFICATION(BAD_REQUEST, "존재하지 않는 인증정보. 휴대전화 번호가 정확한지 확인 요망"),
     NO_MEMBER_INFO(NOT_FOUND, "제공된 정보와 일치하는 회원 정보 없음"),
     INCORRECT_PASSWORD(BAD_REQUEST, "현재 비밀번호 불일치"),
-    NO_MEMBER_TO_UPDATE_FCM_TOKEN(BAD_REQUEST, "fcm 토큰을 갱신할 회원 정보 없음");
+    NO_MEMBER_TO_UPDATE_FCM_TOKEN(BAD_REQUEST, "fcm 토큰을 갱신할 회원 정보 없음"),
+    INSUFFICIENT_FUNDS(BAD_REQUEST, "잔액이 부족합니다.");
 
     private final HttpStatus status;
     private final String message;

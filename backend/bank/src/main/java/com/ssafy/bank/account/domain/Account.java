@@ -60,4 +60,8 @@ public class Account extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public void updateBalance(long balance){
+        this.balance = balance;
+    }
 }
