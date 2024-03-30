@@ -11,7 +11,7 @@ const menuItems = [
   { name: "예산", path: "/groups/budget", icon: "budget-icon.png" },
   { name: "마이피드", path: "/groups/feed/my", icon: "user-icon.png" },
   { name: "리포트", path: "/groups/report", icon: "report-icon.png" },
-  { name: "추가메뉴", path: "/", icon: "apss-icon.png" },
+  { name: "추가메뉴", path: "/groups/menu", icon: "apss-icon.png" },
 ];
 </script>
 

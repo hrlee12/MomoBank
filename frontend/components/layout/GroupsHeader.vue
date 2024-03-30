@@ -63,6 +63,9 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-budget-detail") {
     noSideMenu.value = true;
     return "예산 상세";
+  } else if (route.name === "groups-menu") {
+    noSideMenu.value = true;
+    return "추가 메뉴";
   }
 });
 </script>
