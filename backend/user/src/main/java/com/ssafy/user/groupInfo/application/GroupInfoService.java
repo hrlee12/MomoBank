@@ -1,7 +1,9 @@
 package com.ssafy.user.groupInfo.application;
 
+import com.ssafy.user.bank.application.BankCallService;
 import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.bank.domain.repository.AccountRepository;
+import com.ssafy.user.bank.dto.request.TransferRequest;
 import com.ssafy.user.budget.domain.Budget;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
@@ -17,9 +19,11 @@ import com.ssafy.user.groupInfo.dto.response.GetMyGroupListResponse;
 import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.SplitBalanceResponse;
+import com.ssafy.user.groupMember.application.GroupMemberService;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.groupMember.domain.GroupMember.memberType;
 import com.ssafy.user.groupMember.domain.repository.GroupMemberRepository;
+import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -37,6 +41,9 @@ public class GroupInfoService {
     private final GroupMemberRepository groupMemberRepository;
     private final AccountRepository accountRepository;
 
+    private final GroupMemberService groupMemberService;
+    private final BankCallService bankCallService;
+
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
         Member member = memberCheck(memberId);
@@ -52,8 +59,11 @@ public class GroupInfoService {
 
     // 각 모임원이 달마다 납입한 금액 조회
     public GetFeesListResponse getFeesPerMonth(int memberId, int groupInfoId) {
-        Member member = memberCheck(memberId);
+        Member member = memberCheck(memberId); // 선택된 모임원
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
+        Account account = groupInfo.getAccount();
+
+
 
         return new GetFeesListResponse();
     }
@@ -81,6 +91,7 @@ public class GroupInfoService {
 
         groupInfoRepository.save(groupInfo);
         groupMemberRepository.save(groupMember);
+
         return CreateNewGroupResponse.from(groupInfo);
     }
 
@@ -110,13 +121,25 @@ public class GroupInfoService {
 
     // 모임 회비 분배
     public SplitBalanceResponse splitBalance(int memberId, int groupInfoId) {
-        Member member = memberCheck(memberId);
+        Member member = memberCheck(memberId); // 모임장 권환
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
+        Account account = groupInfo.getAccount();
+        List<GroupMemberDTO> list = groupMemberService.getAllGroupMembers(groupInfoId);
 
-        // groupmember 조회
-        // 송금
+        long amount = account.getBalance()/list.size();
 
-        return new SplitBalanceResponse();
+        for(GroupMemberDTO groupMember : list){
+            Member toMember = memberCheck(groupMember.getId());
+            Account personalAccount = groupMemberRepository.findAccountFromGroupMemberByMember(toMember, groupInfo);
+            TransferRequest request = new TransferRequest(
+                groupInfo.getAccount().getAccountId(),
+                personalAccount.getAccountId(),
+                amount
+            );
+            bankCallService.transfer(request);
+        }
+
+        return new SplitBalanceResponse(amount, list.size());
     }
 
     // 모임 삭제

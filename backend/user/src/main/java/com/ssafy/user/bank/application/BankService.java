@@ -5,6 +5,8 @@ import com.ssafy.user.bank.dto.response.AccountResponse;
 import com.ssafy.user.bank.dto.response.GetMyAccountListResponse;
 import com.ssafy.user.bank.dto.response.GetTransferListResponse;
 import com.ssafy.user.bank.dto.response.SearchAccountResponse;
+import com.ssafy.user.bank.dto.response.SearchFromAccountResponse;
+import com.ssafy.user.bank.dto.response.SearchToAccountResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,13 +29,15 @@ public class BankService {
     }
 
     // 본인 거래 내역 조회
-    public GetTransferListResponse getTransfer() {
+    public GetTransferListResponse getTransfer(int accountId) {
         return new GetTransferListResponse();
     }
 
     // 계좌 조회
-    public SearchAccountResponse searchAccount(String bankName, String accountNumber) {
-        return accountRepository.findAccountByBankAndAccount(bankName, accountNumber);
+    public SearchAccountResponse searchAccount(int accountId, String bankName, String accountNumber) {
+        SearchFromAccountResponse from = accountRepository.findFromAccountByBankAndAccount(accountId);
+        SearchToAccountResponse to = accountRepository.findToAccountByBankAndAccount(bankName, accountNumber);
+        return new SearchAccountResponse(from, to);
     }
 
 }

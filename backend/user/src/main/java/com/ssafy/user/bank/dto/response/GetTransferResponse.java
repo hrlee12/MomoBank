@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetTransferResponse {
-    private String description;
+    private String name;
     private Date date;
     private long ammount;
     private long transferType;
+    private long balance;
 }

@@ -22,15 +22,21 @@ public class RestTemplateUtil{
         HttpHeaders headers = new HttpHeaders();
 
 
-        HttpEntity entity = new HttpEntity(body, headers);
+        HttpEntity entity = null;
+
+        if (body == null)
+            entity = new HttpEntity(headers);
+
+        entity = new HttpEntity(body, headers);
 
 
         ResponseEntity response = restTemplate.exchange(
-                uri,
-                method, // 요청 메서드 변경 가능
-                entity,
-                Object.class);
+            uri,
+            method, // 요청 메서드 변경 가능
+            entity,
+            Object.class);
 
         return response;
     }
 }
+
