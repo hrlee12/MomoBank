@@ -50,7 +50,7 @@ const getImageUrl = (imageName, idx) => {
       <div></div>
       <!-- pl을 선언한것은 +아이콘의 크기만큼 우측으로 이동 시켜서 중앙 정렬하게하기 위함이다. -->
       <div class="pl-11 text-gray-color">가입날짜: 2024-03-22</div>
-      <nuxt-link to="/groups/feed-write">
+      <nuxt-link to="/groups/feed/write">
         <div class="pr-3">
           <div
             class="flex items-center justify-center w-8 h-8 border-2 rounded-md border-gray-color"
@@ -95,7 +95,7 @@ const getImageUrl = (imageName, idx) => {
     <div v-if="feedTab === 'feed'" class="container px-2 pt-4 mx-auto bg-white">
       <div class="grid grid-cols-3 gap-[0.15rem]">
         <div v-for="item in feedList" :key="item.id" class="aspect-square">
-          <nuxt-link to="/groups/feed-detail">
+          <nuxt-link to="/groups/feed/detail">
             <img
               class="object-cover w-full h-full"
               :src="getImageUrl(item.img, 1)"

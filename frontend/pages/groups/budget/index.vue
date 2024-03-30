@@ -159,12 +159,14 @@ const calPercentage = (goalBudget, curBudget) => {
       </div>
     </div>
     <!-- 예산 추가 -->
-    <div
-      class="flex items-center justify-center w-11/12 h-16 mx-auto mt-5 bg-light-gray-color rounded-xl"
-    >
-      <div>
-        <img class="w-8 h-8" :src="getImageUrl('add-icon.png', 0)" />
+    <nuxt-link to="/groups/budget/add">
+      <div
+        class="flex items-center justify-center w-11/12 h-16 mx-auto mt-5 bg-light-gray-color rounded-xl"
+      >
+        <div>
+          <img class="w-8 h-8" :src="getImageUrl('add-icon.png', 0)" />
+        </div>
       </div>
-    </div>
+    </nuxt-link>
   </div>
 </template>

@@ -26,15 +26,15 @@ const pageTitle = computed(() => {
     route.name === "groups-transaction-history"
   ) {
     return groupsName;
-  } else if (route.name === "groups-detail") {
+  } else if (route.name === "groups-budget-detail") {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
     return "입금 현황";
-  } else if (route.name === "groups-my-feed") {
+  } else if (route.name === "groups-feed-my") {
     return "나의 모임";
   } else if (route.name === "groups-report") {
     return "리포트";
-  } else if (route.name === "groups-view-all-group-members") {
+  } else if (route.name === "groups-members") {
     return "모임 인원";
   } else if (
     route.name === "groups-announcement" ||
@@ -57,7 +57,7 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-feed-detail") {
     noSideMenu.value = true;
     return "게시물";
-  } else if (route.name === "groups-add-budget") {
+  } else if (route.name === "groups-budget-add") {
     noSideMenu.value = true;
     return "예산 추가";
   }

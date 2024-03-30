@@ -52,6 +52,7 @@ const isDropdownVisible = ref(false);
 const cancelButton = true;
 const visibleModal = ref(false);
 const visibleBottomModal = ref(false);
+const visibleComments = ref(false);
 
 // 사용자 정의 드롭다운 메뉴를 토글하는 함수
 const toggleDropdown = () => {
@@ -91,11 +92,12 @@ const adjustHeight = (event) => {
 
 const visibleBottomModalClick = () => {
   visibleBottomModal.value = true;
-  console.log(visibleBottomModal.value);
+  visibleComments.value = true;
 };
 
 const handleUpdate = (event) => {
   visibleBottomModal.value = event.isVisible;
+  visibleComments.value = event.commentsVisible;
 };
 
 // TODO : 수정 버튼 클릭했을 떄 API 호출.
@@ -213,8 +215,9 @@ const handleUpdate = (event) => {
     class="z-50"
   ></CompleteModal>
   <GroupsBottomSheetModal
+    :isComments="visibleComments"
     :isVisible="visibleBottomModal"
-    @update="handleUpdate"
+    @comments-update="handleUpdate"
   ></GroupsBottomSheetModal>
   <div v-if="visibleBottomModal" class="modal-bg"></div>
 </template>
