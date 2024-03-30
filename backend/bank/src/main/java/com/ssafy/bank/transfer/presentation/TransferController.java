@@ -2,6 +2,7 @@ package com.ssafy.bank.transfer.presentation;
 
 import com.ssafy.bank.common.CommonResponse;
 import com.ssafy.bank.transfer.application.TransferService;
+import com.ssafy.bank.transfer.dto.request.PasswordConfirmRequest;
 import com.ssafy.bank.transfer.dto.request.TransferRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,10 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransferController {
 
     private final TransferService transferService;
+
     @Operation(summary = "송금", description = "송금합니다.")
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(@RequestBody TransferRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "송금 성공",
             transferService.transfer(request));
+    }
+
+    @GetMapping("/password-confirm")
+    public ResponseEntity<?> passwordConfirm(@RequestBody PasswordConfirmRequest request) {
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "비밀번호 확인",
+            transferService.passwordConfirm(request));
     }
 }

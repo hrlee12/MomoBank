@@ -6,7 +6,9 @@ import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.transfer.domain.Transfer;
 import com.ssafy.bank.transfer.domain.repository.TransferRepository;
+import com.ssafy.bank.transfer.dto.request.PasswordConfirmRequest;
 import com.ssafy.bank.transfer.dto.request.TransferRequest;
+import com.ssafy.bank.transfer.dto.response.PasswordConfirmResponse;
 import com.ssafy.bank.transfer.dto.response.TransferResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,12 @@ public class TransferService {
         Account fromAccount = accountCheck(request.fromAccountId());
         Account toAccount = accountCheck(request.toAccountId());
 
-        if(fromAccount.getBalance() < request.amount()){
+        if (fromAccount.getBalance() < request.amount()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_FUNDS);
         }
 
-        fromAccount.updateBalance(fromAccount.getBalance()-request.amount());
-        toAccount.updateBalance(toAccount.getBalance()+request.amount());
+        fromAccount.updateBalance(fromAccount.getBalance() - request.amount());
+        toAccount.updateBalance(toAccount.getBalance() + request.amount());
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
@@ -54,6 +56,12 @@ public class TransferService {
             transfer.getDescription(),
             transfer.getFromBalance()
         );
+    }
+
+    public PasswordConfirmResponse passwordConfirm(PasswordConfirmRequest request) {
+        Account account = accountCheck(request.accountId());
+
+        return new PasswordConfirmResponse(account.getAccountPassword().equals(request.password()));
     }
 
     private Account accountCheck(int accountId) {

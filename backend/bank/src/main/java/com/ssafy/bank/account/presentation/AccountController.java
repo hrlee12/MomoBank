@@ -37,26 +37,21 @@ public class AccountController {
 
     @Operation(summary = "계좌 삭제", description = "사용자의 계좌를 삭제합니다.")
     @DeleteMapping("/delete-account")
-    public ResponseEntity<?> deleteAccount(@Parameter(description = "계좌 삭제를 위한 계좌 id", required = true)
-    @RequestBody DeleteAccountRequest request) {
+    public ResponseEntity<?> deleteAccount(
+        @Parameter(description = "계좌 삭제를 위한 계좌 id", required = true)
+        @RequestBody DeleteAccountRequest request) {
         AccountResponse accountResponse = accountService.deleteAccount(request);
         return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌를 삭제했습니다.", accountResponse);
     }
 
     @GetMapping("/account-products")
-    public ResponseEntity<?> getAccountProducts(){
+    public ResponseEntity<?> getAccountProducts() {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 계좌 상품을 조회했습니다.",
             accountService.getAccountProducts());
     }
 
-    @PostMapping("/transfer")
-    public ResponseEntity<?> transfer(){
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 송금했습니다.",
-            null);
-    }
-
     @GetMapping("/bank-list")
-    public ResponseEntity<?> getBankList(){
+    public ResponseEntity<?> getBankList() {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 은행사를 조회했습니다.",
             accountService.getBanks());
     }
