@@ -29,13 +29,8 @@ public class TransferService {
             throw new CustomException(ErrorCode.INSUFFICIENT_FUNDS);
         }
 
-        System.out.println("송금 전 보내는 계좌 잔액 : " + fromAccount.getBalance());
-        System.out.println("송금 전 받는 계좌 잔액 : " + toAccount.getBalance());
-        System.out.println("송금 할 금액 : " + request.amount());
         fromAccount.updateBalance(fromAccount.getBalance()-request.amount());
         toAccount.updateBalance(toAccount.getBalance()+request.amount());
-        System.out.println("송금 후 보내는 계좌 잔액 : " + fromAccount.getBalance());
-        System.out.println("송금 후 받는 계좌 잔액 : " + toAccount.getBalance());
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
