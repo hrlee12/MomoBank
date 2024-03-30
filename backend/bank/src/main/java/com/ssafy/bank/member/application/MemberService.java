@@ -68,12 +68,7 @@ public class MemberService {
         if (member == null)
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
 
-        // 비밀번호 일치 여부 확인
-        if (!BCrypt.checkpw(request.getCurrentPassword(), member.getPassword())){
-            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
-        }
 
-        request.setNewPassword(BCrypt.hashpw(request.getNewPassword(), BCrypt.gensalt()));
 
         // 비밀번호 변경
         member.changePassword(request.getNewPassword());
