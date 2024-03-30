@@ -5,10 +5,6 @@ const props = defineProps({
   cancelButton: Boolean,
 });
 
-if (props.cancelButton === undefined) {
-  const cancelButton = ref(false);
-}
-
 const emit = defineEmits(["ok-button", "visible-modal"]);
 
 function completeWrite() {
@@ -36,7 +32,10 @@ const modalTitle = computed(() => {
     moveLink.value = "/groups/announcement";
     return "공지사항이 수정되었습니다";
   } else if (route.name === "groups-feed-detail") {
-    moveLink.value = "/groups/my-feed";
+    moveLink.value = "/groups/feed/my";
+    return "정말로 삭제하시겠습니까?";
+  } else if (route.name === "groups-budget-detail") {
+    moveLink.value = "/groups/budget";
     return "정말로 삭제하시겠습니까?";
   }
 });
@@ -54,14 +53,14 @@ const modalTitle = computed(() => {
       >
         {{ modalTitle }}
       </div>
-      <div v-if="!cancelButton">
+      <div v-if="!props.cancelButton">
         <nuxt-link :to="moveLink">
           <button @click="completeWrite" class="px-4 mt-4 text-main-color">
             확인
           </button>
         </nuxt-link>
       </div>
-      <div v-if="cancelButton" class="flex justify-center w-full">
+      <div v-if="props.cancelButton" class="flex justify-center w-full">
         <nuxt-link :to="moveLink" class="w-1/2">
           <div @click="completeWrite" class="text-center text-main-color">
             확인

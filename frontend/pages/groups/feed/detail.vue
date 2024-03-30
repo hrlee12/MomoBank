@@ -60,13 +60,11 @@ const toggleDropdown = () => {
 };
 
 const editMode = ref(false);
-const deleteMode = ref(false);
 
 const selectOption = (option) => {
   if (option === "edit") {
     editMode.value = true;
   } else if (option === "delete") {
-    deleteMode.value = true;
     visibleModal.value = true;
   }
   isDropdownVisible.value = false; // 드롭다운 메뉴를 닫습니다.

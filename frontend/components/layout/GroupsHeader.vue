@@ -26,7 +26,7 @@ const pageTitle = computed(() => {
     route.name === "groups-transaction-history"
   ) {
     return groupsName;
-  } else if (route.name === "groups-budget-detail") {
+  } else if (route.name === "groups-detail") {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
     return "입금 현황";
@@ -60,6 +60,9 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-budget-add") {
     noSideMenu.value = true;
     return "예산 추가";
+  } else if (route.name === "groups-budget-detail") {
+    noSideMenu.value = true;
+    return "예산 상세";
   }
 });
 </script>

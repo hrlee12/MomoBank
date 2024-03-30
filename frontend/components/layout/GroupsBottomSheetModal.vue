@@ -31,6 +31,8 @@ const props = defineProps({
   isFrequency: Boolean,
 });
 const emit = defineEmits(["comments-update", "budget-add-update"]);
+const frequencyDay = ref(null);
+
 // 모달 종료 함수
 const close = (data) => {
   // emit으로 isVisible, bank 정보 반환
@@ -38,6 +40,7 @@ const close = (data) => {
   emit("budget-add-update", {
     budgetAddVisible: false,
     isVisible: false,
+    frequencyDay: frequencyDay,
     data,
   });
 };
@@ -107,6 +110,7 @@ const days = [
 const activeDay = ref(days[0]);
 const setActiveDay = (day) => {
   activeDay.value = day;
+  frequencyDay.value = day;
 };
 </script>
 
@@ -179,6 +183,12 @@ const setActiveDay = (day) => {
                 </li>
               </ul>
             </div>
+          </div>
+          <div
+            @click="close('')"
+            class="flex items-center justify-center w-full h-10 font-bold text-white rounded-md bg-main-color"
+          >
+            <div>확인</div>
           </div>
         </div>
       </div>
