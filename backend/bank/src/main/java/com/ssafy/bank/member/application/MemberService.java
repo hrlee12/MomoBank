@@ -38,7 +38,7 @@ public class MemberService {
         if (memberRepositoryCustom.findMemberToCheckDtoById(request.getId()) != null)
             throw new CustomException(ErrorCode.ALREADY_JOINED_ID);
 
-        request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+//        request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
 
         // 멤버 엔티티 생성 및 저장
         Member member = Member.builder()
@@ -47,7 +47,6 @@ public class MemberService {
                 .phoneNumber(request.getPhoneNumber())
                 .birthDate(toLocalDateTime(request.getBirthdate()))
                 .password(request.getPassword())
-//                .password(request.getPassword())
                 .build();
 
 
