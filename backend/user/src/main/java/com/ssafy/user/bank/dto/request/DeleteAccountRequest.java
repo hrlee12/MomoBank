@@ -2,7 +2,9 @@ package com.ssafy.user.bank.dto.request;
 
 public record DeleteAccountRequest(
     int memberId,
-    int accountId
+    int accountId,
+    String accountPassword
+
 ) {
 
 }
