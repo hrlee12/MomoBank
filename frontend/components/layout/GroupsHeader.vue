@@ -54,6 +54,12 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-feed-write") {
     noSideMenu.value = true;
     return "새 게시물";
+  } else if (route.name === "groups-feed-detail") {
+    noSideMenu.value = true;
+    return "게시물";
+  } else if (route.name === "groups-add-budget") {
+    noSideMenu.value = true;
+    return "예산 추가";
   }
 });
 </script>

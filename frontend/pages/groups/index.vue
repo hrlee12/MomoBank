@@ -22,7 +22,9 @@ const getImageUrl = (imageName, idx) => {
 
 // 피드 내용 상세보기(더보기 클릭)
 
-const fullText = ref("5반5린이들과 함께간 일본 후쿠오카에서 사진 한장!");
+const fullText = ref(
+  "5반5린이들과 함께간 일본 후쿠오카에서 사진 한장!!!!!!!!!!!!!!!!!!!!!!!"
+);
 const showFullText = ref(false);
 
 const displayText = computed(() => {
@@ -41,7 +43,6 @@ const toggleText = () => {
 </script>
 
 <template>
-  
   <div class="bg-white h-44 rounded-b-[14px]">
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
