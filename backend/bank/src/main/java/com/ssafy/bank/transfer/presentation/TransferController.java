@@ -30,7 +30,7 @@ public class TransferController {
             transferService.transfer(request));
     }
 
-    @GetMapping("/password-confirm")
+    @PostMapping("/password-confirm")
     public ResponseEntity<?> passwordConfirm(@RequestBody PasswordConfirmRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "비밀번호 확인",
             transferService.passwordConfirm(request));
