@@ -13,10 +13,9 @@ import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupDescriptionRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupNameRequest;
 import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
-import com.ssafy.user.groupInfo.dto.response.GetFeesListResponse;
+import com.ssafy.user.groupInfo.dto.response.GetFeesPerYearResponse;
 import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
 import com.ssafy.user.groupInfo.dto.response.GetMyGroupListResponse;
-import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.SplitBalanceResponse;
 import com.ssafy.user.groupMember.application.GroupMemberService;
@@ -58,14 +57,12 @@ public class GroupInfoService {
     }
 
     // 각 모임원이 달마다 납입한 금액 조회
-    public GetFeesListResponse getFeesPerMonth(int memberId, int groupInfoId) {
+    public List<GetFeesPerYearResponse> getFeesPerMonth(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId); // 선택된 모임원
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
         Account account = groupInfo.getAccount();
 
-
-
-        return new GetFeesListResponse();
+        return groupInfoRepository.GetFeesPerYear(member);
     }
 
     // 새 모임 생성

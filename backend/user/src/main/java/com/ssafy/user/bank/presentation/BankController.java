@@ -3,7 +3,9 @@ package com.ssafy.user.bank.presentation;
 import com.ssafy.user.bank.application.BankCallService;
 import com.ssafy.user.bank.application.BankService;
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
+import com.ssafy.user.bank.dto.request.CreateCardInfoRequest;
 import com.ssafy.user.bank.dto.request.DeleteAccountRequest;
+import com.ssafy.user.bank.dto.request.DeleteCardRequest;
 import com.ssafy.user.bank.dto.request.GetAccountDetailRequest;
 import com.ssafy.user.bank.dto.request.GetAccountTransferRequest;
 import com.ssafy.user.bank.dto.request.GetMyAccountRequest;
@@ -86,9 +88,8 @@ public class BankController {
 //
 //    @Operation(summary = "카드 삭제", description = "사용자의 카드를 삭제합니다.")
 //    @DeleteMapping("/delete-card")
-//    public ResponseEntity<?> deleteCard(@RequestBody DeleteAccountRequest request) {
-//        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 삭제했습니다.",
-//            new CardResponse());
+//    public ResponseEntity<?> deleteCard(@RequestBody DeleteCardRequest request) {
+//        return bankCallService.deleteCard(request);
 //    }
 
     @Operation(summary = "송금", description = "송금")
