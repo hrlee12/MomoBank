@@ -41,6 +41,9 @@ public class Account extends BaseEntity {
     @Column(name = "account_number", nullable = false)
     private String accountNumber;
 
+    @Column(name = "account_password", nullable = false)
+    private String accountPassword;
+
     @ManyToOne
     @JoinColumn(name = "account_product_id", nullable = false)
     private AccountProduct accountProduct;
@@ -57,4 +60,8 @@ public class Account extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public void updateBalance(long balance){
+        this.balance = balance;
+    }
 }

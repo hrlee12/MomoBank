@@ -2,7 +2,8 @@ package com.ssafy.bank.account.dto.request;
 
 public record CreateAccountRequest(
     int memberId,
-    int accountProductId
+    int accountProductId,
+    String accountPassword
 ) {
 
 }
