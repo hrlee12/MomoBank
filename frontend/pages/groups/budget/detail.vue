@@ -1,8 +1,9 @@
 <script setup>
-import AccountInformation from "~/components/group/AccountInformation.vue";
+import GroupsBottomSheetModal from "~/components/layout/GroupsBottomSheetModal.vue";
+import CompleteModal from "~/components/layout/CompleteModal.vue";
 
 definePageMeta({
-  layout: "groups",
+  layout: "no-footer-bank",
 });
 
 const getImageUrl = (imageName, idx) => {
@@ -12,149 +13,181 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const groupDetails = [
-  { title: "모임명", content: "5반 5린이들", icon: "arrow-icon.png" },
-  { title: "목적", content: "5반 5린이들 친해지자!", icon: "arrow-icon.png" },
-  { title: "가용금액", content: "1,234,567원" },
-  { title: "총 납부금액", content: "780,000원" },
-  { title: "납부일자", content: "매월 11일" },
-  { title: "전체금액", content: "2,345,678원" },
-  { title: "모임인원", content: "6명", icon: "arrow-icon.png" },
-];
+const budgetGoal = ref("454545454");
+const targetAmount = ref("21212212");
+const goalDay = ref("2024-03-31");
+
+// 삭제 확인,취소를 위한 변수
+const cancelButton = true;
+const visibleModal = ref(false);
+
+const isVisibleModal = (value) => {
+  visibleModal.value = value;
+};
+
+// 이체주기 선택
+const visibleFrequency = ref(false);
+
+const visibleBottomModal = ref(false);
+
+const editMode = ref(false);
+
+const visibleBottomModalClick = () => {
+  visibleBottomModal.value = true;
+  visibleFrequency.value = true;
+};
+
+const frequencyDay = ref("1");
+
+const handleUpdate = (event) => {
+  visibleBottomModal.value = event.isVisible;
+  visibleFrequency.value = event.budgetAddVisible;
+  if (event.frequencyDay.value !== null) {
+    frequencyDay.value = event.frequencyDay.value;
+  }
+};
+
+const editModeOn = () => {
+  editMode.value = true;
+};
+
+const editModeOff = () => {
+  editMode.value = false;
+};
+
+function deleteModal() {
+  visibleModal.value = true;
+}
 </script>
 
 <template>
-  <div class="bg-white h-44 rounded-b-[14px]">
-    <div class="flex flex-row justify-between">
-      <div class="flex items-center justify-center w-10 h-6 ml-4 rounded-xl">
-        <div class="text-[13px]"></div>
-      </div>
-      <div class="items-center">
-        <p class="text-positive-color text-[13px]">납부 완료</p>
-      </div>
-      <div class="w-8 h-6 mr-4">
-        <img
-          class="rotate-90"
-          :src="getImageUrl('arrow-icon.png', 0)"
-          alt="arrow-icon"
-        />
-      </div>
-    </div>
-    <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->
-    <AccountInformation></AccountInformation>
-
-    <!-- 매월 예산 납부 금액, 입금현황 -->
-    <div class="flex justify-center mt-4">
-      <!-- TODO : 각 모임 별 입금 현황이라 id 값으로 받아야함 즉, :to로 동적 경로로 설정해야함. -->
-      <NuxtLink
-        to="/groups/deposit-status"
-        class="flex items-center justify-center w-64 border border-gray-300 rounded-xl h-9"
-      >
-        <div
-          class="h-5 pr-2 text-sm border-r-2 border-sub-color text-sub-color"
-        >
-          매월 11일, 320,000원씩
-        </div>
-        <div class="pl-2 text-sm text-sub-color">입금 현황 ></div>
-      </NuxtLink>
-    </div>
-  </div>
-
-  <!-- 상세 정보 -->
-
-  <div class="h-full pb-16 mt-4 bg-white">
-    <div class="flex-col ml-3 mr-3">
-      <div
-        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-      >
-        <div>
-          <div class="text-xl font-bold">모임명</div>
-          <div class="font-semibold">5반5린이들</div>
-        </div>
-
-        <div class="h-5 rotate-180 w-7">
-          <img
-            :src="getImageUrl ? getImageUrl('arrow-icon.png', 0) : ''"
-            alt="arrow-icon"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="flex-col ml-3 mr-3">
-      <div
-        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-      >
-        <div>
-          <div class="text-xl font-bold">목적</div>
-          <div class="font-semibold">5반 5린이들 친해지자!</div>
-        </div>
-
-        <div class="h-5 rotate-180 w-7">
-          <img
-            :src="getImageUrl ? getImageUrl('arrow-icon.png', 0) : ''"
-            alt="arrow-icon"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="flex-col ml-3 mr-3">
-      <div
-        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-      >
-        <div>
-          <div class="text-xl font-bold">가용 금액</div>
-          <div class="font-semibold">1,234,567원</div>
-        </div>
-      </div>
-    </div>
-    <div class="flex-col ml-3 mr-3">
-      <div
-        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-      >
-        <div>
-          <div class="text-xl font-bold">총 납부 금액</div>
-          <div class="font-semibold">780,000원</div>
-        </div>
-      </div>
-    </div>
-    <div class="flex-col ml-3 mr-3">
-      <div
-        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-      >
-        <div>
-          <div class="text-xl font-bold">납부 일자</div>
-          <div class="font-semibold">매월 11일</div>
-        </div>
-      </div>
-    </div>
-    <div class="flex-col ml-3 mr-3">
-      <div
-        class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-      >
-        <div>
-          <div class="text-xl font-bold">전체 금액</div>
-          <div class="font-semibold">2,345,678원</div>
-        </div>
-      </div>
-    </div>
-    <div class="flex-col ml-3 mr-3">
-      <NuxtLink to="/groups/members">
-        <div
-          class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
-        >
-          <div>
-            <div class="text-xl font-bold">모임 인원</div>
-            <div class="font-semibold">6명</div>
-          </div>
-
-          <div class="h-5 rotate-180 w-7">
-            <img
-              :src="getImageUrl ? getImageUrl('arrow-icon.png', 0) : ''"
-              alt="arrow-icon"
+  <div class="h-screen bg-white">
+    <div class="px-4 py-2">
+      <div v-if="!editMode">
+        <div class="py-3">
+          <div class="py-3 text-xl font-bold">예산 목적</div>
+          <div class="border-b-2 border-main-color">
+            <input
+              type="text"
+              disabled
+              v-model="budgetGoal"
+              placeholder="예산 목적 입력"
+              class="w-full text-lg"
             />
           </div>
         </div>
-      </NuxtLink>
+        <div class="py-3">
+          <div class="py-3 text-xl font-bold">목표 금액</div>
+          <div class="border-b-2 border-main-color">
+            <input
+              type="text"
+              disabled
+              v-model="targetAmount"
+              placeholder="목표 금액 입력"
+              class="w-full text-lg"
+            />
+          </div>
+        </div>
+        <div class="py-3 text-xl font-bold">목표 날짜</div>
+        <div>{{ goalDay }}</div>
+        <div class="py-3 text-xl font-bold">납입 날짜</div>
+        <div class="flex items-center">
+          <div>매월 {{ frequencyDay }}일</div>
+        </div>
+        <div class="flex justify-end px-4 mt-4 space-x-4">
+          <button
+            @click="editModeOn()"
+            class="px-4 py-2 font-bold text-white rounded-xl bg-main-color hover:bg-blue-700"
+          >
+            수정
+          </button>
+          <button
+            @click="deleteModal"
+            class="px-4 py-2 font-bold text-white rounded-xl bg-negative-color hover:bg-red-700"
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+
+      <!-- editMode On -->
+      <div v-if="editMode">
+        <div class="py-3">
+          <div class="py-3 text-xl font-bold">예산 목적</div>
+          <div class="border-b-2 border-main-color">
+            <input
+              type="text"
+              v-model="budgetGoal"
+              placeholder="예산 목적 입력"
+              class="w-full text-lg"
+            />
+          </div>
+        </div>
+        <div class="py-3">
+          <div class="py-3 text-xl font-bold">목표 금액</div>
+          <div class="border-b-2 border-main-color">
+            <input
+              type="text"
+              v-model="targetAmount"
+              placeholder="목표 금액 입력"
+              class="w-full text-lg"
+            />
+          </div>
+        </div>
+        <div class="py-3 text-xl font-bold">목표 날짜</div>
+        <div>
+          <input
+            type="date"
+            class="border-none"
+            id="goalInput"
+            name="goalInput"
+            v-model="goalDay"
+          />
+        </div>
+        <div class="py-3 text-xl font-bold">납입 날짜</div>
+        <div class="flex items-center">
+          <div @click="visibleBottomModalClick">매월 {{ frequencyDay }}일</div>
+          <div class="w-5 h-5 rotate-180">
+            <img :src="getImageUrl('arrow-icon.png', 0)" alt="arrow-icon" />
+          </div>
+        </div>
+
+        <GroupsBottomSheetModal
+          :isFrequency="visibleFrequency"
+          :isVisible="visibleBottomModal"
+          @budget-add-update="handleUpdate"
+        ></GroupsBottomSheetModal>
+        <div v-if="visibleBottomModal" class="modal-bg"></div>
+        <div class="flex justify-end px-4 mt-4 space-x-4">
+          <button
+            @click="editModeOff()"
+            class="px-4 py-2 font-bold text-white rounded-xl bg-main-color hover:bg-blue-700"
+          >
+            취소
+          </button>
+          <button
+            class="px-4 py-2 font-bold text-white rounded-xl bg-negative-color hover:bg-red-700"
+          >
+            완료
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+  <CompleteModal
+    v-if="visibleModal"
+    :cancelButton="cancelButton"
+    @visible-modal="isVisibleModal"
+  ></CompleteModal>
 </template>
+<style lang="scss" scoped>
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
+</style>
