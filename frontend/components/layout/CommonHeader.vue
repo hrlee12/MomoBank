@@ -19,46 +19,60 @@ const router = useRoute();
 const NO_SIDE_MENU = 0;
 const FULL_MENU = 1;
 const ONLY_ARROW = 2;
-const routerNameToInfoMap = {
-  "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
-  "user-authenicate": { title: "본인확인", sideMenuActive: NO_SIDE_MENU },
-  "user-find-password": { title: "비밀번호찾기", sideMenuActive: NO_SIDE_MENU },
 
-  "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
-  "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
-  "bank-history": { title: "거래내역", sideMenuActive: FULL_MENU },
-  "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
-  "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
-  "bank-profile-phone-edit": {
-    title: "전화번호수정",
-    sideMenuActive: NO_SIDE_MENU,
-  },
-  "bank-profile-password-edit": {
-    title: "비밀번호수정",
-    sideMenuActive: NO_SIDE_MENU,
-  },
-  "bank-remit": { title: "계좌개설", sideMenuActive: FULL_MENU },
-  user: { title: "", sideMenuActive: ONLY_ARROW },
-  "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
-  "bank-group-create-account-select": {
-    title: "계좌선택",
-    sideMenuActive: NO_SIDE_MENU,
-  },
-  "bank-group-create-card-select": {
-    title: "카드선택",
-    sideMenuActive: NO_SIDE_MENU,
-  },
-};
-
+// 동적 세그먼트 값을 포함한 라우터 이름을 기반으로 타이틀과 사이드 메뉴 활성화 상태를 결정
 const pageTitle = computed(() => {
-  const routeInfo = routerNameToInfoMap[router.name];
-  return routeInfo ? routeInfo.title : ""; // 라우터 이름에 해당하는 타이틀이 없는 경우 기본 타이틀 반환
+  const id = router.params.id;
+  if (id && router.name.startsWith("bank-")) {
+    return { title: "거래내역", sideMenuActive: FULL_MENU };
+  }
+
+  // 정적 라우터 이름에 대한 설정
+  const staticRoutesInfo = {
+    "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
+    "user-authenicate": { title: "본인확인", sideMenuActive: NO_SIDE_MENU },
+    "user-find-password": {
+      title: "비밀번호찾기",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+
+    "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
+    "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
+    "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
+    "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
+    "bank-profile-phone-edit": {
+      title: "전화번호수정",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+    "bank-profile-password-edit": {
+      title: "비밀번호수정",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+    "bank-remit": { title: "송금", sideMenuActive: NO_SIDE_MENU },
+    "bank-remit-confirm-remit": {
+      title: "송금확인",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+    user: { title: "", sideMenuActive: ONLY_ARROW },
+    "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
+    "bank-group-create-account-select": {
+      title: "계좌선택",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+    "bank-group-create-card-select": {
+      title: "카드선택",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+  };
+
+  return (
+    staticRoutesInfo[router.name] || { title: "", sideMenuActive: ONLY_ARROW }
+  );
 });
 
-const isSideMenuActive = computed(() => {
-  const routeInfo = routerNameToInfoMap[router.name];
-  return routeInfo ? routeInfo.sideMenuActive : false; // sideMenuActive가 1이면 true, 아니면 false 반환
-});
+const isSideMenuActive = computed(
+  () => pageTitle.value.sideMenuActive !== NO_SIDE_MENU
+);
 </script>
 
 <template>
@@ -72,7 +86,7 @@ const isSideMenuActive = computed(() => {
     </div>
 
     <!-- <h1 class="title">{{ menuStore.menuTitle }}</h1> -->
-    <h1 class="title">{{ pageTitle }}</h1>
+    <h1 class="title">{{ pageTitle.title }}</h1>
 
     <div v-if="isSideMenuActive" class="link-container">
       <NoticeHome />
