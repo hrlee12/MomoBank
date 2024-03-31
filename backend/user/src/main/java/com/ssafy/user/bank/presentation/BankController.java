@@ -3,16 +3,13 @@ package com.ssafy.user.bank.presentation;
 import com.ssafy.user.bank.application.BankCallService;
 import com.ssafy.user.bank.application.BankService;
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
-import com.ssafy.user.bank.dto.request.CreateCardInfoRequest;
 import com.ssafy.user.bank.dto.request.DeleteAccountRequest;
-import com.ssafy.user.bank.dto.request.DeleteCardRequest;
 import com.ssafy.user.bank.dto.request.GetAccountDetailRequest;
 import com.ssafy.user.bank.dto.request.GetAccountTransferRequest;
 import com.ssafy.user.bank.dto.request.GetMyAccountRequest;
 import com.ssafy.user.bank.dto.request.PasswordConfirmRequest;
 import com.ssafy.user.bank.dto.request.SearchAccountRequest;
 import com.ssafy.user.bank.dto.request.TransferRequest;
-import com.ssafy.user.bank.dto.response.GetTransferListResponse;
 import com.ssafy.user.common.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,7 +62,7 @@ public class BankController {
     @GetMapping("/get-transfer")
     public ResponseEntity<?> getTransafer(@RequestBody GetAccountTransferRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 거래 내역 죄회 성공",
-            new GetTransferListResponse());
+            bankService.getTransfer(request.memberId(), request.accountId()));
     }
 
     @Operation(summary = "당행 계좌 생성", description = "모모뱅크의 계좌를 생성합니다.")
@@ -100,7 +97,7 @@ public class BankController {
 
     @Operation(summary = "비밀번호 확인", description = "계좌 비밀번호 확인")
     @PostMapping("/password-confirm")
-        public ResponseEntity<?> passwordConfirm(@RequestBody PasswordConfirmRequest request) {
+    public ResponseEntity<?> passwordConfirm(@RequestBody PasswordConfirmRequest request) {
         return bankCallService.passwordConfirm(request);
     }
 

@@ -1,12 +1,19 @@
 package com.ssafy.user.bank.domain.repository;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.bank.domain.QAccount;
+import com.ssafy.user.bank.domain.QTransfer;
 import com.ssafy.user.bank.dto.response.AccountResponse;
 import com.ssafy.user.bank.dto.response.GetMyAccountResponse;
+import com.ssafy.user.bank.dto.response.GetTransferListPerDateResponse;
+import com.ssafy.user.bank.dto.response.GetTransferListResponse;
+import com.ssafy.user.bank.dto.response.GetTransferResponse;
 import com.ssafy.user.bank.dto.response.QAccountResponse;
 import com.ssafy.user.bank.dto.response.QGetMyAccountResponse;
+import com.ssafy.user.bank.dto.response.QGetTransferResponse;
 import com.ssafy.user.bank.dto.response.QSearchFromAccountResponse;
 import com.ssafy.user.bank.dto.response.QSearchToAccountResponse;
 import com.ssafy.user.bank.dto.response.SearchFromAccountResponse;
@@ -15,6 +22,9 @@ import com.ssafy.user.groupInfo.domain.QGroupInfo;
 import com.ssafy.user.groupMember.dto.response.AccountDTO;
 import com.ssafy.user.groupMember.dto.response.QAccountDTO;
 import com.ssafy.user.member.domain.QMember;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -68,7 +78,8 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
 //    }
 
     @Override
-    public SearchToAccountResponse findToAccountByBankAndAccount(String bankName, String accountNumber){
+    public SearchToAccountResponse findToAccountByBankAndAccount(String bankName,
+        String accountNumber) {
         QAccount account = QAccount.account;
         QMember member = QMember.member;
 
@@ -85,7 +96,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     }
 
     @Override
-    public SearchFromAccountResponse findFromAccountByBankAndAccount(int accountId){
+    public SearchFromAccountResponse findFromAccountByBankAndAccount(int accountId) {
         QAccount account = QAccount.account;
 
         return queryFactory
@@ -96,6 +107,44 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
             .from(account)
             .where(account.accountId.eq(accountId))
             .fetchOne();
+    }
+
+    @Override
+    public GetTransferListResponse findTransferByAccount(Account account) {
+        QTransfer transfer = QTransfer.transfer;
+        List<GetTransferListPerDateResponse> response = new ArrayList<>();
+        LocalDateTime start = account.getCreatedAt();
+        for (LocalDateTime date = LocalDateTime.now(); date.isAfter(start);
+            date = date.minusDays(1)) {
+            List<GetTransferResponse> list = new ArrayList<>();
+            List<GetTransferResponse> from = queryFactory
+                .select(new QGetTransferResponse(
+                    transfer.description,
+                    transfer.createdAt,
+                    transfer.amount,
+                    Expressions.constant(false),
+                    transfer.fromBalance
+                ))
+                .from(transfer)
+                .where(transfer.fromAccount.eq(account))
+                .fetch();
+            List<GetTransferResponse> to = queryFactory
+                .select(new QGetTransferResponse(
+                    transfer.description,
+                    transfer.createdAt,
+                    transfer.amount,
+                    Expressions.constant(true),
+                    transfer.toBalance
+                    ))
+                .from(transfer)
+                .where(transfer.toAccount.eq(account))
+                .fetch();
+            list.addAll(from);
+            list.addAll(to);
+            Collections.sort(list, (o1, o2) -> o1.getDate().compareTo(o2.getDate()));
+            response.add(new GetTransferListPerDateResponse(date.toLocalDate(), list));
+        }
+        return new GetTransferListResponse(response);
     }
 
     public List<AccountDTO> findAccountDTOByMemberId(String memberId) {
