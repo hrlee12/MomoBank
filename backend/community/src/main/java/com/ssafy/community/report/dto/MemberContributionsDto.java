@@ -1,8 +1,7 @@
 package com.ssafy.community.report.dto;
 
-import com.ssafy.community.feed.entity.Users;
+import com.ssafy.community.feed.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ public class MemberContributionsDto {
     private Integer memberContributionId;
 
     @Schema(description = "사용자 ID", example = "1")
-    private Users user;
+    private Member user;
 
     @Schema(description = "연체 일자", example = "0")
     private Integer overdueDate;

@@ -20,4 +20,13 @@ public class ErrorResponse {
                         .message(e.getMessage())
                         .build());
     }
+
+
+    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorResponse errorResponse) {
+        return ResponseEntity
+                .status(errorResponse.getStatus())
+                .body(errorResponse);
+    }
+
+
 }

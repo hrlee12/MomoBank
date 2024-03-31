@@ -1,17 +1,11 @@
 package com.ssafy.user.member.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.user.bank.entity.Account;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @ToString

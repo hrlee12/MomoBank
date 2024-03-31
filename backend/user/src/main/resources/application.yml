@@ -1,4 +1,3 @@
-
 springdoc:
   api-docs:
     enabled: true
@@ -13,6 +12,15 @@ server:
     contextPath: "/api/user"
 
 spring:
+  kafka:
+    producer:
+#      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+    consumer:
+#      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+      group-id: "myGroup"
+
   config:
     import: classpath:application-user-private-aws.yml
   jpa:
@@ -30,9 +38,3 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
 
 
-
-
-openapi:
-  service:
-    # API Gateway 포트
-    url: http://localhost:8081
