@@ -3,6 +3,7 @@ package com.ssafy.user.bank.domain.repository;
 import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.bank.dto.response.AccountResponse;
 import com.ssafy.user.bank.dto.response.GetMyAccountResponse;
+import com.ssafy.user.bank.dto.response.GetTransferListResponse;
 import com.ssafy.user.bank.dto.response.SearchAccountResponse;
 import com.ssafy.user.bank.dto.response.SearchFromAccountResponse;
 import com.ssafy.user.bank.dto.response.SearchToAccountResponse;
@@ -19,6 +20,8 @@ public interface AccountRepositoryCustom {
     public SearchToAccountResponse findToAccountByBankAndAccount(String bankName, String accountNumber);
 
     public SearchFromAccountResponse findFromAccountByBankAndAccount(int accountId);
+
+    public GetTransferListResponse findTransferByAccount(Account account);
 
     public Account findAccountByIdAndMemberId(int accountId, String memberId);
 
