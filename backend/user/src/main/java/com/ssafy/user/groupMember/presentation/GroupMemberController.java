@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,9 @@ public class GroupMemberController {
 
     private final GroupMemberService groupMemberService;
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @GetMapping("/{groupId}/members")
     @Operation(summary = "모임원 목록 불러오기")
     @ApiResponses(value = {
@@ -49,6 +54,9 @@ public class GroupMemberController {
     }
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @PostMapping("/{groupId}/invite")
     @Operation(summary = "모임 초대 링크 생성", responses = {
             @ApiResponse(responseCode = "200", description = "모임원 초대 링크 생성 성공",
@@ -61,6 +69,9 @@ public class GroupMemberController {
     }
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @PostMapping("/invite/{inviteCode}")
     @Operation(summary = "초대 링크 검증", responses = {
             @ApiResponse(responseCode = "200", description = "유효한 초대링크. 인증토큰 발급 완료",
@@ -77,6 +88,9 @@ public class GroupMemberController {
     }
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @PostMapping("/invite/accounts")
     @Operation(summary = "연결할 계좌 선택하고 모임 가입", responses = {
             @ApiResponse(responseCode = "200", description = "모임 가입 완료"),
@@ -91,6 +105,9 @@ public class GroupMemberController {
     }
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @DeleteMapping("/{groupId}/members/{groupMemberId}")
     @Operation(summary = "모임원 추방")
     @ApiResponses(value = {
@@ -104,6 +121,9 @@ public class GroupMemberController {
     }
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @DeleteMapping("/{groupId}/members")
     @Operation(summary = "모임 탈퇴")
     @ApiResponses(value = {

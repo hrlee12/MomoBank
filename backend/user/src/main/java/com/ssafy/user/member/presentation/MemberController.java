@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,9 @@ public class MemberController {
     private final MemberService memberService;
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청", description = "전화번호 수정 시, 인증 api. 인증번호는 3분 후에 만료됨")
     @ApiResponses(value = {
@@ -50,6 +55,9 @@ public class MemberController {
     }
 
 
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @PatchMapping("/phone-verification/phone-numbers")
     @Operation(summary = "휴대폰 인증번호 검증 및 수정")
     @ApiResponses(value = {
@@ -84,7 +92,9 @@ public class MemberController {
 
 
 
-
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @Operation(summary = "마이페이지 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "마이페이지 조회 성공",
@@ -103,7 +113,9 @@ public class MemberController {
 
 
 
-
+    @SecurityRequirements({
+            @SecurityRequirement(name = "Bearer Authentication"),
+            @SecurityRequirement(name = "refreshToken")})
     @Operation(summary = "비밀번호 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
@@ -121,7 +133,9 @@ public class MemberController {
 
 
 
-
+@SecurityRequirements({
+        @SecurityRequirement(name = "Bearer Authentication"),
+        @SecurityRequirement(name = "refreshToken")})
     @Operation(summary = "fcm 토큰 갱신")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "fcm 토큰 갱신 성공"),

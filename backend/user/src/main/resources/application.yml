@@ -12,14 +12,14 @@ server:
     contextPath: "/api/user"
 
 spring:
-  kafka:
-    producer:
-      bootstrap-servers: "localhost:9092"
+#  kafka:
+#    producer:
+#      bootstrap-servers: "localhost:9092"
 #      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
-    consumer:
-      bootstrap-servers: "localhost:9092"
+#    consumer:
+#      bootstrap-servers: "localhost:9092"
 #      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
-#      group-id: "myGroup"
+#      group-id: "user"
 
   config:
 #    import: classpath:application-user-private-aws.yml
@@ -37,5 +37,11 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: trace
-
-
+    org:
+      springframework:
+        web: INFO
+        apache:
+          tiles: DEBUG
+        springframework:
+          boot: DEBUG
+          security: DEBUG

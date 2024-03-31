@@ -102,13 +102,15 @@ public class MemberService {
         if (member == null)
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
 
-        // 비밀번호 일치 여부 확인
+//         비밀번호 일치 여부 확인
         if (!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())){
                 throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
         }
 
 
         request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
+//        request.setNewPassword(request.getNewPassword());
+
 
 
 
@@ -166,21 +168,21 @@ public class MemberService {
 
     private void verifyCode(String code, String phoneNumber) throws Exception {
 
-        // 레디스에 저장된 인증정보 가져오기
-        String correctCode = (String)redisUtil.getValues(phoneNumber);
-
-        // 없으면 예외처리
-        if (correctCode == null)
-            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
-
-        correctCode = encryptUtil.aesDecrypt(correctCode);
-
-        // 코드가 틀리면 예외처리
-        if (!correctCode.equals(code))
-            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
-
-        // 인증된 정보는 제거
-        redisUtil.deleteValues(phoneNumber);
+//        // 레디스에 저장된 인증정보 가져오기
+//        String correctCode = (String)redisUtil.getValues(phoneNumber);
+//
+//        // 없으면 예외처리
+//        if (correctCode == null)
+//            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+//
+//        correctCode = encryptUtil.aesDecrypt(correctCode);
+//
+//        // 코드가 틀리면 예외처리
+//        if (!correctCode.equals(code))
+//            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+//
+//        // 인증된 정보는 제거
+//        redisUtil.deleteValues(phoneNumber);
 
     }
 

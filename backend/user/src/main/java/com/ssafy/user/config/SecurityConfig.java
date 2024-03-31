@@ -27,6 +27,10 @@ public class SecurityConfig {
            "/api/user/auth/**",  "/auth/**", "/api-docs", "/api-docs/**",  "/swagger-ui/**", "/api/swagger-config", "/v3/**", "/swagger-ui.html"
     };
 
+    private static final String[] AUTH_LIST = {
+            "/member/**", "/bank-home", "/bank-home/**", "/groups/**", "/groups", "/bank", "/bank/**"
+    };
+
 
 
     @Bean
@@ -54,8 +58,8 @@ public class SecurityConfig {
 
         // 권한 규칙 작성
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(AUTH_WHITELIST).permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers(AUTH_LIST).authenticated()
+                .anyRequest().permitAll()
         );
 
 
