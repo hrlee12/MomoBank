@@ -1,10 +1,16 @@
 package com.ssafy.community.report.presentation;
 
+import com.ssafy.community.feed.domain.Feed;
+import com.ssafy.community.feed.domain.repository.FeedRepository;
 import com.ssafy.community.report.domain.entity.MonthlyReports;
 import com.ssafy.community.report.dto.*;
 import com.ssafy.community.report.application.ReportService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +25,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
 public class ReportController {
+
+
+    @Autowired
+    private FeedRepository feedRepository;
+
+    public List<Feed> getTop3LikedFeedsLastMonth() {
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+        Pageable topThree = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "likesCount"));
+
+        Page<Feed> page = feedRepository.findTopLikedFeedsLastMonth(oneMonthAgo, topThree);
+        return page.getContent();
+    }
 
 
     @Autowired
@@ -42,11 +61,16 @@ public class ReportController {
                             description = "서버 내부 오류")
             })
     @PostMapping("/collect-monthly-data")
-    public ResponseEntity<MonthlyReportDto> collectMonthlyReportData(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) {
+    public ResponseEntity<MonthlyReportDto> collectMonthlyReportData() {
         MonthlyReportDto monthlyReportDto = MonthlyReportDto.createExample();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        List<Feed> feeds = getTop3LikedFeedsLastMonth();
+
+        System.out.println(feeds);
+
+
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(monthlyReportDto);
@@ -77,7 +101,7 @@ public class ReportController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) throws IOException
     {
 
-        MonthlyReportDto monthlyReportDto = collectMonthlyReportData("2023.03").getBody();
+        MonthlyReportDto monthlyReportDto = collectMonthlyReportData().getBody();
 
 //        String reportStr = reportService.getAIReport(monthlyReportDto);
         String reportStr = "## 1. 회계\n" +
@@ -183,7 +207,7 @@ public class ReportController {
 
 
         try {
-            list = reportService.getAIRecommendationNextActivity(collectMonthlyReportData("2023.03").getBody(), makeReport("2023.03").getBody().getContent());
+            list = reportService.getAIRecommendationNextActivity(collectMonthlyReportData().getBody(), makeReport("2023.03").getBody().getContent());
         }catch(Exception e) {
             list = null;
         }
