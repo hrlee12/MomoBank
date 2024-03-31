@@ -1,23 +1,11 @@
 <script setup>
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
 import AddBox from "~/components/bank/AddBox.vue";
-import { getAccountList } from "~/api/bank.js";
+import { getMyAccountList } from "@/api/bank";
 
 definePageMeta({
   layout: "bank",
 });
-
-const getMyAccountList = () => {
-  // axios함수를 통해 데이터 불러오기
-  getAccountList(
-    ({ data }) => {
-      accountList.value = data.accountList;
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-};
 
 const accountList = ref([
   { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
@@ -32,8 +20,15 @@ const accountList = ref([
   },
 ]);
 
-onMounted(() => {
-  getMyAccountList();
+// 전체 계좌 리스트 받는 함수
+onMounted(async () => {
+  try {
+    const memberId = 1; // 예시 ID
+    const response = await getMyAccountList(memberId);
+    accountList.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
 });
 </script>
 
