@@ -114,7 +114,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
         QTransfer transfer = QTransfer.transfer;
         List<GetTransferListPerDateResponse> response = new ArrayList<>();
         LocalDateTime start = account.getCreatedAt();
-        for (LocalDateTime date = LocalDateTime.now(); date.isAfter(start);
+        for (LocalDateTime date = LocalDateTime.now(); date.isAfter(start.minusDays(1));
             date = date.minusDays(1)) {
             List<GetTransferResponse> list = new ArrayList<>();
             List<GetTransferResponse> from = queryFactory
@@ -126,7 +126,10 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
                     transfer.fromBalance
                 ))
                 .from(transfer)
-                .where(transfer.fromAccount.eq(account))
+                .where(transfer.fromAccount.eq(account)
+                    .and(transfer.createdAt.year().eq(date.getYear()))
+                    .and(transfer.createdAt.month().eq(date.getMonthValue()))
+                    .and(transfer.createdAt.dayOfMonth().eq(date.getDayOfMonth())))
                 .fetch();
             List<GetTransferResponse> to = queryFactory
                 .select(new QGetTransferResponse(
@@ -137,7 +140,10 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
                     transfer.toBalance
                     ))
                 .from(transfer)
-                .where(transfer.toAccount.eq(account))
+                .where(transfer.toAccount.eq(account)
+                    .and(transfer.createdAt.year().eq(date.getYear()))
+                    .and(transfer.createdAt.month().eq(date.getMonthValue()))
+                    .and(transfer.createdAt.dayOfMonth().eq(date.getDayOfMonth())))
                 .fetch();
             list.addAll(from);
             list.addAll(to);
