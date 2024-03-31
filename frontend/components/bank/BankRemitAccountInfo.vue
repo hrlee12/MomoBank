@@ -67,13 +67,6 @@ const goNext = () => {
 @import "~/assets/css/main.scss";
 @import "~/assets/css/action.scss";
 
-// input type number 오른쪽 화살표 제거
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
 .prime-btn,
 .second-btn {
   border-radius: 15px !important;
