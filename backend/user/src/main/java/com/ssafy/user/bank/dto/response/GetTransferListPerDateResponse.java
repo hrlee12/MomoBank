@@ -1,6 +1,6 @@
 package com.ssafy.user.bank.dto.response;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetTransferListPerDateResponse {
-    private Date date;
+
+    private LocalDate date;
     private List<GetTransferResponse> transferlist;
 }
