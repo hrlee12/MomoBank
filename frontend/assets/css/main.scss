@@ -83,6 +83,9 @@ button {
 .emphasize {
   color: $primary-color !important;
 }
+.emphasize-warning {
+  color: $negative-color !important;
+}
 
 // input type number 오른쪽 화살표 제거
 input::-webkit-outer-spin-button,
