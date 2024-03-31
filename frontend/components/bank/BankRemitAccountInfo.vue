@@ -1,5 +1,14 @@
 <script setup>
 import BankBottomSheetModal from "~/components/layout/BankBottomSheetModal.vue";
+import { useNuxtApp } from "#app";
+import { watchEffect } from "vue";
+
+// Nuxt 앱 인스턴스에서 $router를 가져옵니다.
+const { $router } = useNuxtApp();
+
+// 스토어 상태에 접근
+const remitStore = useRemitStore();
+const remitInfo = remitStore.remitInfo;
 
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
@@ -22,10 +31,16 @@ const handleUpdate = (eventPayload) => {
 };
 
 // emit 보내기
-const emit = defineEmits(["update:menuIndex"]);
+// const emit = defineEmits(["update:menuIndex"]);
+// const goNext = () => {
+//   // emit 전송으로 컴포넌트 교체
+//   emit("update:menuIndex", { menuIndex: 1, targetAccountNumber, bankInfo });
+// };
+
 const goNext = () => {
-  // emit 전송으로 컴포넌트 교체
-  emit("update:menuIndex", { menuIndex: 1, targetAccountNumber, bankInfo });
+  remitInfo.targetAccountNumber = targetAccountNumber.value;
+  remitInfo.targetAccountBankName = bankInfo.value.name;
+  $router.push("/bank/remit/money-input");
 };
 </script>
 
@@ -66,13 +81,6 @@ const goNext = () => {
 <style lang="scss" scoped>
 @import "~/assets/css/main.scss";
 @import "~/assets/css/action.scss";
-
-// input type number 오른쪽 화살표 제거
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
 
 .prime-btn,
 .second-btn {

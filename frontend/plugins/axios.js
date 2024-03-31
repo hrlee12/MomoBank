@@ -1,17 +1,16 @@
 // plugins/axios.js
 import axios from "axios";
+import { defineNuxtPlugin } from "#app";
 
-export const localAxios = () => {
+export default defineNuxtPlugin((nuxtApp) => {
   const instance = axios.create({
-    baseURL: "https://j10a505.p.ssafy.io/", // 기본 URL 설정
-    timeout: 5000, // 요청 시간 초과
+    baseURL: "https://j10a505.p.ssafy.io/",
+    timeout: 5000,
     headers: {
       "Content-Type": "application/json",
-      // 필요한 경우 추가 헤더 설정
     },
   });
 
-  // 요청 인터셉터 설정
   instance.interceptors.request.use(
     (config) => {
       // 요청 전 처리 로직
@@ -22,7 +21,6 @@ export const localAxios = () => {
     }
   );
 
-  // 응답 인터셉터 설정
   instance.interceptors.response.use(
     (response) => {
       // 응답 받은 후 처리 로직
@@ -33,5 +31,6 @@ export const localAxios = () => {
     }
   );
 
-  return instance;
-};
+  // axios 인스턴스를 nuxtApp의 모든 컴포넌트에서 `$axios`로 사용할 수 있도록 설정
+  nuxtApp.provide("axios", instance);
+});
