@@ -50,7 +50,4 @@ public enum ErrorCode {
     private final HttpStatus status;
     private final String message;
 
-    public ErrorCode findErrorCode() {
-        return ErrorCode.ALREADY_DELETED;
-    }
 }

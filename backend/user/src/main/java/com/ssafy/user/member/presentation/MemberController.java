@@ -35,9 +35,7 @@ public class MemberController {
     private final MemberService memberService;
 
 
-    @SecurityRequirements({
-            @SecurityRequirement(name = "Bearer Authentication"),
-            @SecurityRequirement(name = "refreshToken")})
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/phone-verification/code")
     @Operation(summary = "휴대폰 인증번호 요청", description = "전화번호 수정 시, 인증 api. 인증번호는 3분 후에 만료됨")
     @ApiResponses(value = {
@@ -55,9 +53,7 @@ public class MemberController {
     }
 
 
-    @SecurityRequirements({
-            @SecurityRequirement(name = "Bearer Authentication"),
-            @SecurityRequirement(name = "refreshToken")})
+    @SecurityRequirement(name = "Bearer Authentication")
     @PatchMapping("/phone-verification/phone-numbers")
     @Operation(summary = "휴대폰 인증번호 검증 및 수정")
     @ApiResponses(value = {
@@ -92,9 +88,7 @@ public class MemberController {
 
 
 
-    @SecurityRequirements({
-            @SecurityRequirement(name = "Bearer Authentication"),
-            @SecurityRequirement(name = "refreshToken")})
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "마이페이지 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "마이페이지 조회 성공",
@@ -113,9 +107,7 @@ public class MemberController {
 
 
 
-    @SecurityRequirements({
-            @SecurityRequirement(name = "Bearer Authentication"),
-            @SecurityRequirement(name = "refreshToken")})
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "비밀번호 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
@@ -133,9 +125,7 @@ public class MemberController {
 
 
 
-@SecurityRequirements({
-        @SecurityRequirement(name = "Bearer Authentication"),
-        @SecurityRequirement(name = "refreshToken")})
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "fcm 토큰 갱신")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "fcm 토큰 갱신 성공"),

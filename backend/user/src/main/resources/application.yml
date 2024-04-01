@@ -11,15 +11,17 @@ server:
   servlet:
     contextPath: "/api/user"
 
+
+
 spring:
-#  kafka:
-#    producer:
+  kafka:
+    producer:
 #      bootstrap-servers: "localhost:9092"
-#      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
-#    consumer:
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+    consumer:
 #      bootstrap-servers: "localhost:9092"
-#      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
-#      group-id: "user"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+      group-id: "user"
 
   config:
 #    import: classpath:application-user-private-aws.yml
@@ -45,3 +47,8 @@ logging:
         springframework:
           boot: DEBUG
           security: DEBUG
+
+
+openapi:
+  service:
+    url: http://j10a505.p.ssafy.io/api/user

@@ -6,10 +6,15 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.security.SecuritySchemes;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 import static java.awt.SystemColor.info;
 
@@ -38,12 +43,11 @@ import static java.awt.SystemColor.info;
 })
 public class SwaggerConfig {
     @Bean
-    public GroupedOpenApi chatOpenApi() {
-        String[] paths = {"/**"};
-
-        return GroupedOpenApi.builder()
-                .group("유저서비스 API v1")
-                .pathsToMatch(paths)
-                .build();
+    public OpenAPI customOpenAPI(@Value("${openapi.service.url}") String url) {
+        return new OpenAPI()
+                .servers(List.of(new Server().url(url)));
     }
+
+    // 여기에 필요한 경우 GroupedOpenApi 빈 설정을 유지하거나 추가할 수 있습니다.
 }
+

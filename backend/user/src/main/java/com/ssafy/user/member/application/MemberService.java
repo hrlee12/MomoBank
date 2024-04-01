@@ -30,7 +30,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
@@ -59,8 +59,7 @@ public class MemberService {
     private final RedisUtil redisUtil;
     private final RestTemplateUtil restTemplateUtil;
     private final EncryptUtil encryptUtil;
-    private final PasswordEncoder passwordEncoder;
-
+//    private final PasswordEncoder passwordEncoder;
     @Value("${bank.url}")
     private String bankUrl;
 
@@ -103,14 +102,16 @@ public class MemberService {
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
 
 //         비밀번호 일치 여부 확인
-        if (!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())){
+//        if (!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())){
+        if (!BCrypt.checkpw(request.getCurrentPassword(), member.getPassword())){
                 throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
         }
 
 
-        request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
-//        request.setNewPassword(request.getNewPassword());
+//        request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
+        request.setNewPassword(BCrypt.hashpw(request.getNewPassword(), BCrypt.gensalt()));
 
+//        request.setNewPassword(request.getNewPassword());
 
 
 
@@ -168,21 +169,21 @@ public class MemberService {
 
     private void verifyCode(String code, String phoneNumber) throws Exception {
 
-//        // 레디스에 저장된 인증정보 가져오기
-//        String correctCode = (String)redisUtil.getValues(phoneNumber);
-//
-//        // 없으면 예외처리
-//        if (correctCode == null)
-//            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
-//
-//        correctCode = encryptUtil.aesDecrypt(correctCode);
-//
-//        // 코드가 틀리면 예외처리
-//        if (!correctCode.equals(code))
-//            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
-//
-//        // 인증된 정보는 제거
-//        redisUtil.deleteValues(phoneNumber);
+        // 레디스에 저장된 인증정보 가져오기
+        String correctCode = (String)redisUtil.getValues(phoneNumber);
+
+        // 없으면 예외처리
+        if (correctCode == null)
+            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+
+        correctCode = encryptUtil.aesDecrypt(correctCode);
+
+        // 코드가 틀리면 예외처리
+        if (!correctCode.equals(code))
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+
+        // 인증된 정보는 제거
+        redisUtil.deleteValues(phoneNumber);
 
     }
 

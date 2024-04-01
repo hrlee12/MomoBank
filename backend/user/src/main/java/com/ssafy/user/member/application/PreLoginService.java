@@ -17,11 +17,12 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
@@ -42,7 +43,7 @@ public class PreLoginService {
     private final RedisUtil redisUtil;
     private final RestTemplateUtil restTemplateUtil;
     private final EncryptUtil encryptUtil;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Value("${bank.url}")
     private String bankUrl;
@@ -64,8 +65,8 @@ public class PreLoginService {
 
 
         // 레디스에 해당번호로 생성된 인증번호 있다면 지우기
-//        if (redisUtil.existKey(phoneNumber))
-//            redisUtil.deleteValues(phoneNumber);
+        if (redisUtil.existKey(phoneNumber))
+            redisUtil.deleteValues(phoneNumber);
 
 
         // 랜덤한 숫자(6글자) 생성
@@ -80,7 +81,7 @@ public class PreLoginService {
         sendSms(phoneNumber, message);
 
         // redis에 저장
-//        redisUtil.setValues(phoneNumber, encryptUtil.aesEncrypt(verificationNumber), Duration.ofSeconds(60 * 3));
+        redisUtil.setValues(phoneNumber, encryptUtil.aesEncrypt(verificationNumber), Duration.ofSeconds(60 * 3));
 
         return;
     }
@@ -102,7 +103,7 @@ public class PreLoginService {
 
         // (전화번호 : 시크릿 키) 저장
         // 만료시간을 지정하기 위해 레디스에 저장.
-//        redisUtil.setValues(phoneNumber, encryptUtil.aesEncrypt(secretKey), Duration.ofSeconds(20 * 60));
+        redisUtil.setValues(phoneNumber, encryptUtil.aesEncrypt(secretKey), Duration.ofSeconds(20 * 60));
 
         return encryptUtil.hashEncrypt(phoneNumber, secretKey);
     }
@@ -121,7 +122,8 @@ public class PreLoginService {
         // 전화번호 인증토큰 검증
         verifyToken(request.getAuthToken(), request.getPhoneNumber());
 
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
+//        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         // 회원 정보 저장하기
         try {
             ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
@@ -165,7 +167,7 @@ public class PreLoginService {
         toBankRequest.put("id", request.getId());
         toBankRequest.put("phoneNumber", request.getPhoneNumber());
 //        toBankRequest.put("newPassword", passwordEncoder.encode(newPassword));
-        toBankRequest.put("newPassword", newPassword);
+        toBankRequest.put("newPassword", BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 
 
 
@@ -185,20 +187,20 @@ public class PreLoginService {
     private void verifyCode(String code, String phoneNumber) throws Exception {
 
         // 레디스에 저장된 인증정보 가져오기
-//        String correctCode = (String)redisUtil.getValues(phoneNumber);
-//
-//        // 없으면 예외처리
-//        if (correctCode == null)
-//            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+        String correctCode = (String)redisUtil.getValues(phoneNumber);
 
-//        correctCode = encryptUtil.aesDecrypt(correctCode);
-//
-//        // 코드가 틀리면 예외처리
-//        if (!correctCode.equals(code))
-//            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
-//
-//        // 인증된 정보는 제거
-//        redisUtil.deleteValues(phoneNumber);
+        // 없으면 예외처리
+        if (correctCode == null)
+            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+
+        correctCode = encryptUtil.aesDecrypt(correctCode);
+
+        // 코드가 틀리면 예외처리
+        if (!correctCode.equals(code))
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+
+        // 인증된 정보는 제거
+        redisUtil.deleteValues(phoneNumber);
 
     }
 
@@ -209,18 +211,18 @@ public class PreLoginService {
 
         // 예외처리 안되고 메서드를 무사히 빠져나가면 검증 완료
 
-//        String secretKey = (String)redisUtil.getValues(phoneNumber);
-//
-//        if (secretKey == null) {
-//            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
-//        }
-//
-//        secretKey = encryptUtil.aesDecrypt(secretKey);
-//
-//
-//        if (!encryptUtil.hashEncrypt(phoneNumber, secretKey).equals(token)) {
-//            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
-//        }
+        String secretKey = (String)redisUtil.getValues(phoneNumber);
+
+        if (secretKey == null) {
+            throw new CustomException(ErrorCode.EXPIRED_CERTIFICATION);
+        }
+
+        secretKey = encryptUtil.aesDecrypt(secretKey);
+
+
+        if (!encryptUtil.hashEncrypt(phoneNumber, secretKey).equals(token)) {
+            throw new CustomException(ErrorCode.INCORRECT_CERTIFICATION_INFO);
+        }
     }
 
 

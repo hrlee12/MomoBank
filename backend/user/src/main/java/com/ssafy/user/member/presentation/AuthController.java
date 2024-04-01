@@ -7,15 +7,14 @@ import com.ssafy.user.member.dto.request.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,14 +28,17 @@ public class AuthController {
     private final AuthService authService;
 
 
-
+    @SecurityRequirement(name = "refreshToken")
     @Operation(summary = "어세스 토큰 재발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "재발급 성공")
     })
     @PostMapping("/regenerate")
-    public ResponseEntity regenerateToken() {
+    public ResponseEntity regenerateToken(@RequestHeader Map<String, String> headers) {
 // 로직 구현
+
+        System.out.println(headers.keySet().toString());
+        System.out.println(headers.values().toString());
         return ResponseEntity.ok().build();
     }
 
