@@ -26,6 +26,7 @@ spring:
             allowedOrigins: 
               - "http://j10a505.p.ssafy.io" 
               - "http://localhost"
+              - "http://localhost:3000"
             allowedMethods: # 허용할 HTTP 메서드를 지정합니다.
               - GET
               - POST
