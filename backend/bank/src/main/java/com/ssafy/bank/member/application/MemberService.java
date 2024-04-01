@@ -5,9 +5,11 @@ import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
 import com.ssafy.bank.member.domain.repository.MemberRepository;
 import com.ssafy.bank.member.domain.repository.MemberRepositoryCustom;
+import com.ssafy.bank.member.dto.kafka.InsertMemberVO;
 import com.ssafy.bank.member.dto.request.JoinRequest;
 import com.ssafy.bank.member.dto.request.PasswordUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.mindrot.jbcrypt.BCrypt;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepositoryCustom memberRepositoryCustom;
@@ -52,8 +55,18 @@ public class MemberService {
 
         memberRepository.save(member);
 
+        InsertMemberVO insertMemberVO = InsertMemberVO.builder()
+                            .memberId(member.getMemberId())
+                            .id(member.getId())
+                            .birthdate(member.getBirthDate())
+                            .name(member.getName())
+                            .password(member.getPassword())
+                            .phoneNumber(member.getPhoneNumber())
+                            .build();
 
-        kafkaTemplate.send("insertMember", request);
+
+
+        kafkaTemplate.send("insertMember", insertMemberVO);
 
 
     }
@@ -62,12 +75,14 @@ public class MemberService {
     public void updatePassword(PasswordUpdateRequest request) {
 
 
+        System.out.println(request.getId());
         Member member = memberRepositoryCustom.findMemberById(request.getId());
 
 
-        if (member == null)
+        if (member == null) {
+            log.info("회원정보 없음");
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
-
+        }
 
 
         // 비밀번호 변경
@@ -88,9 +103,10 @@ public class MemberService {
 
 
 
-        if (member == null)
+        if (member == null) {
+            log.info("회원정보 없음");
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
-
+        }
 
         // 비밀번호 변경
         member.changePassword(request.get("newPassword"));
