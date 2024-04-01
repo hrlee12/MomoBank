@@ -23,7 +23,9 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]': # 모든 경로에 대해 CORS 설정을 적용합니다.
-            allowedOrigins: "http://j10a505.p.ssafy.io" # 허용할 도메인을 지정합니다. 여러 개의 도메인을 허용하려면 리스트 형태로 추가합니다.
+            allowedOrigins: 
+              - "http://j10a505.p.ssafy.io" 
+              - "http://localhost"
             allowedMethods: # 허용할 HTTP 메서드를 지정합니다.
               - GET
               - POST
