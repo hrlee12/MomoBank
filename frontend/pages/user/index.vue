@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router"; // useRouter 추가
+import { useUserApi } from "@/api/user";
+
+const { loginRequest } = useUserApi();
 
 const router = useRouter(); // useRouter 인스턴스 생성
 
@@ -21,7 +24,8 @@ const loginInfo = ref({
 });
 
 // 로그인 요청시 재확인
-const loginRequest = () => {
+
+const login = async () => {
   // 아이디 입력란 확인
   if (!loginInfo.value.userId) {
     alert("아이디를 입력해주세요.");
@@ -36,10 +40,23 @@ const loginRequest = () => {
 
   // axios로 사용자 유무 확인
   // 실패시 alert("입력된 정보에 해당하는 유저를 찾지 못하였습니다.");
-
-  // 모든 검증을 통과했을 때
-  console.log(loginInfo.value);
-  router.push(`/bank`);
+  await loginRequest(
+    //
+    {
+      id: loginInfo.userId,
+      password: loginInfo.password,
+    },
+    (data) => {
+      console.log(data);
+      // 모든 검증을 통과했을 때
+      console.log(loginInfo.value);
+      router.push(`/bank`);
+    },
+    // 로그인 실패시
+    (error) => {
+      console.log(error);
+    }
+  );
 };
 </script>
 

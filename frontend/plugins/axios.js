@@ -4,7 +4,7 @@ import { defineNuxtPlugin } from "#app";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const instance = axios.create({
-    baseURL: "https://j10a505.p.ssafy.io/",
+    baseURL: "https://j10a505.p.ssafy.io/api/",
     timeout: 5000,
     headers: {
       "Content-Type": "application/json",

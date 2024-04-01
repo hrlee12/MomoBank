@@ -10,7 +10,6 @@ const { $router } = useNuxtApp();
 
 // 스토어 상태에 접근
 const remitStore = useRemitStore();
-const remitInfo = remitStore.remitInfo;
 
 const historyMenuActive = ref(true);
 const id = router.params.id;
@@ -44,9 +43,12 @@ const hideActive = () => {
 };
 
 const goNext = (param) => {
-  // remitInfo.myAccountId = accountInfo.accountId;
-  remitStore.updateMyAccountId(accountInfo.accountId);
-  console.log(accountInfo.accountId);
+  remitStore.setMyAccountInfo(
+    accountInfo.accountId,
+    accountInfo.accountProductName,
+    accountInfo.balance
+  );
+
   if (param == 0) $router.push(`/bank/${accountId}`);
   else if (param == 1) $router.push("/bank/remit");
 };
@@ -56,10 +58,10 @@ const goNext = (param) => {
   <div v-if="accountInfo" class="content account-content">
     <div class="account-item">
       <div class="account-info">
-        <h2>{{ accountInfo.accountName }}</h2>
+        <h2>{{ accountInfo.accountProductName }}</h2>
         <div class="account-no">
           <p @click="copyTextToClipboard(accountInfo.accountNumber)">
-            {{ accountInfo.accountType }} {{ accountInfo.accountNumber }}
+            {{ accountInfo.accountProductType }} {{ accountInfo.accountNumber }}
           </p>
         </div>
       </div>
@@ -80,9 +82,7 @@ const goNext = (param) => {
       <div v-if="historyMenuActive" @click="goNext(0)" class="account-menu">
         거래내역
       </div>
-      <div @click="goNext(1)" class="account-menu">
-        송금하기{{ accountInfo.accountId }}
-      </div>
+      <div @click="goNext(1)" class="account-menu">송금하기</div>
     </div>
   </div>
   <div v-else class="content account-content account-menu">

@@ -17,8 +17,10 @@ export const useRemitStore = defineStore({
     },
   }),
   actions: {
-    updateTargetAccountNumber(accountNumber) {
-      this.targetAccountNumber = accountNumber;
+    setMyAccountInfo(id, name, balance) {
+      this.remitInfo.myAccountId = id;
+      this.remitInfo.myAccountName = name;
+      this.remitInfo.myAccountBalance = balance;
     },
 
     updateMyAccountId(id) {

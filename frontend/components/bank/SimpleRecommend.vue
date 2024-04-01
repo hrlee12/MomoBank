@@ -1,8 +1,9 @@
 <script setup>
 defineProps({
-  id: String,
-  name: String,
+  id: "",
+  name: "",
   benefits: Array,
+  interest: Number,
   imgUrl: String,
   corpName: String,
 });
@@ -17,9 +18,16 @@ defineProps({
         <h3>{{ name }}</h3>
         <p>{{ corpName }}</p>
       </div>
-      <div class="right">
-        <p class="emphasize">{{ benefits[0] }}</p>
-        <p class="emphasize">{{ benefits[1] }}</p>
+      <div class="card-item">
+        <p
+          v-if="benefits !== undefined"
+          v-for="(benefit, index) in benefits"
+          :key="index"
+          class="emphasize"
+        >
+          {{ benefit }}
+        </p>
+        <h3 v-else class="right emphasize">최고 연 {{ interest }}%</h3>
       </div>
     </div>
   </div>
@@ -40,5 +48,11 @@ defineProps({
   width: 75%;
   display: flex;
   justify-content: space-between;
+}
+
+.card-item {
+  display: flex;
+  justify-content: end;
+  width: 100%;
 }
 </style>

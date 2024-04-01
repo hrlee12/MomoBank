@@ -1,9 +1,12 @@
 .left {
   text-align: left;
+  align-self: center;
+  width: 30%;
 }
 .right {
-  text-align: right;
+  text-align: end;
   align-self: center;
+  width: 70%;
 }
 
 p {

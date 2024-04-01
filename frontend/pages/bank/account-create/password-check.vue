@@ -1,4 +1,7 @@
 <script setup>
+import { useRouter } from "vue-router";
+const router = useRouter();
+
 definePageMeta({
   layout: "action",
 });
@@ -12,7 +15,7 @@ const getImageUrl = (imageName, idx) => {
 const name = ref("김성수");
 
 // 비밀번호 숫자를 저장할 배열
-const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "-"];
 
 // 입력 패스워드
 const inputPasswordArray = ref(["", "", "", ""]);
@@ -85,17 +88,21 @@ const backspace = () => {
     inputPasswordArray.value[lastIndex] = "";
   }
 };
+
+const goNext = () => {
+  router.push("/bank");
+};
 </script>
 
 <template>
   <div
     v-if="!checkPassBoolean && !passValidation"
-    class="flex justify-center h-screen pt-20"
+    class="flex justify-center pt-20"
   >
     <div class="flex flex-col">
       <p class="text-xl font-bold text-center">{{ name }}님 계좌에 사용할</p>
       <p class="mb-4 text-xl font-bold text-center">비밀번호를 입력해주세요</p>
-      <div class="flex justify-between mb-[50%]">
+      <div class="flex justify-between mb-[20%]">
         <input
           class="w-12 h-12 text-5xl text-center border-2 border-gray-300 rounded"
           type="password"
@@ -121,34 +128,27 @@ const backspace = () => {
           readonly
         />
       </div>
-      <div class="grid grid-cols-3 gap-[4.5rem]">
+      <div class="grid grid-cols-3 gap-[2rem]">
         <button
           v-for="number in keypadNumbers"
           :key="number"
           @click="enterNumber(number)"
           class="flex items-center justify-center w-12 h-12 text-3xl font-bold text-gray-color"
         >
-          {{ number }}
+          <div v-if="number != '-'">{{ number }}</div>
+          <div v-else>
+            <div class="w-8 h-8" @click="backspace">
+              <img
+                :src="getImageUrl('back-number-icon.png', 0)"
+                alt="back-number"
+              />
+            </div>
+          </div>
         </button>
-      </div>
-      <div class="flex items-center justify-between pt-16">
-        <div></div>
-        <div
-          @click="enterNumber(0)"
-          class="w-12 h-12 text-3xl font-bold text-center text-gray-color pl-[1.9rem]"
-        >
-          0
-        </div>
-        <div class="w-8 h-8" @click="backspace">
-          <img
-            :src="getImageUrl('back-number-icon.png', 0)"
-            alt="back-number"
-          />
-        </div>
       </div>
     </div>
   </div>
-  <div v-if="checkPassBoolean" class="flex justify-center h-screen pt-20">
+  <div v-if="checkPassBoolean" class="flex justify-center pt-20">
     <div class="flex flex-col">
       <p class="text-xl font-bold text-center">입력한 비밀번호를</p>
       <p class="mb-4 text-xl font-bold text-center">확인해주세요</p>
@@ -158,7 +158,7 @@ const backspace = () => {
       >
         비밀번호가 일치하지 않습니다!
       </div>
-      <div class="flex justify-between mb-[50%]">
+      <div class="flex justify-between mb-[20%]">
         <input
           class="w-12 h-12 text-5xl text-center border-2 border-gray-300 rounded"
           type="password"
@@ -184,35 +184,28 @@ const backspace = () => {
           readonly
         />
       </div>
-      <div class="grid grid-cols-3 gap-[4.5rem]">
+      <div class="grid grid-cols-3 gap-[2rem]">
         <button
           v-for="number in keypadNumbers"
           :key="number"
           @click="checkEnterNumber(number)"
           class="flex items-center justify-center w-12 h-12 text-3xl font-bold text-gray-color"
         >
-          {{ number }}
+          <div v-if="number != '-'">{{ number }}</div>
+          <div v-else>
+            <div class="w-8 h-8" @click="backspace">
+              <img
+                :src="getImageUrl('back-number-icon.png', 0)"
+                alt="back-number"
+              />
+            </div>
+          </div>
         </button>
-      </div>
-      <div class="flex items-center justify-between pt-16">
-        <div></div>
-        <div
-          @click="checkEnterNumber(0)"
-          class="w-12 h-12 text-3xl font-bold text-center text-gray-color pl-[1.9rem]"
-        >
-          0
-        </div>
-        <div class="w-8 h-8" @click="backspace">
-          <img
-            :src="getImageUrl('back-number-icon.png', 0)"
-            alt="back-number"
-          />
-        </div>
       </div>
     </div>
   </div>
   <div v-if="passValidation">
-    <div class="flex flex-col items-center justify-center pt-20">
+    <div class="flex flex-col justify-between items-center pt-20">
       <div class="w-14 h-14">
         <img :src="getImageUrl('check-icon.png', 0)" />
       </div>
@@ -221,6 +214,12 @@ const backspace = () => {
       <div class="text-3xl font-bold">통장을 만들었어요</div>
     </div>
   </div>
+  <button
+    class="w-11/12 bg-main-color text-white h-10 rounded-xl absolute bottom-5"
+    @click="goNext()"
+  >
+    다음
+  </button>
 </template>
 
 <style></style>

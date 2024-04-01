@@ -2,6 +2,9 @@
 import BankAccount from "@/components/bank/BankAccount.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useRouter } from "vue-router";
+import { useBankApi } from "@/api/bank";
+
+const { getMyAccountList } = useBankApi();
 
 const router = useRouter();
 
@@ -22,35 +25,25 @@ function onSlideChange(swiper) {
 }
 
 // 슬라이드 데이터
-const accounts = ref([
-  {
-    accountId: 0,
-    accountType: "입출금",
-    accountName: "저축은행",
-    accountNumber: "123-1234-12345",
-    balance: 1000000,
-  },
-  {
-    accountId: 1,
-    accountType: "입출금",
-    accountName: "효리은행",
-    accountNumber: "123-1234-12345",
-    balance: 2000000,
-  },
-  {
-    accountId: 2,
-    accountType: "입출금",
-    accountName: "소이은행",
-    accountNumber: "123-1234-12345",
-    balance: 3000000,
-  },
-]);
+const myAccountList = ref([]);
 const isLastSlide = ref(false);
 
 // 각각의 그룹 페이지로 이동
 const goToGroup = (param) => {
   router.push(`/groups`);
 };
+
+// 전체 계좌 리스트 받는 함수
+onMounted(async () => {
+  try {
+    const memberId = 13; // 예시 ID
+    const response = await getMyAccountList(memberId);
+    myAccountList.value = response.data.data.myAccountList;
+    console.log(myAccountList.value);
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <template>
@@ -86,7 +79,7 @@ const goToGroup = (param) => {
       @slideChange="onSlideChange"
       class="mySwiper"
     >
-      <SwiperSlide v-for="(account, index) in accounts" :key="index">
+      <SwiperSlide v-for="(account, index) in myAccountList" :key="index">
         <BankAccount :accountInfo="account" />
       </SwiperSlide>
 
