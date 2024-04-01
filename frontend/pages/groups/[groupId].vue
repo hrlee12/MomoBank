@@ -7,6 +7,57 @@
 -->
 <script setup>
 import AccountInformation from "~/components/group/AccountInformation.vue";
+import { useGroupStore } from "@/stores/group";
+
+const { groupId } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
+
+const groupStore = useGroupStore();
+
+import { useGroupApi } from "~/api/groups";
+
+const { getGroupFeedList, getGroupHome } = useGroupApi();
+
+const fetchGroupFeeds = async (groupId) => {
+  try {
+    const response = await getGroupFeedList(groupId);
+    return response.data;
+  } catch (error) {
+    console.error("피드 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
+
+const groupData = ref({});
+
+const memberId = 2;
+
+const fetchGroupHome = async (groupId, memberId) => {
+  try {
+    const response = await getGroupHome(groupId, memberId);
+    return response.data;
+  } catch (error) {
+    console.error("그룹 홈 데이터를 불러오는 데 실패했습니다.", error);
+  }
+};
+
+const curDate = new Date();
+
+const feedList = ref(null);
+
+onMounted(() => {
+  fetchGroupFeeds(groupId).then((response) => {
+    feedList.value = response.content;
+  });
+
+  fetchGroupHome(groupId, memberId).then((response) => {
+    groupData.value = response.data;
+    console.log(groupData.value);
+    const groupName = groupData.value.groupName;
+    groupStore.updateGroupHeaderName(groupName);
+    groupStore.updateAccountNumber(groupData.value.accountNumber);
+    groupStore.updateGroupId(groupId);
+    groupStore.updatePaymentStatus(groupData.value.status);
+  });
+});
 
 definePageMeta({
   layout: "groups",
@@ -47,7 +98,7 @@ const toggleText = () => {
     <div>
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
       <div class="flex flex-row justify-between">
-        <NuxtLink to="/groups/budget/detail">
+        <NuxtLink :to="`/groups/detail/${groupId}`">
           <div
             class="flex items-center justify-center w-10 h-6 ml-4 bg-light-gray-color rounded-xl"
           >
@@ -55,8 +106,11 @@ const toggleText = () => {
           </div>
         </NuxtLink>
 
-        <div class="items-center">
+        <div v-if="groupData.status" class="items-center">
           <p class="text-positive-color text-[13px]">납부 완료</p>
+        </div>
+        <div v-if="!groupData.status" class="items-center">
+          <p class="text-negative-color text-[13px]">납부 요망</p>
         </div>
         <div class="w-8 h-6 mr-4">
           <img
@@ -111,7 +165,12 @@ const toggleText = () => {
   </nuxt-link>
 
   <!-- 피드리스트 -->
-  <div class="w-full h-full pb-16 mx-auto mt-2 bg-white">
+
+  <div
+    v-for="item in feedList"
+    :key="item.id"
+    class="w-full h-full pb-16 mx-auto mt-2 bg-white"
+  >
     <div class="pb-4 border-b-2 border-light-gray-color">
       <!-- 프로필, 닉네임, 게시일 -->
       <div class="flex items-center pt-3 ml-2">
@@ -122,14 +181,16 @@ const toggleText = () => {
             alt="user-icon"
           />
         </div>
-        <div class="ml-2">kimsungsu_97</div>
-        <div class="ml-2 text-sm text-gray-color">2일전</div>
+        <div class="ml-2">{{ item.groupMemberName }}</div>
+        <div class="ml-2 text-sm text-gray-color">
+          {{ new Date(item.updatedAt) }}
+        </div>
       </div>
       <!-- 이미지 -->
       <div class="mt-2">
         <img
           class="w-full h-64"
-          :src="getImageUrl('image-1.png', 1)"
+          :src="item.mediaList[0].mediaUrl"
           alt="image-1"
         />
       </div>

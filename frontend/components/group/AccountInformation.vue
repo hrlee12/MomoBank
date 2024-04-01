@@ -1,8 +1,16 @@
+<script setup>
+import { useGroupStore } from "@/stores/group";
+
+const groupStore = useGroupStore();
+
+const accountNumber = computed(() => groupStore.accountNumber);
+</script>
+
 <template>
   <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->
   <div class="flex justify-center mt-4">
     <div class="text-gray-color border-b-2 border-b-gray-color-500 text-[15px]">
-      1234-12-567456
+      {{ accountNumber }}
     </div>
   </div>
   <div class="flex justify-center">

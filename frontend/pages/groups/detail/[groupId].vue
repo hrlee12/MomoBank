@@ -1,6 +1,36 @@
 <script setup>
 import AccountInformation from "~/components/group/AccountInformation.vue";
 
+import { useGroupStore } from "@/stores/group";
+import { useGroupApi } from "~/api/groups";
+
+const groupStore = useGroupStore();
+
+const { groupId } = useRoute().params;
+
+const { getGroupDetail } = useGroupApi();
+
+const fetchGroupDetail = async (groupId, memberId) => {
+  try {
+    const response = await getGroupDetail(groupId, memberId);
+    return response.data;
+  } catch (error) {
+    console.error("모임 상세 정보를 불러오는 데 실패했습니다.", error);
+  }
+};
+
+const groupDetailData = ref({});
+
+// TODO: 나중에 동적으로 변경해주자(로그인 API 안돼서 보류)
+const memberId = 2;
+
+onMounted(() => {
+  fetchGroupDetail(groupId, memberId).then((response) => {
+    groupDetailData.value = response.data;
+    console.log(groupDetailData.value);
+  });
+});
+
 definePageMeta({
   layout: "groups",
 });
@@ -11,16 +41,6 @@ const getImageUrl = (imageName, idx) => {
   else if (idx == 1) return "/images/" + imageName;
   else console.log("Image code error");
 };
-
-const groupDetails = [
-  { title: "모임명", content: "5반 5린이들", icon: "arrow-icon.png" },
-  { title: "목적", content: "5반 5린이들 친해지자!", icon: "arrow-icon.png" },
-  { title: "가용금액", content: "1,234,567원" },
-  { title: "총 납부금액", content: "780,000원" },
-  { title: "납부일자", content: "매월 11일" },
-  { title: "전체금액", content: "2,345,678원" },
-  { title: "모임인원", content: "6명", icon: "arrow-icon.png" },
-];
 </script>
 
 <template>
@@ -30,8 +50,15 @@ const groupDetails = [
         <div class="text-[13px]"></div>
       </div>
       <div class="items-center">
-        <p class="text-positive-color text-[13px]">납부 완료</p>
+        <p
+          v-if="groupStore.paymentStatus"
+          class="text-positive-color text-[13px]"
+        >
+          납부 완료
+        </p>
+        <p v-else class="text-positive-color text-[13px]">납부 완료</p>
       </div>
+
       <div class="w-8 h-6 mr-4">
         <img
           class="rotate-90"
@@ -69,7 +96,7 @@ const groupDetails = [
       >
         <div>
           <div class="text-xl font-bold">모임명</div>
-          <div class="font-semibold">5반5린이들</div>
+          <div class="font-semibold">{{ groupDetailData.name }}</div>
         </div>
 
         <div class="h-5 rotate-180 w-7">
@@ -86,7 +113,7 @@ const groupDetails = [
       >
         <div>
           <div class="text-xl font-bold">목적</div>
-          <div class="font-semibold">5반 5린이들 친해지자!</div>
+          <div class="font-semibold">{{ groupDetailData.description }}</div>
         </div>
 
         <div class="h-5 rotate-180 w-7">
@@ -103,7 +130,9 @@ const groupDetails = [
       >
         <div>
           <div class="text-xl font-bold">가용 금액</div>
-          <div class="font-semibold">1,234,567원</div>
+          <div class="font-semibold">
+            {{ groupDetailData.availableBalance }}원
+          </div>
         </div>
       </div>
     </div>
@@ -113,7 +142,7 @@ const groupDetails = [
       >
         <div>
           <div class="text-xl font-bold">총 납부 금액</div>
-          <div class="font-semibold">780,000원</div>
+          <div class="font-semibold">{{ groupDetailData.totalFee }}원</div>
         </div>
       </div>
     </div>
@@ -123,7 +152,9 @@ const groupDetails = [
       >
         <div>
           <div class="text-xl font-bold">납부 일자</div>
-          <div class="font-semibold">매월 11일</div>
+          <div class="font-semibold">
+            매월 {{ groupDetailData.monthlyFee }}일
+          </div>
         </div>
       </div>
     </div>
@@ -133,7 +164,7 @@ const groupDetails = [
       >
         <div>
           <div class="text-xl font-bold">전체 금액</div>
-          <div class="font-semibold">2,345,678원</div>
+          <div class="font-semibold">{{ groupDetailData.totalBalance }}원</div>
         </div>
       </div>
     </div>
@@ -144,7 +175,7 @@ const groupDetails = [
         >
           <div>
             <div class="text-xl font-bold">모임 인원</div>
-            <div class="font-semibold">6명</div>
+            <div class="font-semibold">{{ groupDetailData.members }}명</div>
           </div>
 
           <div class="h-5 rotate-180 w-7">
