@@ -1,22 +1,25 @@
-import { localAxios } from "@/plugins/axios";
+// api/bank.js
+import { useNuxtApp } from "#app";
 
-const local = localAxios();
+export function useBankApi() {
+  const { $axios } = useNuxtApp();
 
-function getAccountList(memberId, success, fail) {
-  local.get(`/bank/my-accounts?memberId=${memberId}`).then(success).catch(fail);
+  const getMyAccountList = async (memberId) => {
+    return await $axios.get(`/bank/my-accounts?memberId=${memberId}`);
+  };
+
+  const deleteLike = async (cardId) => {
+    return await $axios.delete(`/flashcard/${cardId}/favorite`);
+  };
+
+  const postLike = async (cardId) => {
+    return await $axios.post(`/flashcard/${cardId}/favorite`);
+  };
+
+  const sendCardID = async (data) => {
+    return await $axios.patch(`/flashcard/weight`, data);
+  };
+
+  // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
+  return { getMyAccountList };
 }
-
-// 예시
-function deleteLike(cardId, success, fail) {
-  local.delete(`/flashcard/${cardId}/favorite`).then(success).catch(fail);
-}
-
-function postLike(cardId, success, fail) {
-  local.post(`/flashcard/${cardId}/favorite`).then(success).catch(fail);
-}
-
-function sendCardID(data, success, fail) {
-  local.patch(`/flashcard/weight`, data).then(success).catch(fail);
-}
-
-export { getAccountList };

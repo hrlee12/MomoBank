@@ -1,9 +1,16 @@
 <script setup>
 import KebabMenu from "@/components/ui/KebabMenu";
-import { useRoute } from "#vue-router";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
+import { useNuxtApp } from "#app";
 
 const router = useRoute();
+// Nuxt 앱 인스턴스에서 $router를 가져옵니다.
+const { $router } = useNuxtApp();
+
+// 스토어 상태에 접근
+const remitStore = useRemitStore();
+const remitInfo = remitStore.remitInfo;
 
 const historyMenuActive = ref(true);
 const id = router.params.id;
@@ -11,7 +18,7 @@ if (id && router.name.startsWith("bank-")) {
   historyMenuActive.value = false;
 }
 
-defineProps({
+const { accountInfo } = defineProps({
   accountInfo: Object,
 });
 
@@ -22,7 +29,6 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const textToCopy = ref("");
 const copyTextToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text);
@@ -35,6 +41,14 @@ const copyTextToClipboard = async (text) => {
 const hide = ref(false);
 const hideActive = () => {
   hide.value = !hide.value;
+};
+
+const goNext = (param) => {
+  // remitInfo.myAccountId = accountInfo.accountId;
+  remitStore.updateMyAccountId(accountInfo.accountId);
+  console.log(accountInfo.accountId);
+  if (param == 0) $router.push(`/bank/${accountId}`);
+  else if (param == 1) $router.push("/bank/remit");
 };
 </script>
 
@@ -63,15 +77,15 @@ const hideActive = () => {
     </div>
 
     <div class="link-content">
-      <NuxtLink :to="`/bank/${accountInfo.accountId}`" v-if="historyMenuActive"
-        >거래내역</NuxtLink
-      >
-      <NuxtLink to="/bank/remit" :accountId="accountInfo.accountId"
-        >송금하기</NuxtLink
-      >
+      <div v-if="historyMenuActive" @click="goNext(0)" class="account-menu">
+        거래내역
+      </div>
+      <div @click="goNext(1)" class="account-menu">
+        송금하기{{ accountInfo.accountId }}
+      </div>
     </div>
   </div>
-  <div v-else class="content account-content">
+  <div v-else class="content account-content account-menu">
     <NuxtLink to="/bank/remit"
       ><div><img :src="getImageUrl('add-icon.png', 0)" alt="" /></div>
       <h1>계좌 개설</h1></NuxtLink
@@ -114,7 +128,6 @@ const hideActive = () => {
 
     button {
       background-color: $light-gray-color;
-      border-radius: 20px;
       height: 90%;
       min-width: 50px;
       color: $gray-color;
@@ -133,16 +146,17 @@ const hideActive = () => {
     align-self: center;
     padding-top: 2vh;
 
-    a + a {
+    .account-menu + .account-menu {
       border-left: 1px solid $light-gray-color;
     }
   }
 }
-a {
+.account-menu {
   color: $primary-color;
   font-weight: bold;
   text-align: center;
   width: 50%;
+  border-radius: 0 m !important;
 
   div {
     margin-top: 6vh;
