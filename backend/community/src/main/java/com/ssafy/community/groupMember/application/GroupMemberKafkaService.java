@@ -47,6 +47,7 @@ public class GroupMemberKafkaService {
 
 
         GroupMember groupMember = GroupMember.builder()
+                .groupMemberId((Integer)groupMemberInfo.get("groupMemberId"))
                 .groupInfo(group)
                 .member(member)
                 .role(GroupMember.memberType.모임원)
