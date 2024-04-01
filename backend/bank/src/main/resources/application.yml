@@ -1,5 +1,3 @@
-
-
 springdoc:
   api-docs:
     enabled: true
@@ -13,14 +11,13 @@ server:
   servlet:
     context-path: /api/bank
 
-
 openapi:
   service:
     url: http://j10a505.p.ssafy.io/api/bank
 
 spring:
   config:
-    import: classpath:application-bank-priavte.yml
+    import: classpath:application-bank-private.yml
   jpa:
     hibernate:
       ddl-auto: update
