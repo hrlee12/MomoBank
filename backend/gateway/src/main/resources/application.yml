@@ -28,6 +28,9 @@ spring:
               - "https://j10a505.p.ssafy.io"
               - "http://localhost"
               - "http://localhost:3000"
+              - "http://community.default.svc.cluster.local:8083"
+              - "http://bank.default.svc.cluster.local:8084"
+              - "http://user.default.svc.cluster.local:8082"
             allowedMethods: # 허용할 HTTP 메서드를 지정합니다.
               - GET
               - POST
