@@ -11,6 +11,20 @@ export function useUserApi() {
       .catch(fail);
   };
 
+  const requestVerifyMessage = async (data, success, fail) => {
+    return await $axios
+      .post(`/user/auth/phone-verification/code`, data)
+      .then(success)
+      .catch(fail);
+  };
+
+  const confirmVerifyMessage = async (data, success, fail) => {
+    return await $axios
+      .post(`/user/auth/phone-verification/verify`, data)
+      .then(success)
+      .catch(fail);
+  };
+
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
-  return { loginRequest };
+  return { loginRequest, requestVerifyMessage, confirmVerifyMessage };
 }
