@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 public class InsertGroupMemberVO {
+    private int groupMemberId;
     private String memberId;
     private int groupId;
 }

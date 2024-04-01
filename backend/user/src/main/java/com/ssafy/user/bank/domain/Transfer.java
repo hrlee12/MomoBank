@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 public class Transfer extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transfer_id")
     private int transferId;
 
