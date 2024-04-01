@@ -37,6 +37,7 @@ public class MemberKafkaService {
 
 
         Member member = Member.builder()
+                .memberId((Integer)userInfo.get("memberId"))
                 .id((String)userInfo.get("id"))
                 .name((String)userInfo.get("name"))
                 .phoneNumber((String)userInfo.get("phoneNumber"))
