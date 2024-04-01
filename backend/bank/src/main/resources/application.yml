@@ -7,9 +7,13 @@ springdoc:
     path: /swagger-ui.html
 
 server:
-  port: 8083
+  port: 8084
   servlet:
-    contextPath: "/api/bank"
+    context-path: /api/bank
+
+openapi:
+  service:
+    url: http://j10a505.p.ssafy.io/api/bank
 
 spring:
   config:
