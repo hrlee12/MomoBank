@@ -8,13 +8,13 @@ import java.io.IOException;
 
 @Component
 public class KafkaConsumerListener {
-
-    @Autowired
-    ReportController reportController;
-    @KafkaListener(topics = "testTopic", groupId = "myGroup")
-    public void listen(String message) throws IOException {
-        System.out.println("Received Message in group 'myGroup': " + message);
-        reportController.makeReport("2020.03");
-
-    }
+//
+//    @Autowired
+//    ReportController reportController;
+//    @KafkaListener(topics = "testTopic", groupId = "myGroup")
+//    public void listen(String message) throws IOException {
+//        System.out.println("Received Message in group 'myGroup': " + message);
+//        reportController.makeReport("2020.03");
+//
+//    }
 }
