@@ -115,13 +115,13 @@ const calPercentage = (goalBudget, curBudget) => {
           <!-- setting icon -->
           <div class="flex justify-between">
             <div
-              class="overflow-hidden text-lg font-bold text-ellipsis w-60 whitespace-nowrap"
+              class="overflow-hidden text-base font-bold text-ellipsis w-52 whitespace-nowrap"
             >
               {{ item.title }}
             </div>
             <!-- TODO : 납부 완/미완을 데이터 넘어오면 그걸로 if문 넣고 색상 바꾸자. -->
             <div class="text-positive-color text-[13px]">{{ item.status }}</div>
-            <div class="w-6 h-6">
+            <div class="w-5 h-5">
               <img
                 :src="getImageUrl('setting-icon.png', 0)"
                 alt="setting icon"
@@ -130,8 +130,8 @@ const calPercentage = (goalBudget, curBudget) => {
           </div>
           <!-- 매월 x일 입금, 월마다 입금 금액 -->
           <div class="flex justify-between pt-2 mb-3">
-            <div class="font-bold">{{ item.monthly }}</div>
-            <div class="font-bold">{{ item.monthPayments }}</div>
+            <div class="text-sm font-bold">{{ item.monthly }}</div>
+            <div class="text-sm font-bold">{{ item.monthPayments }}</div>
           </div>
           <!-- 납입 여부 -->
           <div class="flex items-center justify-between">

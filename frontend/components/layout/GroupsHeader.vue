@@ -1,4 +1,8 @@
 <script setup>
+import { useGroupStore } from "@/stores/group";
+
+const groupStore = useGroupStore();
+
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
   else if (idx === 1) return "/images/" + imageName;
@@ -14,19 +18,23 @@ const goBack = () => {
 
 const route = useRoute();
 
-const groupsName = "5반5린이들";
+const groupsName = computed(() => groupStore.groupHeaderName);
+
+// const groupId = computed(() => route.params.groupId);
+
+// console.log(route.name);
 
 // TODO : pinia로 관리할지, Header에서 직접 관리할지.
 const pageTitle = computed(() => {
   noSideMenu.value = false;
   noArrowMenu.value = false;
   if (
-    route.name === "groups" ||
+    route.name === "groups-groupId" ||
     route.name === "groups-budget" ||
     route.name === "groups-transaction-history"
   ) {
     return groupsName;
-  } else if (route.name === "groups-detail") {
+  } else if (route.name === "groups-detail-groupId") {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
     return "입금 현황";
