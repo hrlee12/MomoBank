@@ -1,4 +1,4 @@
-package com.ssafy.user.member.dto.kafka;
+package com.ssafy.user.groupMember.dto.kafka;
 
 import lombok.*;
 
