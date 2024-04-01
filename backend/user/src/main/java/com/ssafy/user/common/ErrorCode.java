@@ -1,15 +1,10 @@
 package com.ssafy.user.common;
 
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
@@ -44,11 +39,15 @@ public enum ErrorCode {
     NO_INVITE_LINK(BAD_REQUEST, "해당 초대링크가 존재하지 않습니다. 만료된 링크인지 확인해주세요."),
     ALREADY_JOINED_MEMBER(CONFLICT, "해당 모임에 이미 가입한 회원입니다."),
     GROUP_LEADER_CANNOT_RESIGN(BAD_REQUEST, "모임장은 탈퇴할 수 없습니다."),
-    NOT_OWN_GROUP_MEMBER(BAD_REQUEST, "해당 회원의 그룹 멤버 정보가 아닙니다.");
+    NOT_OWN_GROUP_MEMBER(BAD_REQUEST, "해당 회원의 그룹 멤버 정보가 아닙니다."),
+    NOT_VALID_ARGUMENT(BAD_REQUEST, "바디의 파라미터가 적절하지 못합니다."),
+    INVALID_JWT_TOKEN(UNAUTHORIZED, "잘못된 형식의 JWT 토큰입니다."),
+    EXPIRED_JWT_TOKEN(UNAUTHORIZED, "어세스 토큰이 만료되었습니다."),
+    JWT_EXCEPTION(UNAUTHORIZED, "jwt 토큰 관련 문제가 있습니다."),
+    NO_SUCH_MEMBER_SAME_WITH_JWT_INFO(UNAUTHORIZED, "jwt에 담긴 회원 아이디와 일치하는 회원 정보가 없습니다."),
+    NO_AUTHORITY(FORBIDDEN, "자원에 접근할 수 있는 권한이 없습니다."),
+    NO_AUTHENTICATION(UNAUTHORIZED, "로그인이 필요한 작업입니다.");
     private final HttpStatus status;
     private final String message;
 
-    public ErrorCode findErrorCode() {
-        return ErrorCode.ALREADY_DELETED;
-    }
 }

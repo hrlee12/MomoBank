@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class KafkaTestController {
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
-    @GetMapping("/send")
-    public String sendMessage() {
-        kafkaTemplate.send("testTopic", new GetFeesPerMonthResponse(23,34));
-        return "Message sent to the Kafka Topic testTopic Successfully";
-    }
-    @GetMapping("/text")
-    public String sendText() {
-        return "this is text!!!!";
-    }
+//    @Autowired
+//    private KafkaTemplate<String, Object> kafkaTemplate;
+//
+//    @GetMapping("/send")
+//    public String sendMessage() {
+//        kafkaTemplate.send("testTopic", new GetFeesPerMonthResponse(23,34));
+//        return "Message sent to the Kafka Topic testTopic Successfully";
+//    }
+//    @GetMapping("/text")
+//    public String sendText() {
+//        return "this is text!!!!";
+//    }
 
 }

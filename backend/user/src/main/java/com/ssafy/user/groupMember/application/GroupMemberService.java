@@ -20,7 +20,7 @@ import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.groupMember.dto.response.VerifyInviteCodeResponse;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
-import com.ssafy.user.member.dto.kafka.InsertGroupMemberVO;
+import com.ssafy.user.groupMember.dto.kafka.InsertGroupMemberVO;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
