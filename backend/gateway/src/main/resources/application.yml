@@ -34,4 +34,4 @@ openapi:
 spring:
   config:
     import: classpath:application-private.yml
-    #    import: classpath:application-user-private-aws.yml
+#    import: classpath:application-user-private-aws.yml
