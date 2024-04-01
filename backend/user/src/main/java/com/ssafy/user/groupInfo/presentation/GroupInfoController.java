@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,32 +31,33 @@ public class GroupInfoController {
 
     @Operation(summary = "전체 모임 조회", description = "참여중인 모든 모임 조회")
     @GetMapping("/my-groups")
-    public ResponseEntity<?> getMyGroups(@RequestBody GroupRequest request) {
+    public ResponseEntity<?> getMyGroups(
+        @RequestParam int memberId) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "전체 모임 죄회 성공",
-            groupInfoService.getMyGroups(request.memberId()));
+            groupInfoService.getMyGroups(memberId));
     }
 
     @Operation(summary = "모임 홈 조회", description = "선택된 모임의 홈을 통해 상세 조회")
     @GetMapping("/{id}")
     public ResponseEntity<?> getGroupDetails(@PathVariable int id,
-        @RequestBody GroupRequest request) {
+        @RequestParam int memberId) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 홈 조회 성공",
-            groupInfoService.getGroupDetails(request.memberId(), id));
+            groupInfoService.getGroupDetails(memberId, id));
     }
 
     @Operation(summary = "모임원별 납입액", description = "각 모임원이 달마나 납입한 금액 조회")
     @GetMapping("/{id}/fees-per-month")
     public ResponseEntity<?> getFeesPerMonth(@PathVariable int id, @RequestBody
-    GroupRequest request) {
-
+    @RequestParam int memberId) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "해당 모임원 납입금액 조회 성공",
-            groupInfoService.getFeesPerMonth(request.memberId(), id));
+            groupInfoService.getFeesPerMonth(memberId, id));
     }
 
     @Operation(summary = "모임 상세 조회", description = "모임 상세 페이지를 통한 모임 상세 조회")
     @GetMapping("/{id}/detail")
-    public ResponseEntity<?> getGroupDetail(@PathVariable int id, @RequestBody
-    GroupRequest request) {
+    public ResponseEntity<?> getGroupDetail(@PathVariable int id,
+        @RequestParam int memberId) {
+        GroupRequest request = new GroupRequest(memberId);
         return CommonResponse.toResponseEntity(HttpStatus.OK, "모임 상세 조회 성공",
             groupInfoService.getGroupDetail(request.memberId(), id));
     }

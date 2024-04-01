@@ -22,10 +22,8 @@ spring:
 #      bootstrap-servers: "localhost:9092"
       bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
       group-id: "user"
-
-  config:
-#    import: classpath:application-user-private-aws.yml
-    import: classpath:application-private.yml
+  profiles:
+    active: private
   jpa:
     hibernate:
       ddl-auto: update
