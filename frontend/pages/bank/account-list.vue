@@ -18,6 +18,7 @@ onMounted(async () => {
     const memberId = 13; // 예시 ID
     const response = await getMyAccountList(memberId);
     myAccountList.value = response.data.data.myAccountList;
+    console.log(myAccountList);
     console.log(myAccountList.value);
   } catch (error) {
     console.error(error);
@@ -35,9 +36,9 @@ onMounted(async () => {
     </div>
     <div v-else v-for="(account, index) in myAccountList" :key="index">
       <SimpleAccount
-        :accountName="account.accountName"
+        :accountName="account.accountProductName"
         :accountNumber="account.accountNumber"
-        :money="account.money"
+        :money="account.balance"
         :status="true"
       />
     </div>
