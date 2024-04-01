@@ -56,6 +56,7 @@ import java.util.*;
 public class MemberService {
     private final DefaultMessageService messageService;
     private final MemberRepositoryCustom memberRepositoryCustom;
+    private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
     private final RestTemplateUtil restTemplateUtil;
     private final EncryptUtil encryptUtil;
@@ -165,6 +166,13 @@ public class MemberService {
     }
 
 
+    public void logout(String memberId) throws Exception {
+
+        if (redisUtil.existKey(encryptUtil.aesEncrypt(memberId))) {
+            redisUtil.deleteValues(encryptUtil.aesEncrypt(memberId));
+        };
+
+    }
 
 
     private void verifyCode(String code, String phoneNumber) throws Exception {
