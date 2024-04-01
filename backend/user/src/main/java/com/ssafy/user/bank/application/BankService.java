@@ -39,7 +39,7 @@ public class BankService {
             .accountId((int)accountInfo.get("accountId"))
             .accountNumber((String)accountInfo.get("accountNumber"))
             .accountProductName((String)accountInfo.get("accountProductName"))
-            .accountType((AccountType) accountInfo.get("accountType"))
+            .accountType(accountInfo.get("accountType").equals("입출금자유예금")? AccountType.입출금 : accountInfo.get("accountType").equals("정기예금")? AccountType.정기예금 : AccountType.적금)
             .bankName((String)accountInfo.get("bankName"))
             .interestRate((float)accountInfo.get("interestRate"))
             .balance((long)accountInfo.get("balance"))
