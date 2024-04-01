@@ -24,7 +24,8 @@ spring:
         corsConfigurations:
           '[/**]': # 모든 경로에 대해 CORS 설정을 적용합니다.
             allowedOrigins: 
-              - "http://j10a505.p.ssafy.io" 
+              - "http://j10a505.p.ssafy.io"
+              - "https://j10a505.p.ssafy.io"
               - "http://localhost"
               - "http://localhost:3000"
             allowedMethods: # 허용할 HTTP 메서드를 지정합니다.
