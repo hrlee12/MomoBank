@@ -25,15 +25,7 @@ function onSlideChange(swiper) {
 }
 
 // 슬라이드 데이터
-const myAccountList = ref([
-  {
-    accountId: 0,
-    accountProductType: "입출금",
-    accountProductName: "저축은행",
-    accountNumber: "123-1234-12345",
-    balance: 1000000,
-  },
-]);
+const myAccountList = ref([]);
 const isLastSlide = ref(false);
 
 // 각각의 그룹 페이지로 이동

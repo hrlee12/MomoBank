@@ -1,5 +1,8 @@
 <script setup>
 import { useNuxtApp } from "#app";
+import { useBankApi } from "@/api/bank";
+
+const { remitBalance } = useBankApi();
 
 // Nuxt 앱 인스턴스에서 $router를 가져옵니다.
 const { $router } = useNuxtApp();
@@ -19,8 +22,26 @@ const getImageUrl = (imageName, idx) => {
 };
 
 const goNext = () => {
-  menuIdx.value += 1;
+  remit();
+
   if (menuIdx.value == 3) $router.push("/bank/");
+};
+
+const remit = async () => {
+  await remitBalance(
+    // myAccountId, targetAccountId, remitAmount
+    {
+      fromAccountId: remitInfo.myAccountId,
+      toAccountId: remitInfo.targetAccountId,
+      amount: remitInfo.remitAmount,
+    },
+    (data) => {
+      console.log(data);
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 };
 
 definePageMeta({

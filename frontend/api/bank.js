@@ -8,6 +8,9 @@ export function useBankApi() {
     return await $axios.get(`/user/bank/my-accounts/${memberId}`);
   };
 
+  const remitBalance = async (data) => {
+    return await $axios.post("/user/bank/transfer", data);
+  };
   const deleteLike = async (cardId) => {
     return await $axios.delete(`/flashcard/${cardId}/favorite`);
   };
@@ -21,5 +24,5 @@ export function useBankApi() {
   };
 
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
-  return { getMyAccountList };
+  return { getMyAccountList, remitBalance };
 }
