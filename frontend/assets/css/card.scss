@@ -1,0 +1,25 @@
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+  align-self: center;
+}
+
+.emphasize {
+  color: $primary-color !important;
+}
+
+p {
+  font-size: 1.8vh;
+}
+
+img {
+  align-self: center;
+  height: 3vh;
+}
+
+h3 {
+  overflow: hidden;
+  text-wrap: none;
+}

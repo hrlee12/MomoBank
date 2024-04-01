@@ -1,0 +1,52 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+server:
+  port: 8082
+  servlet:
+    contextPath: "/api/user"
+
+
+
+spring:
+  kafka:
+    producer:
+#      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+    consumer:
+#      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "my-kafka.default.svc.cluster.local:9092"
+      group-id: "user"
+  profiles:
+    active: private
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: trace
+    org:
+      springframework:
+        web: INFO
+        apache:
+          tiles: DEBUG
+        springframework:
+          boot: DEBUG
+          security: DEBUG
+
+
+openapi:
+  service:
+    url: http://j10a505.p.ssafy.io/api/user
