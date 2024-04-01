@@ -37,4 +37,7 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: trace
 
+openapi:
+  service:
+    url: http://j10a505.p.ssafy.io/api/user
 
