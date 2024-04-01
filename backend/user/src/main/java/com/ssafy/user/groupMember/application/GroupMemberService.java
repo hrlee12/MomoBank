@@ -197,7 +197,7 @@ public class GroupMemberService {
         // -------------------------------- 그룹장에게 알람보내기 필요. -----------------------------------
         // --------------------- 카프카로 community의 그룹알람 insert, 그룹멤버 insert 필요 --------
 
-        kafkaTemplate.send("insertGroupMember", new InsertGroupMemberVO(memberId, groupId));
+        kafkaTemplate.send("insertGroupMember", new InsertGroupMemberVO(groupMember.getGroupMemberId(), memberId, groupId));
     }
 
 
