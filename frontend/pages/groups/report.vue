@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from 'axios';
 import Chart from "chart.js/auto";
 import { marked } from 'marked';
 
@@ -10,10 +11,6 @@ const showGoalBudget = ref(false);
 const showSpendCategory = ref(false);
 const months = ref([]);
 const selectedMonth = ref("");
-const reportData = ref({
-  recommendations: [{ "recommend": "클럽", "reason": "이전에 노래방을 갔으니 이번엔 재미있게 클럽을 가보세요!" }, { "recommend": "캠핑", "reason": "카페나 영화를 보는 것도 좋지만 자연 속에서 새로운 경험을 해보는 것은 어떨까요? 캠핑을 통해 팀원들과 더 가까워질 수 있어요." }, { "recommend": "테마파크", "reason": "재미있는 놀이기구와 다양한 활동을 통해 스트레스를 풀고 즐거운 시간을 보낼 수 있습니다. 함께 모임하여 즐거운 추억을 만들어보세요!" }, { "recommend": "요가 수업", "reason": "몸과 마음을 편안하게 만들어주는 요가 수업을 통해 스트레스를 해소하고 건강한 삶을 유지해보세요. 함께 참여하면 더욱 즐거운 시간을 보낼 수 있습니다." }]
-})
-
 
 
 const reportAndBestMember = ref({
@@ -30,6 +27,21 @@ const reportAndBestMember = ref({
     "reason": "홍길동님은 모임비를 제때 납부하고 게시판 활동에서 큰 사랑을 받아 베스트 멤버로 선정되었습니다."
   }
 })
+
+const reportData = ref({ recommendations: [] });
+
+async function fetchReportData() {
+  try {
+    const response = await axios.get('https://j10a505.p.ssafy.io/api/community/reports/recommend-next-activity?yearMonth=2024.03');
+    // API 호출 결과로 받은 데이터를 reportData의 recommendations에 할당
+    reportData.value.recommendations = response.data;
+  } catch (error) {
+    console.error("API 호출 중 오류 발생:", error);
+    // 에러 핸들링: 필요에 따라 적절한 사용자 경험을 제공하기 위한 코드를 추가할 수 있습니다.
+  }
+}
+
+fetchReportData();
 
 
 console.log(reportAndBestMember.value.bestMember.bestMember.name)
