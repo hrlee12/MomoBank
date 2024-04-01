@@ -18,7 +18,6 @@ import org.hibernate.annotations.ColumnDefault;
 public class GroupMember extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_member_id")
     private int groupMemberId;
 
