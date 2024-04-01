@@ -5,6 +5,7 @@ import { useUserApi } from "@/api/user"; // api 추가
 
 const router = useRouter(); // useRouter 인스턴스 생성
 const { requestVerifyMessage, confirmVerifyMessage } = useUserApi();
+const userStore = useUserStore();
 
 // This file path is /products/:id
 const { number } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
@@ -80,6 +81,10 @@ const handleEnter = () => {
     },
     (data) => {
       console.log("인증번호가 맞았습니다.");
+      console.log(data.data.data.authToken);
+
+      userStore.setPhoneNumber(number);
+      userStore.setAuthToken(data.data.data.authToken);
       router.push("/user/signup");
     },
     (error) => {

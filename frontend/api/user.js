@@ -25,6 +25,15 @@ export function useUserApi() {
       .catch(fail);
   };
 
+  const userJoinRequest = async (data, success, fail) => {
+    return await $axios.post(`/user/auth/join`, data).then(success).catch(fail);
+  };
+
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
-  return { loginRequest, requestVerifyMessage, confirmVerifyMessage };
+  return {
+    loginRequest,
+    requestVerifyMessage,
+    confirmVerifyMessage,
+    userJoinRequest,
+  };
 }
