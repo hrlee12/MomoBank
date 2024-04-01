@@ -48,7 +48,7 @@ public class RecommendService {
     }
 
 
-    public void recommendCard(UserSelectionDto userSelectionDto,List<CardDto> cards, CardsCategoryDto cardsCategoryDto) {
+    public List<CardDto> recommendCard(UserSelectionDto userSelectionDto,List<CardDto> cards, CardsCategoryDto cardsCategoryDto) {
         Map<String, List<String>> dataMap = new HashMap<>();
 
         dataMap.put("1", Arrays.asList("kb국민카드", "삼성카드", "롯데카드", "BC 바로카드", "신한카드", "현대카드", "우리카드", "NH농협카드", "하나카드", "IBK기업은행", ""));
@@ -98,6 +98,7 @@ public class RecommendService {
                 System.out.println(card);
             }
         }
+        return recommendedCards;
         // System.out.println(recommendedCards);
 
 

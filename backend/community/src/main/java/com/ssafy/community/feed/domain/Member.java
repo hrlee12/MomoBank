@@ -1,5 +1,6 @@
 package com.ssafy.community.feed.domain;
 
+
 import com.ssafy.community.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -52,18 +53,23 @@ public class Member extends BaseEntity {
 
     @Size(min = 0, max = 50)
     @Column(length = 50)
-    @ColumnDefault("\"momo\"")
     private String provider;
 
     @ColumnDefault("50")
     private int sincerity;
 
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
     private List<GroupMember> groupMembers;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REFRESH)
+    private List<GroupInfo> groupInfos;
 
     public void changeProvider() {
         this.provider = "kakao";
     }
+
+    public void changePhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 
 
     public void changePassword(String password) {
@@ -88,3 +94,4 @@ public class Member extends BaseEntity {
 
 
 }
+

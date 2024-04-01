@@ -1,10 +1,16 @@
 package com.ssafy.community.report.presentation;
 
+import com.ssafy.community.feed.domain.Feed;
+import com.ssafy.community.feed.domain.repository.FeedRepository;
 import com.ssafy.community.report.domain.entity.MonthlyReports;
 import com.ssafy.community.report.dto.*;
 import com.ssafy.community.report.application.ReportService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +25,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
 public class ReportController {
+
+
+    @Autowired
+    private FeedRepository feedRepository;
+
+    public List<Feed> getTop3LikedFeedsLastMonth() {
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+        Pageable topThree = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "likesCount"));
+
+        Page<Feed> page = feedRepository.findTopLikedFeedsLastMonth(oneMonthAgo, topThree);
+        return page.getContent();
+    }
 
 
     @Autowired
@@ -42,11 +62,16 @@ public class ReportController {
                             description = "서버 내부 오류")
             })
     @PostMapping("/collect-monthly-data")
-    public ResponseEntity<MonthlyReportDto> collectMonthlyReportData(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) {
+    public ResponseEntity<MonthlyReportDto> collectMonthlyReportData() {
         MonthlyReportDto monthlyReportDto = MonthlyReportDto.createExample();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        List<Feed> feeds = getTop3LikedFeedsLastMonth();
+
+        System.out.println(feeds);
+
+
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(monthlyReportDto);
@@ -77,20 +102,20 @@ public class ReportController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "연도와 월 (YYYY.MM 형식)", required = true, content = @Content(schema = @Schema(implementation = String.class))) String yearMonth) throws IOException
     {
 
-        MonthlyReportDto monthlyReportDto = collectMonthlyReportData("2023.03").getBody();
+        MonthlyReportDto monthlyReportDto = collectMonthlyReportData().getBody();
 
-//        String reportStr = reportService.getAIReport(monthlyReportDto);
-        String reportStr = "## 1. 회계\n" +
-                "\n" +
-                "- **불완전 납부**: 김철수님이 15,000원을 미납하셨습니다. 다음 회차에는 납부를 잊지 말아주세요.\n" +
-                "- **초과 입금**: 이영희님께서는 30,000원을 초과 납부하셨습니다. 너무 감사합니다! 모임의 발전에 큰 도움이 됩니다.\n" +
-                "- **완납**: 홍길동님은 물론이고 모임비를 제때 납부하셨습니다. 감사합니다!\n" +
-                "\n" +
-                "## 2. 게시판 활동\n" +
-                "\n" +
-                "- '**함께 본 시간을 달리는 소녀**': 작성자 홍길동님, 좋아요 120개와 댓글 2개라는 큰 사랑을 받았습니다. 영화에 대한 세심한 후기와 그날의 모임에 대한 이야기가 독자들의 공감을 얻었네요.\n" +
-                "- '**오늘의 영화 후기**': 작성자 김철수님, 좋아요 95개, 댓글 2개를 얻으셨습니다. 영화에 대한 깊이 있는 생각을 공유해주셔서 감사합니다.\n" +
-                "- '**카페에서의 작은 모임**': 작성자 이영희님, 좋아요 110개, 댓글 2개를 얻었습니다. 모임 전의 모습을 공유해주셔서 더욱 풍성해진 회원님들의 이야기를 만나보았습니다.\n";
+        String reportStr = reportService.getAIReport(monthlyReportDto);
+//        String reportStr = "## 1. 회계\n" +
+//                "\n" +
+//                "- **불완전 납부**: 김철수님이 15,000원을 미납하셨습니다. 다음 회차에는 납부를 잊지 말아주세요.\n" +
+//                "- **초과 입금**: 이영희님께서는 30,000원을 초과 납부하셨습니다. 너무 감사합니다! 모임의 발전에 큰 도움이 됩니다.\n" +
+//                "- **완납**: 홍길동님은 물론이고 모임비를 제때 납부하셨습니다. 감사합니다!\n" +
+//                "\n" +
+//                "## 2. 게시판 활동\n" +
+//                "\n" +
+//                "- '**함께 본 시간을 달리는 소녀**': 작성자 홍길동님, 좋아요 120개와 댓글 2개라는 큰 사랑을 받았습니다. 영화에 대한 세심한 후기와 그날의 모임에 대한 이야기가 독자들의 공감을 얻었네요.\n" +
+//                "- '**오늘의 영화 후기**': 작성자 김철수님, 좋아요 95개, 댓글 2개를 얻으셨습니다. 영화에 대한 깊이 있는 생각을 공유해주셔서 감사합니다.\n" +
+//                "- '**카페에서의 작은 모임**': 작성자 이영희님, 좋아요 110개, 댓글 2개를 얻었습니다. 모임 전의 모습을 공유해주셔서 더욱 풍성해진 회원님들의 이야기를 만나보았습니다.\n";
 
 
         BestMemberDto bestMemberDto = reportService.getBestMember(monthlyReportDto, reportStr);
@@ -158,20 +183,14 @@ public class ReportController {
     @Operation(summary = "우수 회원 조회", description = "지정된 기간 동안의 우수 회원을 조회합니다.", responses = {
             @ApiResponse(description = "성공", responseCode = "200")
     })
+
     @GetMapping("/top-members")
     public ResponseEntity<?> getTopMembers(
             @Parameter(description = "조회 시작 월 (YYYY.MM 형식)", required = true) @RequestParam String startMonth,
             @Parameter(description = "조회 종료 월 (YYYY.MM 형식)", required = true) @RequestParam String endMonth) {
         return ResponseEntity.ok().build();
     }
-    @Operation(summary = "통장 추천", description = "사용자의 니즈에 맞는 통장을 추천합니다.", responses = {
-            @ApiResponse(description = "성공", responseCode = "200", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @PostMapping("/recommend-account")
-    public ResponseEntity<?> recommendAccount(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "통장 추천을 위한 질문에 대한 답변", required = true, content = @Content(schema = @Schema(implementation = String.class))) String answers) {
-        return ResponseEntity.ok().build();
-    }
+
     @Operation(summary = "다음 활동 추천", description = "수집된 데이터를 바탕으로 모임의 다음 활동을 추천합니다.", responses = {
             @ApiResponse(description = "성공", responseCode = "200", content = @Content(schema = @Schema(implementation = String.class)))
     })
@@ -182,11 +201,20 @@ public class ReportController {
         List<RecommendationDto> list;
 
 
-        try {
-            list = reportService.getAIRecommendationNextActivity(collectMonthlyReportData("2023.03").getBody(), makeReport("2023.03").getBody().getContent());
-        }catch(Exception e) {
-            list = null;
-        }
+//        try {
+//            list = reportService.getAIRecommendationNextActivity(collectMonthlyReportData().getBody(), makeReport("2023.03").getBody().getContent());
+//        }catch(Exception e) {
+//            e.printStackTrace();
+//            list = null;
+//        }
+
+        // 대신에 고정된 결과 데이터를 직접 생성합니다.
+        list = Arrays.asList(
+                new RecommendationDto("보드게임 카페 방문", "가장 많은 활동을 한 곽민우가 게시한 보드게임 카페 관련 글이 인기가 많았으며, 게시물에 팀 활동을 강조하는 긍정적인 내용이 포함되어 있어서 보드게임 카페 방문을 추천합니다."),
+                new RecommendationDto("미납 회비 정산", "미납 회비가 있는 멤버들 중에서는 손준성과 엄세현이 있습니다. 회비 정산을 통해 팀 내 갈등을 예방하고 조직적으로 운영하는데 도움이 될 것입니다."),
+                new RecommendationDto("피시방 모임", "인기 있는 게시물을 작성한 곽민우와 열정적으로 활동한 다른 회원들과 함께 피시방에서 다양한 게임을 즐기며 소통하고 친목을 다지는 모임을 추천합니다."),
+                new RecommendationDto("영화 관람", "회비를 완납했고 게시판 활동이 활발한 김성수를 베스트 멤버로 선정했습니다. 팀원들과 함께 영화를 보며 휴식을 취하고 소통하는 시간을 갖는 것을 추천합니다.")
+        );
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
