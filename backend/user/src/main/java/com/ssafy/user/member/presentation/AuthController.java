@@ -31,15 +31,16 @@ public class AuthController {
     @SecurityRequirement(name = "refreshToken")
     @Operation(summary = "어세스 토큰 재발급")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "재발급 성공")
+            @ApiResponse(responseCode = "200", description = "재발급 성공"),
+            @ApiResponse(responseCode = "401", description = "만료된 리프레쉬 토큰입니다. <br> 유효하지 않은 리프레쉬 토큰입니다. ")
     })
     @PostMapping("/regenerate")
-    public ResponseEntity regenerateToken(@RequestHeader Map<String, String> headers) {
+    public ResponseEntity regenerateToken(@RequestHeader("refreshToken") String refreshToken) throws Exception {
 // 로직 구현
 
-        System.out.println(headers.keySet().toString());
-        System.out.println(headers.values().toString());
-        return ResponseEntity.ok().build();
+        Map<String, String> tokens = authService.regenerateToken(refreshToken);
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "토큰 재발급 완료", null, tokens);
     }
 
 
@@ -50,7 +51,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "제공된 정보와 일치하는 회원 정보 없음")
     })
     @PostMapping("/login")
-    public ResponseEntity login (@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity login (@Valid @RequestBody LoginRequest request) throws Exception {
 
         Map<String, String> tokens = authService.login(request);
 

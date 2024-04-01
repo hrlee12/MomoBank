@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,7 +32,8 @@ public class BudgetController {
     @Operation(summary = "현재 예산 목록 조회", description = "모임 내 예산 목록 조회")
     @GetMapping("/budgets-list")
     public ResponseEntity<?> getBudgetsList(@PathVariable int id,
-        @RequestBody GetBudgetListRequest request) {
+        @RequestParam int memberId) {
+        GetBudgetListRequest request = new GetBudgetListRequest(memberId);
         return CommonResponse.toResponseEntity(HttpStatus.OK, "현재 예산 목록 조회 성공",
             budgetService.getBudgetsList(request.memberId(), id));
     }
