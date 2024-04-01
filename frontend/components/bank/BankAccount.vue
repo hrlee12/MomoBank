@@ -56,10 +56,10 @@ const goNext = (param) => {
   <div v-if="accountInfo" class="content account-content">
     <div class="account-item">
       <div class="account-info">
-        <h2>{{ accountInfo.accountName }}</h2>
+        <h2>{{ accountInfo.accountProductName }}</h2>
         <div class="account-no">
           <p @click="copyTextToClipboard(accountInfo.accountNumber)">
-            {{ accountInfo.accountType }} {{ accountInfo.accountNumber }}
+            {{ accountInfo.accountProductType }} {{ accountInfo.accountNumber }}
           </p>
         </div>
       </div>

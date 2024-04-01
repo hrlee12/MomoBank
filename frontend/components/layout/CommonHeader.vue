@@ -38,6 +38,10 @@ const pageTitle = computed(() => {
 
     "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
     "bank-account-create": { title: "계좌개설", sideMenuActive: FULL_MENU },
+    "bank-account-create-agree": {
+      title: "약관동의",
+      sideMenuActive: NO_SIDE_MENU,
+    },
     "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
     "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
     "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
