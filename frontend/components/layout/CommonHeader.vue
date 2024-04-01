@@ -37,6 +37,7 @@ const pageTitle = computed(() => {
     },
 
     "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
+    "bank-account-create": { title: "계좌개설", sideMenuActive: FULL_MENU },
     "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
     "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
     "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },
@@ -49,6 +50,7 @@ const pageTitle = computed(() => {
       sideMenuActive: NO_SIDE_MENU,
     },
     "bank-remit": { title: "송금", sideMenuActive: NO_SIDE_MENU },
+    "bank-remit-money-input": { title: "송금", sideMenuActive: NO_SIDE_MENU },
     "bank-remit-confirm-remit": {
       title: "송금확인",
       sideMenuActive: NO_SIDE_MENU,

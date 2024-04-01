@@ -18,8 +18,9 @@ defineProps({
         <p>{{ corpName }}</p>
       </div>
       <div class="right">
-        <p class="emphasize">{{ benefits[0] }}</p>
-        <p class="emphasize">{{ benefits[1] }}</p>
+        <p v-for="(benefit, index) in benefits" :key="index" class="emphasize">
+          {{ benefit }}
+        </p>
       </div>
     </div>
   </div>

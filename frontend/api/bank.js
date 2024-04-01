@@ -5,7 +5,7 @@ export function useBankApi() {
   const { $axios } = useNuxtApp();
 
   const getMyAccountList = async (memberId) => {
-    return await $axios.get(`/bank/my-accounts?memberId=${memberId}`);
+    return await $axios.get(`/user/bank/my-accounts/${memberId}`);
   };
 
   const deleteLike = async (cardId) => {
