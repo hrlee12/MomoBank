@@ -8,6 +8,7 @@ definePageMeta({
 
 const completeWrite = ref(false);
 
+
 const goBack = () => {
   window.history.back();
 };
@@ -33,7 +34,6 @@ const announcement = {
 const urlList = ref(announcement.image);
 
 const files = ref([]);
-let filesLength = 0;
 
 const handleFileSelect = (event) => {
   files.value.push(event.target.files[0]);
@@ -123,7 +123,13 @@ function okButton(changeComplte) {
       <div class="text-lg font-semibold text-gray-color">
         새로운 이미지 추가
       </div>
-      <input type="file" hidden id="fileInput" @change="handleFileSelect" />
+      <input
+        type="file"
+        hidden
+        id="fileInput"
+        @change="handleFileSelect"
+        accept="image/png, image/jpeg"
+      />
       <div
         @click="selectFile"
         class="w-[30px] h-[30px] flex justify-center items-center border-2 border-light-gray-color"

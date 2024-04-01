@@ -138,7 +138,7 @@ const groupDetails = [
       </div>
     </div>
     <div class="flex-col ml-3 mr-3">
-      <NuxtLink to="/groups/view-all-group-members">
+      <NuxtLink to="/groups/members">
         <div
           class="flex items-center justify-between w-full pt-2 pb-2 border-b-2 border-light-gray-color"
         >

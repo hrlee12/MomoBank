@@ -1,5 +1,4 @@
 <script setup>
-
 import SelectAnnouncementType from "~/components/announcement-write/SelectAnnouncementType.vue";
 import CreateVoteType from "~/components/announcement-write/CreateVoteType.vue";
 import CreateNormalAnnouncement from "~/components/announcement-write/CreateNormalAnnouncement.vue";
@@ -12,6 +11,7 @@ definePageMeta({
 const currentStep = ref("SelectAnnouncementType");
 const selectedVote = ref(null);
 const completeWrite = ref(false);
+const alongButton = ref(true);
 
 const changeStep = (step) => {
   currentStep.value = step;
@@ -50,6 +50,7 @@ function okButton(changeComplte) {
     >
     </CreateNormalAnnouncement>
     <CompleteModal
+      :alongButton="alongButton"
       v-if="completeWrite === true"
       @ok-button="okButton"
     ></CompleteModal>

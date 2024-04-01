@@ -96,75 +96,83 @@ const calPercentage = (goalBudget, curBudget) => {
     <div class="mr-3 text-sm font-semibold text-gray-color">전체보기</div>
   </div>
   <div class="mb-20">
-    <div
-      class="flex flex-col items-center"
-      v-for="item in budgetList"
-      :key="item.id"
-    >
+    <nuxt-link to="/groups/budget/detail">
       <div
-        class="flex justify-center w-3/12 mt-5 rounded-lg bg-light-gray-color"
+        class="flex flex-col items-center"
+        v-for="item in budgetList"
+        :key="item.id"
       >
-        <div class="font-bold">
-          {{ item.goalDay }}
-        </div>
-      </div>
-      <div
-        class="flex flex-col w-11/12 h-32 mt-2 bg-white border-8 border-white rounded-2xl"
-      >
-        <!-- setting icon -->
-        <div class="flex justify-between">
-          <div
-            class="overflow-hidden text-lg font-bold text-ellipsis w-60 whitespace-nowrap"
-          >
-            {{ item.title }}
-          </div>
-          <!-- TODO : 납부 완/미완을 데이터 넘어오면 그걸로 if문 넣고 색상 바꾸자. -->
-          <div class="text-positive-color text-[13px]">{{ item.status }}</div>
-          <div class="w-6 h-6">
-            <img :src="getImageUrl('setting-icon.png', 0)" alt="setting icon" />
+        <div
+          class="flex justify-center w-3/12 mt-5 rounded-lg bg-light-gray-color"
+        >
+          <div class="font-bold">
+            {{ item.goalDay }}
           </div>
         </div>
-        <!-- 매월 x일 입금, 월마다 입금 금액 -->
-        <div class="flex justify-between pt-2 mb-3">
-          <div class="font-bold">{{ item.monthly }}</div>
-          <div class="font-bold">{{ item.monthPayments }}</div>
-        </div>
-        <!-- 납입 여부 -->
-        <div class="flex items-center justify-between">
-          <div></div>
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="pr-1 text-xs whitespace-nowrap">0원</div>
-          <!-- 게이지로 표시 -->
-          <div class="relative w-full h-7">
+        <div
+          class="flex flex-col w-11/12 h-32 mt-2 bg-white border-8 border-white rounded-2xl"
+        >
+          <!-- setting icon -->
+          <div class="flex justify-between">
             <div
-              class="absolute inset-0 overflow-hidden bg-gray-200 rounded-full"
+              class="overflow-hidden text-lg font-bold text-ellipsis w-60 whitespace-nowrap"
             >
-              <div></div>
+              {{ item.title }}
+            </div>
+            <!-- TODO : 납부 완/미완을 데이터 넘어오면 그걸로 if문 넣고 색상 바꾸자. -->
+            <div class="text-positive-color text-[13px]">{{ item.status }}</div>
+            <div class="w-6 h-6">
+              <img
+                :src="getImageUrl('setting-icon.png', 0)"
+                alt="setting icon"
+              />
+            </div>
+          </div>
+          <!-- 매월 x일 입금, 월마다 입금 금액 -->
+          <div class="flex justify-between pt-2 mb-3">
+            <div class="font-bold">{{ item.monthly }}</div>
+            <div class="font-bold">{{ item.monthPayments }}</div>
+          </div>
+          <!-- 납입 여부 -->
+          <div class="flex items-center justify-between">
+            <div></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="pr-1 text-xs whitespace-nowrap">0원</div>
+            <!-- 게이지로 표시 -->
+            <div class="relative w-full h-7">
               <div
-                class="h-full bg-main-color"
-                :style="{
-                  width: calPercentage(item.goalBudget, item.curBudget) + '%',
-                }"
-              ></div>
+                class="absolute inset-0 overflow-hidden bg-gray-200 rounded-full"
+              >
+                <div></div>
+                <div
+                  class="h-full bg-main-color"
+                  :style="{
+                    width: calPercentage(item.goalBudget, item.curBudget) + '%',
+                  }"
+                ></div>
+              </div>
+              <div
+                class="absolute flex items-center justify-center w-full h-full"
+              >
+                <span class="font-bold">{{ item.curBudget }}원</span>
+              </div>
             </div>
-            <div
-              class="absolute flex items-center justify-center w-full h-full"
-            >
-              <span class="font-bold">{{ item.curBudget }}원</span>
-            </div>
+            <div class="text-xs w-7">{{ item.goalBudget / 10000 }}만원</div>
           </div>
-          <div class="text-xs w-7">{{ item.goalBudget / 10000 }}만원</div>
         </div>
       </div>
-    </div>
+    </nuxt-link>
+
     <!-- 예산 추가 -->
-    <div
-      class="flex items-center justify-center w-11/12 h-16 mx-auto mt-5 bg-light-gray-color rounded-xl"
-    >
-      <div>
-        <img class="w-8 h-8" :src="getImageUrl('add-icon.png', 0)" />
+    <nuxt-link to="/groups/budget/add">
+      <div
+        class="flex items-center justify-center w-11/12 h-16 mx-auto mt-5 bg-light-gray-color rounded-xl"
+      >
+        <div>
+          <img class="w-8 h-8" :src="getImageUrl('add-icon.png', 0)" />
+        </div>
       </div>
-    </div>
+    </nuxt-link>
   </div>
 </template>

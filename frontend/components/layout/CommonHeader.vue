@@ -65,6 +65,9 @@ const pageTitle = computed(() => {
       title: "카드선택",
       sideMenuActive: NO_SIDE_MENU,
     },
+    "bank-account-create-password-check": {
+      sideMenuActive: NO_SIDE_MENU,
+    },
   };
 
   return (

@@ -30,11 +30,11 @@ const pageTitle = computed(() => {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
     return "입금 현황";
-  } else if (route.name === "groups-my-feed") {
+  } else if (route.name === "groups-feed-my") {
     return "나의 모임";
   } else if (route.name === "groups-report") {
     return "리포트";
-  } else if (route.name === "groups-view-all-group-members") {
+  } else if (route.name === "groups-members") {
     return "모임 인원";
   } else if (
     route.name === "groups-announcement" ||
@@ -51,12 +51,27 @@ const pageTitle = computed(() => {
   ) {
     noSideMenu.value = true;
     return "공지사항 수정";
+  } else if (route.name === "groups-feed-write") {
+    noSideMenu.value = true;
+    return "새 게시물";
+  } else if (route.name === "groups-feed-detail") {
+    noSideMenu.value = true;
+    return "게시물";
+  } else if (route.name === "groups-budget-add") {
+    noSideMenu.value = true;
+    return "예산 추가";
+  } else if (route.name === "groups-budget-detail") {
+    noSideMenu.value = true;
+    return "예산 상세";
+  } else if (route.name === "groups-menu") {
+    noSideMenu.value = true;
+    return "추가 메뉴";
   }
 });
 </script>
 
 <template>
-  <header class="flex flex-row justify-between pt-3 bg-white h-14">
+  <header class="flex items-center justify-between pt-1 bg-white h-14">
     <div v-if="noArrowMenu === false">
       <div @click="goBack">
         <img
@@ -80,11 +95,13 @@ const pageTitle = computed(() => {
           :src="getImageUrl('bell-icon.png', 0)"
           alt="bell-icon"
         />
-        <img
-          class="mr-4 w-7 h-7"
-          :src="getImageUrl('home-icon.png', 0)"
-          alt="home-icon"
-        />
+        <nuxt-link to="/bank">
+          <img
+            class="mr-4 w-7 h-7"
+            :src="getImageUrl('home-icon.png', 0)"
+            alt="home-icon"
+          />
+        </nuxt-link>
       </div>
     </div>
     <div class="flex" v-if="noSideMenu === true">
