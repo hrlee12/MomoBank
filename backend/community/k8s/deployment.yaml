@@ -15,5 +15,6 @@ spec:
       containers:
         - name: community
           image: minwoo540/momo:community-latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8083

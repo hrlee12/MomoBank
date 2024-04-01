@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
+
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +19,30 @@ import java.util.List;
 
 import static java.awt.SystemColor.info;
 
+import java.util.List;
+//
+// @OpenAPIDefinition(
+//     info = @Info(title="유저서비스 API 명세서", version = "v1", description = "유저서비스 API v1 문서입니다.")
+// )
+// @RequiredArgsConstructor
+// @Configuration
+// public class SwaggerConfig {
+//
+//     @Bean
+//     public OpenAPI customOpenAPI(@Value("${openapi.service.url}") String url) {
+//         return new OpenAPI()
+//             .servers(List.of(new Server().url(url)))
+//             .components(new Components().addSecuritySchemes("Bearer",
+//                 new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
+//             .addSecurityItem(new SecurityRequirement().addList("Bearer"));
+//
+//     }
+//
+// }
+
 @OpenAPIDefinition(
-        info = @Info(title="유저서비스 API 명세서", version = "v1", description = "유저서비스 API v1 문서입니다.")
+    info = @Info(title="유저서비스 API 명세서", version = "v1", description = "유저서비스 API v1 문서입니다.")
 )
-@RequiredArgsConstructor
 @Configuration
 @SecuritySchemes({
         @SecurityScheme(
