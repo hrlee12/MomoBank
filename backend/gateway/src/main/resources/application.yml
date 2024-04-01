@@ -3,27 +3,16 @@ server:
 
 
 spring:
+  config:
+    import: classpath:application-private.yml
   application:
     name: gateway
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: http://user.default.svc.cluster.local:8082
-          predicates:
-            - Path=/api/user/**
-        - id: community-service
-          uri: http://community.default.svc.cluster.local:8083
-          predicates:
-            - Path=/api/community/**
-        - id: bank-service
-          uri: http://bank.default.svc.cluster.local:8084
-          predicates:
-            - Path=/api/bank/**
       globalcors:
         corsConfigurations:
           '[/**]': # 모든 경로에 대해 CORS 설정을 적용합니다.
-            allowedOrigins: 
+            allowedOrigins:
               - "http://j10a505.p.ssafy.io"
               - "https://j10a505.p.ssafy.io"
               - "http://localhost"
@@ -75,3 +64,7 @@ openapi:
   service:
     # API Gateway 포트
     url: http://j10a505.p.ssafy.io/api
+
+
+
+
