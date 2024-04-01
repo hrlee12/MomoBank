@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,14 +55,20 @@ public class BankController {
 
     @Operation(summary = "계좌 상세 조회", description = "특정 계좌 상세를 조회합니다.")
     @GetMapping("/account-detail")
-    public ResponseEntity<?> getAccountDetail(@RequestBody GetAccountDetailRequest request) {
+    public ResponseEntity<?> getAccountDetail(
+        @RequestParam int memberId,
+        @RequestParam int accountId) {
+        GetAccountDetailRequest request = new GetAccountDetailRequest(memberId, accountId);
         return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 상세 죄회 성공",
             bankService.getAccountDetail(request.memberId(), request.accountId()));
     }
 
     @Operation(summary = "본인 계좌 거래 내역 조회", description = "사용자의 계좌 거래 내역을 조회합니다.")
     @GetMapping("/get-transfer")
-    public ResponseEntity<?> getTransafer(@RequestBody GetAccountTransferRequest request) {
+    public ResponseEntity<?> getTransafer(
+        @RequestParam int memberId,
+        @RequestParam int accountId) {
+        GetAccountTransferRequest request = new GetAccountTransferRequest(memberId, accountId);
         return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 거래 내역 죄회 성공",
             bankService.getTransfer(request.memberId(), request.accountId()));
     }
@@ -103,8 +110,9 @@ public class BankController {
     }
 
     @Operation(summary = "계좌 조회", description = "계좌 조회")
-    @GetMapping("/account-search")
-    public ResponseEntity<?> searchAccount(@RequestBody SearchAccountRequest request) {
+    @PostMapping("/account-search")
+    public ResponseEntity<?> searchAccount(
+        @RequestBody SearchAccountRequest request) {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "계좌 조회 성공",
             bankService.searchAccount(request.myAccountId(), request.bankName(),
                 request.accountNumber()));
