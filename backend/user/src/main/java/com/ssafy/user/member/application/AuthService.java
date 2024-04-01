@@ -2,7 +2,9 @@ package com.ssafy.user.member.application;
 
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
+import com.ssafy.user.common.util.EncryptUtil;
 import com.ssafy.user.common.util.JwtUtil;
+import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import com.ssafy.user.member.dto.request.LoginRequest;
@@ -11,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,11 +28,10 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-//    private final PasswordEncoder passwordEncoder;
+    private final RedisUtil redisUtil;
 
 
-
-    public Map<String, String> login(LoginRequest request) {
+    public Map<String, String> login(LoginRequest request) throws Exception {
         Member member = memberRepository.findByIdAndIsDeletedFalse(request.getId())
                             .orElseThrow(()-> new CustomException(ErrorCode.NO_MEMBER_INFO));
 
@@ -38,8 +42,29 @@ public class AuthService {
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
         }
 
-        String accessToken = jwtUtil.createAccessToken(member.getId());
-        String refreshToken = jwtUtil.createRefreshToken(member.getId());
+
+        return makeJwtTokens(request.getId());
+    }
+
+    public Map<String, String> regenerateToken(String refreshToken) throws Exception {
+
+        String memberId = jwtUtil.getMemberId(refreshToken);
+
+        if(!redisUtil.existKey(memberId)){
+            throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+        };
+
+        return makeJwtTokens(memberId);
+    }
+
+
+
+    private Map<String, String> makeJwtTokens(String memberId){
+
+
+        String accessToken = jwtUtil.createAccessToken(memberId);
+        String refreshToken = jwtUtil.createRefreshToken(memberId);
+
 
         Map<String, String> tokens = new HashMap<>();
 
@@ -47,6 +72,8 @@ public class AuthService {
         tokens.put("refreshToken", refreshToken);
 
         return tokens;
-//    return null;
-    }
+
+    };
+
+
 }
