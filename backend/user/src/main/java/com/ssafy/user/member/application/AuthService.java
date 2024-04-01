@@ -54,6 +54,12 @@ public class AuthService {
             throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         };
 
+        String storedToken = redisUtil.getValues(memberId);
+
+        if (!refreshToken.equals(storedToken)){
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+
         return makeJwtTokens(memberId);
     }
 

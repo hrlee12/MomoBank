@@ -32,7 +32,7 @@ public class AuthController {
     @Operation(summary = "어세스 토큰 재발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "재발급 성공"),
-            @ApiResponse(responseCode = "401", description = "만료된 리프레쉬 토큰")
+            @ApiResponse(responseCode = "401", description = "만료된 리프레쉬 토큰입니다. <br> 유효하지 않은 리프레쉬 토큰입니다. ")
     })
     @PostMapping("/regenerate")
     public ResponseEntity regenerateToken(@RequestHeader("refreshToken") String refreshToken) throws Exception {
