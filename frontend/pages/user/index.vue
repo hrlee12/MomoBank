@@ -43,8 +43,8 @@ const login = async () => {
   await loginRequest(
     //
     {
-      id: loginInfo.userId,
-      password: loginInfo.password,
+      id: loginInfo.value.userId,
+      password: loginInfo.value.userPassword,
     },
     (data) => {
       console.log(data);
@@ -71,11 +71,11 @@ const login = async () => {
       />
       <input
         class="login-item"
-        type="text"
+        type="password"
         placeholder="비밀번호"
         v-model="loginInfo.userPassword"
       />
-      <button class="prime-btn login-item" @click="loginRequest">로그인</button>
+      <button class="prime-btn login-item" @click="login">로그인</button>
       <NuxtLink to="/user/find-password"
         ><p class="font-small">비밀번호를 잊으셨나요?</p></NuxtLink
       >
