@@ -141,5 +141,14 @@ public class MemberController {
     }
 
 
+    @ApiResponse(responseCode = "200", description = "로그아웃 완료")
+    @DeleteMapping("/logout")
+    public ResponseEntity logout(@RequestHeader("X-Authorization-Id") String memberId) throws Exception {
+
+        memberService.logout(memberId);
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "로그아웃 완료", null);
+    }
+
 
 }
