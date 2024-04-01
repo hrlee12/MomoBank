@@ -64,6 +64,8 @@ public class FeedService {
                     .likesCount(feed.getLikesCount())
                     .createdAt(feed.getCreatedAt())
                     .updatedAt(feed.getUpdatedAt())
+                    .groupMemberId(feed.getGroupMember().getGroupMemberId())
+                    .groupMemberName(feed.getGroupMember().getMember().getName())
                     .build();
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
