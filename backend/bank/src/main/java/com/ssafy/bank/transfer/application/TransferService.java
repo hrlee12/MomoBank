@@ -9,9 +9,11 @@ import com.ssafy.bank.transfer.domain.repository.TransferRepository;
 import com.ssafy.bank.transfer.dto.request.PasswordConfirmRequest;
 import com.ssafy.bank.transfer.dto.request.TransferRequest;
 import com.ssafy.bank.transfer.dto.response.PasswordConfirmResponse;
+import com.ssafy.bank.transfer.dto.response.TransferKafkaResponse;
 import com.ssafy.bank.transfer.dto.response.TransferResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +23,7 @@ public class TransferService {
 
     private final TransferRepository transferRepository;
     private final AccountRepository accountRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public TransferResponse transfer(TransferRequest request) {
 
@@ -48,14 +51,25 @@ public class TransferService {
 
         transferRepository.save(transfer);
 
+        TransferKafkaResponse response = new TransferKafkaResponse(
+            transfer.getTransferId(),
+            transfer.getAmount(),
+            transfer.getDescription(),
+            transfer.getFromBalance(),
+            transfer.getToBalance(),
+            transfer.getFromAccount(),
+            transfer.getToAccount()
+        );
+
+        kafkaTemplate.send("transfer", response);
+
         return new TransferResponse(
             fromAccount.getAccountNumber(),
             request.fromAccountId(),
             toAccount.getMember().getName(),
             request.amount(),
             transfer.getDescription(),
-            transfer.getFromBalance()
-        );
+            transfer.getFromBalance());
     }
 
     public PasswordConfirmResponse passwordConfirm(PasswordConfirmRequest request) {

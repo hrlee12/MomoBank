@@ -8,6 +8,7 @@ import com.ssafy.bank.account.dto.request.CreateAccountRequest;
 import com.ssafy.bank.account.dto.request.DeleteAccountRequest;
 import com.ssafy.bank.account.dto.response.AccountResponse;
 import com.ssafy.bank.account.dto.response.BankResponse;
+import com.ssafy.bank.account.dto.response.AccountKafkaResponse;
 import com.ssafy.bank.account.dto.response.GetAllAccountProductResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
@@ -17,6 +18,7 @@ import jakarta.transaction.Transactional;
 import java.security.SecureRandom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +29,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountProductRepository accountProductRepository;
     private final MemberRepository memberRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public AccountResponse createAccount(CreateAccountRequest request) {
         Member member = memberCheck(request.memberId());
@@ -42,17 +45,29 @@ public class AccountService {
 
         int secureRandomNumber = secureRandom.nextInt(1000);
 
-        System.out.println("SecureRandom을 사용한 랜덤한 3자리 숫자: " + secureRandomNumber);
-
         Account account = Account.builder()
             .accountProduct(accountProduct)
             .accountNumber("505-01-"
-                + String.format("%03d", (accountProduct.getAccountProductId() * member.getMemberId())%1000)
+                + String.format("%03d",
+                (accountProduct.getAccountProductId() * member.getMemberId()) % 1000)
                 + String.format("%03d", secureRandomNumber))
             .accountPassword(request.accountPassword())
             .member(member)
             .build();
+
         accountRepository.save(account);
+
+        AccountKafkaResponse response = new AccountKafkaResponse(
+            account.getAccountId(),
+            account.getAccountNumber(),
+            accountProduct.getAccountType(),
+            accountProduct.getBank().getBankName(),
+            accountProduct.getInterestRate(),
+            account.getBalance(),
+            account.getMember()
+        );
+
+        kafkaTemplate.send("createAccount", response);
 
         return AccountResponse.from(account, accountProduct);
     }
@@ -78,6 +93,19 @@ public class AccountService {
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT_PRODUCT));
 
         account.softDelete();
+
+        AccountKafkaResponse response = new AccountKafkaResponse(
+            account.getAccountId(),
+            account.getAccountNumber(),
+            accountProduct.getAccountType(),
+            accountProduct.getBank().getBankName(),
+            accountProduct.getInterestRate(),
+            account.getBalance(),
+            account.getMember()
+        );
+
+        kafkaTemplate.send("deleteAccount", response);
+
         return AccountResponse.from(account, accountProduct);
     }
 
