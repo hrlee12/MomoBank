@@ -6,7 +6,7 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
 server:
-  port: 8084
+  port: 8083
   servlet:
     context-path: /api/community
 
@@ -14,10 +14,12 @@ spring:
   kafka:
     producer:
       bootstrap-servers: my-kafka.default.svc.cluster.local:9092
+#      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       bootstrap-servers: my-kafka.default.svc.cluster.local:9092
+#      bootstrap-servers: localhost:9092
       group-id: myGroup
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
