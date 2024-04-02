@@ -15,6 +15,6 @@ public class InsertMemberVO {
     private String name;
     private String id;
     private String password;
-    private LocalDateTime birthdate;
+    private String birthdate;
     private String phoneNumber;
 }
