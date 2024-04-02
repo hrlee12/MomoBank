@@ -116,21 +116,27 @@ public class BankCallService {
     // 송금
     public ResponseEntity transfer(TransferRequest request){
         ResponseEntity response;
+
+        Account fromAccount = accountCheck(request.fromAccountId());
+        Account toAccount = accountCheck(request.toAccountId());
+
+        if (fromAccount.getBalance() < request.amount()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_FUNDS);
+        }
+
+        fromAccount.updateBalance(fromAccount.getBalance() - request.amount());
+        toAccount.updateBalance(toAccount.getBalance() + request.amount());
+
         try{
             response = restTemplateUtil.send(bankUrl + "/api/bank/transfers/transfer",
                 HttpMethod.POST, request);
         }catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
+        }finally {
+            accountRepository.save(fromAccount);
+            accountRepository.save(toAccount);
         }
-        Account fromAccount = accountCheck(request.fromAccountId());
-        Account toAccount = accountCheck(request.toAccountId());
-
-        fromAccount.updateBalance(fromAccount.getBalance() - request.amount());
-        toAccount.updateBalance(toAccount.getBalance() + request.amount());
-
-        accountRepository.save(fromAccount);
-        accountRepository.save(toAccount);
         return response;
     }
 
