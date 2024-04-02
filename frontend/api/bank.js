@@ -19,7 +19,6 @@ export function useBankApi() {
 
   // 송금할 계좌 정보 조회
   const getTargetAccountInfo = async (data, success, fail) => {
-    console.log("axios 내부: ", data);
     return await $axios
       .post("/user/bank/account-search", data)
       .then(success)
@@ -44,8 +43,17 @@ export function useBankApi() {
     return await $axios.get(`/user/bank/bank-list`);
   };
 
-  const deleteLike = async (cardId) => {
-    return await $axios.delete(`/flashcard/${cardId}/favorite`);
+  // 은행사 생성 가능한 계좌 종류 조회
+  const getBankAccountTypeList = async () => {
+    return await $axios.get(`user/bank/account-products`);
+  };
+
+  // 은행사 계좌 생성
+  const createBankAccount = (data, success, fail) => {
+    return $axios
+      .post(`user/bank/create-account`, data)
+      .then(success)
+      .catch(fail);
   };
 
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
@@ -56,5 +64,7 @@ export function useBankApi() {
     getTransactionHistory,
     getBankList,
     getTargetAccountInfo,
+    getBankAccountTypeList,
+    createBankAccount,
   };
 }

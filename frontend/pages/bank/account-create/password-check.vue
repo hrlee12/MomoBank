@@ -1,6 +1,9 @@
 <script setup>
 import { useRouter } from "vue-router";
+import { useBankApi } from "~/api/bank";
+
 const router = useRouter();
+const { createBankAccount } = useBankApi();
 
 definePageMeta({
   layout: "action",
@@ -89,8 +92,34 @@ const backspace = () => {
   }
 };
 
-const goNext = () => {
-  router.push("/bank");
+// 입력된 숫자 배열을 하나의 숫자로 바꾼다.
+const stringPassword = ref("");
+const changePasswordArrayToString = () => {
+  for (digit in checkPassword) {
+    stringPassword.value += digit;
+  }
+};
+
+const goNext = async () => {
+  if (failPass.value) {
+    // 계좌 생성 요청 api 호출
+    const response = await createBankAccount(
+      {
+        memberId: 2,
+        accountProductId: 0,
+        accountPassword: stringPassword.value,
+      },
+      (data) => {
+        console.log("계좌 생성에 성공했습니다: ", data.data);
+        alert("계좌 생성에 성공했습니다.");
+        // 메인 페이지 이동
+        router.push("/bank");
+      },
+      (error) => {
+        console.log("계좌 생성에 실패했습니다: ", error);
+      }
+    );
+  }
 };
 </script>
 
