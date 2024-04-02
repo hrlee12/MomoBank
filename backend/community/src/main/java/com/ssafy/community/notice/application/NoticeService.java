@@ -31,6 +31,7 @@ public class NoticeService {
                 .map(notice -> NoticeListResponse.builder()
                         .notedId(notice.getNoticeId())
                         .title(notice.getTitle())
+                        .memberName(notice.getGroupMember().getName())
                         .content(notice.getContent())
                         .createdAt(notice.getCreatedAt())
                         .updatedAt(notice.getUpdatedAt())
@@ -52,6 +53,7 @@ public class NoticeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Group Member ID: " + request.getGroupMemberId()));
 
         notice.setGroupInfo(groupMember.getGroupInfo());
+        notice.setGroupMember(groupMember);
         noticeRepository.save(notice);
 
         // TODO: 여기에 알림 전송 로직 추가 (Firebase Cloud Messaging 사용)
