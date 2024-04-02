@@ -11,6 +11,7 @@ import com.ssafy.community.notice.dto.response.NoticeListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,10 +25,11 @@ public class NoticeService {
     private final GroupMemberRepository groupMemberRepository;
 
     // 공지사항 리스트 조회
-    public List<NoticeListResponse> getNoticeList() {
+    public List<NoticeListResponse> getNoticeList(Integer groupId) {
         List<Notice> notices = noticeRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
         return notices.stream()
                 .map(notice -> NoticeListResponse.builder()
+                        .notedId(notice.getNoticeId())
                         .title(notice.getTitle())
                         .content(notice.getContent())
                         .createdAt(notice.getCreatedAt())
@@ -46,7 +48,8 @@ public class NoticeService {
         notice.setUpdatedAt(LocalDateTime.now());
         notice.setIsDeleted(false);
 
-        GroupMember groupMember = groupMemberRepository.findGroupMemberByMemberId(request.getMemberId());
+        GroupMember groupMember = groupMemberRepository.findById(request.getGroupMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Group Member ID: " + request.getGroupMemberId()));
 
         notice.setGroupInfo(groupMember.getGroupInfo());
         noticeRepository.save(notice);
