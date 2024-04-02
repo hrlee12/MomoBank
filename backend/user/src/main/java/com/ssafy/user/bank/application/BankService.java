@@ -14,6 +14,7 @@ import com.ssafy.user.bank.dto.response.SearchToAccountResponse;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.util.KafkaUtil;
+import com.ssafy.user.member.domain.Member;
 import jakarta.transaction.Transactional;
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +43,8 @@ public class BankService {
             .accountType(accountInfo.get("accountType").equals("입출금자유예금")? AccountType.입출금 : accountInfo.get("accountType").equals("정기예금")? AccountType.정기예금 : AccountType.적금)
             .bankName((String)accountInfo.get("bankName"))
             .interestRate(Float.parseFloat(accountInfo.get("interestRate").toString()))
-            .balance((long)accountInfo.get("balance"))
+            .balance(Long.parseLong(accountInfo.get("balance").toString()))
+            .member((Member) accountInfo.get("member"))
             .build();
 
         accountRepository.save(account);
@@ -63,10 +65,10 @@ public class BankService {
 
         Transfer transfer = Transfer.builder()
             .transferId((int) transferInfo.get("transferId"))
-            .amount((long) transferInfo.get("amount"))
+            .amount(Long.parseLong(transferInfo.get("amount").toString()))
             .description((String) transferInfo.get("description"))
-            .fromBalance((long) transferInfo.get("fromBalance"))
-            .toBalance((long) transferInfo.get("toBalance"))
+            .fromBalance(Long.parseLong(transferInfo.get("fromBalance").toString()))
+            .toBalance(Long.parseLong(transferInfo.get("toBalance").toString()))
             .fromAccount((Account) transferInfo.get("fromAccount"))
             .toAccount((Account) transferInfo.get("toAccount"))
             .build();
