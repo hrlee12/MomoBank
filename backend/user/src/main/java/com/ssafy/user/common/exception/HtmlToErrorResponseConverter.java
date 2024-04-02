@@ -26,7 +26,7 @@ public class HtmlToErrorResponseConverter extends AbstractHttpMessageConverter<E
         // HTML에서 오류 코드와 메시지를 추출하는 로직 구현
         // 예제로, 단순화된 처리를 하고 있으며 실제로는 HTML 구조에 따라 다를 수 있습니다.
         return ErrorResponse.builder()
-            .status(404)
+            .status(200)
             .message("CONVERTER_ERROR")
             .body(html)
             .build();
