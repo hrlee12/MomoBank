@@ -11,7 +11,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
     List<Notice> findAllByIsDeletedFalseOrderByCreatedAtDesc();
 
     // groupId를 이용해 삭제되지 않은 공지사항을 조회하는 메서드 추가
-    @Query("SELECT n FROM Notice n WHERE n.isDeleted = false AND n.groupId = :groupId ORDER BY n.createdAt DESC")
-    List<Notice> findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(Integer groupId);
+    @Query("SELECT n FROM Notice n WHERE n.isDeleted = false AND n.groupInfo.groupInfoId = :groupInfoId ORDER BY n.createdAt DESC")
+    List<Notice> findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(Integer groupInfoId);
 
 }

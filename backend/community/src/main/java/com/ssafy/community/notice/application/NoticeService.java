@@ -27,10 +27,10 @@ public class NoticeService {
     private final GroupMemberRepository groupMemberRepository;
 
     // 공지사항 리스트 조회
-    public List<NoticeListResponse> getNoticeList(Integer groupId) {
-        log.info("getNoticeList groupId: {}", groupId);
+    public List<NoticeListResponse> getNoticeList(Integer groupInfoId) {
+        log.info("getNoticeList groupInfoId: {}", groupInfoId);
 
-        List<Notice> notices = noticeRepository.findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(groupId);
+        List<Notice> notices = noticeRepository.findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(groupInfoId);
         return notices.stream()
                 .map(notice -> NoticeListResponse.builder()
                         .notedId(notice.getNoticeId())
