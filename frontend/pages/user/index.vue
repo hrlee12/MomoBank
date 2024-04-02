@@ -43,8 +43,8 @@ const login = async () => {
   await loginRequest(
     //
     {
-      id: loginInfo.userId,
-      password: loginInfo.password,
+      id: loginInfo.value.userId,
+      password: loginInfo.value.userPassword,
     },
     (data) => {
       console.log(data);
@@ -71,11 +71,11 @@ const login = async () => {
       />
       <input
         class="login-item"
-        type="text"
+        type="password"
         placeholder="비밀번호"
         v-model="loginInfo.userPassword"
       />
-      <button class="prime-btn login-item" @click="loginRequest">로그인</button>
+      <button class="prime-btn login-item" @click="login">로그인</button>
       <NuxtLink to="/user/find-password"
         ><p class="font-small">비밀번호를 잊으셨나요?</p></NuxtLink
       >
@@ -84,14 +84,6 @@ const login = async () => {
       <NuxtLink to="/user/authenicate">
         <button class="second-btn login-item">새 계정 만들기</button></NuxtLink
       >
-      <div class="icon-item">
-        <p class="login-item">간편 로그인</p>
-        <img
-          class="login-item"
-          :src="getImageUrl('kakako-icon.png', 0)"
-          alt=""
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -113,6 +105,7 @@ const login = async () => {
 
   p {
     font-size: 1.8vh;
+    margin-top: 5%;
   }
 }
 

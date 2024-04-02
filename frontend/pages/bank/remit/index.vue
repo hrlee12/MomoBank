@@ -14,15 +14,12 @@ const handleUpdate = (eventPayload) => {
   // -> { myAccountName, myAccountBalance, targetAccountId, targetUserName }
   // 인증이 성공적이라면 데이터 업데이트 (메뉴 인덱스 변경 및 목표 계좌번호 및 은행사 정보)
   // 인증이 실패라면 통과
-  targetAccountInfo.value.accountNumber = formatWithHyphens(
-    eventPayload.targetAccountNumber.value
-  );
 };
 </script>
 
 <template>
   <div class="input-container">
-    <BankRemitAccountInfo @update:menuIndex="handleUpdate" />
+    <BankRemitAccountInfo />
   </div>
 </template>
 

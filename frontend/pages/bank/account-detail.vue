@@ -1,25 +1,17 @@
 <script setup>
 import BankAccount from "~/components/bank/BankAccount.vue";
 import AccountHistory from "~/components/bank/AccountHistory.vue";
+import BankFooter from "~/components/layout/BankFooter.vue";
 
-const { id } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
 definePageMeta({
   layout: "action",
 });
 
-// 받아온 id로 account-detail과 get-transfer api호출
-
 // account-detail temp result
-const accountInfo = ref({
-  accountId: 0,
-  accountType: "입출금",
-  accountName: "저축은행",
-  accountNumber: "123-1234-12345",
-  balance: 1000000,
-});
+const accountInfo = ref({});
 
 // get-transfer temp result
-const totalTransferList = ref([
+const transactionHistory = ref([
   {
     transferList: [
       {
@@ -111,6 +103,44 @@ const totalTransferList = ref([
     date: "02-18", // 일자
   },
 ]);
+
+// 스토어 상태에 접근
+const remitStore = useRemitStore();
+// 받아온 id로 account-detail과 get-transfer api호출
+import { useBankApi } from "~/api/bank";
+const { getAccountDetail, getTransactionHistory } = useBankApi();
+
+// 계좌 상세 정보 요청 함수
+const requestAccountDetail = async () => {
+  try {
+    const memberId = remitStore.memberId;
+    const accountId = remitStore.remitInfo.myAccountId;
+    const response = await getAccountDetail(memberId, accountId);
+    accountInfo.value = response.data.data;
+    console.log("accountInfo: ", accountInfo.value);
+  } catch (error) {
+    console.error("계좌 상세 정보 요청 실패:", error);
+  }
+};
+
+// 거래내역 조회 요청 함수
+const requestTransactionHistory = async () => {
+  try {
+    const memberId = remitStore.memberId;
+    const accountId = remitStore.remitInfo.myAccountId;
+    const response = await getTransactionHistory(memberId, accountId);
+    transactionHistory.value = response.data.data.totalTransferList;
+    console.log("transactionHistory: ", transactionHistory.value);
+  } catch (error) {
+    console.error("거래내역 조회 요청 실패:", error);
+  }
+};
+
+// 컴포넌트 마운트 시 API 요청 실행
+onMounted(async () => {
+  await requestAccountDetail();
+  await requestTransactionHistory();
+});
 </script>
 
 <template>
@@ -119,14 +149,21 @@ const totalTransferList = ref([
       <BankAccount :accountInfo="accountInfo" />
     </div>
 
-    <div class="history-container">
+    <div
+      v-if="transactionHistory.length == 0 || transactionHistory == undefined"
+      class="history-container center"
+    >
+      조회된 기록이 없습니다.
+    </div>
+    <div v-else class="history-container">
       <AccountHistory
-        v-for="(transferList, index) in totalTransferList"
+        v-for="(history, index) in transactionHistory"
         :key="index"
-        :transferInfoPerDate="transferList"
+        :history="history"
       />
     </div>
   </div>
+  <BankFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -154,5 +191,10 @@ const totalTransferList = ref([
   background-color: white;
   border-radius: 15px;
   padding: 3vh 5vw 10vh 5vw;
+  min-height: 60vh;
+}
+
+.center {
+  text-align: center;
 }
 </style>

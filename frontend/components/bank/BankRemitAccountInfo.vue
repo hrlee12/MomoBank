@@ -1,7 +1,6 @@
 <script setup>
 import BankBottomSheetModal from "~/components/layout/BankBottomSheetModal.vue";
 import { useNuxtApp } from "#app";
-import { watchEffect } from "vue";
 
 // Nuxt 앱 인스턴스에서 $router를 가져옵니다.
 const { $router } = useNuxtApp();
@@ -29,13 +28,6 @@ const handleUpdate = (eventPayload) => {
   isModalVisible.value = eventPayload.isVisible;
   if (eventPayload.bankInfo != "") bankInfo.value = eventPayload.bankInfo;
 };
-
-// emit 보내기
-// const emit = defineEmits(["update:menuIndex"]);
-// const goNext = () => {
-//   // emit 전송으로 컴포넌트 교체
-//   emit("update:menuIndex", { menuIndex: 1, targetAccountNumber, bankInfo });
-// };
 
 const goNext = () => {
   remitInfo.targetAccountNumber = targetAccountNumber.value;
