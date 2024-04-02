@@ -19,11 +19,13 @@ import java.security.SecureRandom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -32,6 +34,7 @@ public class AccountService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public AccountResponse createAccount(CreateAccountRequest request) {
+        log.info("CreateAccountRequest : {}", request);
         Member member = memberCheck(request.memberId());
 
         AccountProduct accountProduct = accountProductRepository.findById(
