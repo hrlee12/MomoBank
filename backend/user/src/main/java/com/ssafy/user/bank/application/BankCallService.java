@@ -34,7 +34,7 @@ public class BankCallService {
     public ResponseEntity accountProductList() {
         ResponseEntity response;
         try {
-            response = restTemplateUtil.send(bankUrl + "/accounts/account-products", HttpMethod.GET,
+            response = restTemplateUtil.send(bankUrl + "/api/bank/accounts/account-products", HttpMethod.GET,
                 null);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
@@ -47,7 +47,7 @@ public class BankCallService {
     public ResponseEntity bankList() {
         ResponseEntity response;
         try {
-            response = restTemplateUtil.send(bankUrl + "/accounts/bank-list", HttpMethod.GET,
+            response = restTemplateUtil.send(bankUrl + "/api/bank/accounts/bank-list", HttpMethod.GET,
                 null);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
