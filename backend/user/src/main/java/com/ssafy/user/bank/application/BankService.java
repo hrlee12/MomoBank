@@ -34,7 +34,6 @@ public class BankService {
     private final TransferRepository transferRepository;
     private final KafkaUtil kafkaUtil;
     private final MemberRepository memberRepository;
-    private final AccountRepository accountRepository;
 
     @KafkaListener(topics = "createAccount", groupId = "user")
     public void createAccount(Object data) {
