@@ -70,6 +70,8 @@ public class AccountService {
             account.getMember()
         );
 
+        log.info("AccountKafkaResponse : {}", response);
+
         kafkaTemplate.send("createAccount", response);
 
         return AccountResponse.from(account, accountProduct);
