@@ -3,10 +3,12 @@ import { defineStore } from "pinia";
 
 export const useGroupStore = defineStore("group", {
   state: () => ({
+    link: "https://j10a505.p.ssafy.io/",
     groupHeaderName: "",
     accountNumber: "",
     groupId: undefined,
     paymentStatus: undefined,
+    groupMemberId: undefined,
   }),
   actions: {
     updateGroupHeaderName(newName) {
@@ -20,6 +22,9 @@ export const useGroupStore = defineStore("group", {
     },
     updatePaymentStatus(newPaymentStatus) {
       this.paymentStatus = newPaymentStatus;
+    },
+    updateGroupMemberId(newGroupMemberId) {
+      this.groupMemberId = newGroupMemberId;
     },
   },
 });

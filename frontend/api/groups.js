@@ -28,6 +28,13 @@ export function useGroupApi() {
     return await $axios.get(`/user/groups/${groupId}/members`);
   };
 
+  const getGroupNoticeList = async (groupId) => {
+    return await $axios.get(`/community/notice/list/${groupId}`);
+  };
+
+  const postGroupNotice = async (notice) => {
+    return await $axios.post(`/community/notice/create`, notice);
+  };
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
     getGroupFeedList,
@@ -35,5 +42,7 @@ export function useGroupApi() {
     getGroupDetail,
     getMyGroups,
     getGroupMembers,
+    getGroupNoticeList,
+    postGroupNotice,
   };
 }

@@ -48,17 +48,20 @@ const feedList = ref(null);
 onMounted(() => {
   fetchGroupFeeds(groupId).then((response) => {
     feedList.value = response.content;
-    console.log(feedList.value)
+    // 공지사항 작성 테스트를 위해 임의로 선언
+    groupStore.updateGroupMemberId(4);
+    groupStore.updateGroupId(2);
   });
 
   fetchGroupHome(groupId, memberId).then((response) => {
     groupData.value = response.data;
-    console.log(groupData.value);
     const groupName = groupData.value.groupName;
     groupStore.updateGroupHeaderName(groupName);
     groupStore.updateAccountNumber(groupData.value.accountNumber);
     groupStore.updateGroupId(groupId);
     groupStore.updatePaymentStatus(groupData.value.status);
+    groupStore.updateGroupMemberId(groupData.value.groupMemberId);
+    console.log(groupData.value.groupMemberId);
   });
 });
 
@@ -143,8 +146,10 @@ const toggleText = () => {
   </div>
 
   <!-- 공지사항 -->
-  <nuxt-link to="/groups/announcement">
-    <div class="flex items-center justify-between w-full h-12 mx-auto mt-2 bg-white rounded-xl">
+  <nuxt-link :to="`/groups/announcement/${groupId}`">
+    <div
+      class="flex items-center justify-between w-full h-12 mx-auto mt-2 bg-white rounded-xl"
+    >
       <div>
         <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png', 0)" />
       </div>
