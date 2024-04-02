@@ -7,7 +7,7 @@ springdoc:
     path: /swagger-ui.html
 
 server:
-  port: 8084
+  port: 8083
   servlet:
     context-path: /api/community
 
