@@ -58,7 +58,7 @@ public class MemberService {
         InsertMemberVO insertMemberVO = InsertMemberVO.builder()
                             .memberId(member.getMemberId())
                             .id(member.getId())
-                            .birthdate(member.getBirthDate())
+                            .birthdate(request.getBirthdate())
                             .name(member.getName())
                             .password(member.getPassword())
                             .phoneNumber(member.getPhoneNumber())
