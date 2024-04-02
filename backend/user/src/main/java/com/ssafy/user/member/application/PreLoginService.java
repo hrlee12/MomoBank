@@ -126,7 +126,7 @@ public class PreLoginService {
         request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         // 회원 정보 저장하기
         try {
-            ResponseEntity response = restTemplateUtil.send(bankUrl + "/member/join", HttpMethod.POST, request);
+            ResponseEntity response = restTemplateUtil.send(bankUrl + "/api/bank/member/join", HttpMethod.POST, request);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
@@ -173,7 +173,7 @@ public class PreLoginService {
 
         // 임시 비밀번호 저장
         try {
-            restTemplateUtil.send(bankUrl + "/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
+            restTemplateUtil.send(bankUrl + "/api/bank/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);

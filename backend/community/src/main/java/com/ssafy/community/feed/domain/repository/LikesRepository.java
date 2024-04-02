@@ -18,5 +18,5 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
     void deleteByFeedFeedIdAndGroupMemberGroupMemberId(Integer feedId, Integer memberId);
 
     @Query("SELECT l FROM Likes l WHERE l.feed.feedId = :feedId AND l.groupMember.groupMemberId = :groupMemberId")
-    Likes findByFeedAndGroupMember(Feed feed, GroupMember groupMember);
+    Likes findByFeedIdAndGroupMemberId(int feedId, int groupMemberId);
 }
