@@ -68,7 +68,7 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-budget-add") {
     noSideMenu.value = true;
     return "예산 추가";
-  } else if (route.name === "groups-budget-detail") {
+  } else if (route.name === "groups-budget-budgetId") {
     noSideMenu.value = true;
     return "예산 상세";
   } else if (route.name === "groups-menu") {

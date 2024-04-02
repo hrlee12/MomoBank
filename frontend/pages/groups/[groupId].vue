@@ -9,9 +9,9 @@
 import AccountInformation from "~/components/group/AccountInformation.vue";
 import { useGroupStore } from "@/stores/group";
 
-const { groupId } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
-
 const groupStore = useGroupStore();
+
+const { groupId } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
 
 import { useGroupApi } from "~/api/groups";
 
@@ -19,7 +19,7 @@ const { getGroupFeedList, getGroupHome } = useGroupApi();
 
 const fetchGroupFeeds = async (groupId) => {
   try {
-    const response = await getGroupFeedList(groupId)
+    const response = await getGroupFeedList(groupId);
     return response.data;
   } catch (error) {
     console.error("피드 목록을 불러오는 데 실패했습니다.", error);
@@ -42,8 +42,6 @@ const fetchGroupHome = async (groupId, memberId) => {
 const curDate = new Date();
 
 const feedList = ref(null);
-
-
 
 onMounted(() => {
   fetchGroupFeeds(groupId).then((response) => {
@@ -105,7 +103,9 @@ const toggleText = () => {
       <!-- 상세, 납부 완료, 접기/펴기 아이콘 -->
       <div class="flex flex-row justify-between">
         <NuxtLink :to="`/groups/detail/${groupId}`">
-          <div class="flex items-center justify-center w-10 h-6 ml-4 bg-light-gray-color rounded-xl">
+          <div
+            class="flex items-center justify-center w-10 h-6 ml-4 bg-light-gray-color rounded-xl"
+          >
             <div class="text-gray-color text-[13px]">상세</div>
           </div>
         </NuxtLink>
@@ -117,7 +117,11 @@ const toggleText = () => {
           <p class="text-negative-color text-[13px]">납부 요망</p>
         </div>
         <div class="w-8 h-6 mr-4">
-          <img class="rotate-90" :src="getImageUrl('arrow-icon.png', 0)" alt="arrow-icon" />
+          <img
+            class="rotate-90"
+            :src="getImageUrl('arrow-icon.png', 0)"
+            alt="arrow-icon"
+          />
         </div>
       </div>
 
@@ -130,13 +134,17 @@ const toggleText = () => {
       <div class="flex justify-center">
         <div class="flex mt-3 w-80">
           <nuxt-link to="/groups/transaction-history">
-            <div class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color">
+            <div
+              class="font-semibold text-[17px] w-40 text-center border-r-[1px] text-main-color"
+            >
               거래내역
             </div>
           </nuxt-link>
 
           <nuxt-link to="/groups/budget">
-            <div class="font-semibold text-[17px] w-40 text-center text-main-color">
+            <div
+              class="font-semibold text-[17px] w-40 text-center text-main-color"
+            >
               예산
             </div>
           </nuxt-link>
@@ -162,12 +170,20 @@ const toggleText = () => {
 
   <!-- 피드리스트 -->
 
-  <div v-for="item in feedList" :key="item.id" class="w-full h-full pb-0 mx-auto mt-2 bg-white">
+  <div
+    v-for="item in feedList"
+    :key="item.id"
+    class="w-full h-full pb-0 mx-auto mt-2 bg-white"
+  >
     <div class="pb-4 border-b-2 border-light-gray-color">
       <!-- 프로필, 닉네임, 게시일 -->
       <div class="flex items-center pt-3 ml-2">
         <div>
-          <img class="w-8 h-8" :src="getImageUrl('user-icon-3.png', 0)" alt="user-icon" />
+          <img
+            class="w-8 h-8"
+            :src="getImageUrl('user-icon-3.png', 0)"
+            alt="user-icon"
+          />
         </div>
         <div class="ml-2">{{ item.groupMemberName }}</div>
         <div class="ml-2 text-sm text-gray-color">
@@ -176,27 +192,43 @@ const toggleText = () => {
       </div>
       <!-- 이미지 -->
       <div class="mt-2">
-        <img class="w-full h-64" :src="item.mediaList[0].mediaUrl" alt="image-1" />
+        <img
+          class="w-full h-64"
+          :src="item.mediaList[0].mediaUrl"
+          alt="image-1"
+        />
       </div>
       <!-- 하트 -->
       <div class="w-6 h-6 mt-2 ml-2">
         <img :src="getImageUrl('like.png', 0)" alt="like" />
       </div>
       <!-- 좋아요 -->
-      <div class="ml-2 font-bold text-[13px]">좋아요 {{ item.likesCount }}개</div>
+      <div class="ml-2 font-bold text-[13px]">
+        좋아요 {{ item.likesCount }}개
+      </div>
 
       <!-- 피드 더보기 상세 내용 -->
-      <div v-if="!showFullText"
+      <div
+        v-if="!showFullText"
         class="ml-2 overflow-hidden cursor-pointer w-72 text-ellipsis whitespace-nowrap text-gray-color"
-        @click="toggleText">
+        @click="toggleText"
+      >
         {{ item.content }}
       </div>
 
-      <div v-if="isTextOverflow && !showFullText" class="ml-2 cursor-pointer text-gray-color" @click="toggleText">
+      <div
+        v-if="isTextOverflow && !showFullText"
+        class="ml-2 cursor-pointer text-gray-color"
+        @click="toggleText"
+      >
         더보기
       </div>
 
-      <div v-if="showFullText" class="ml-2 cursor-pointer text-gray-color" @click="toggleText">
+      <div
+        v-if="showFullText"
+        class="ml-2 cursor-pointer text-gray-color"
+        @click="toggleText"
+      >
         {{ fullText }}
       </div>
 

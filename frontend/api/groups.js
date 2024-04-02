@@ -35,6 +35,32 @@ export function useGroupApi() {
   const postGroupNotice = async (notice) => {
     return await $axios.post(`/community/notice/create`, notice);
   };
+
+  const getGroupBudget = async (groupId, memberId) => {
+    return await $axios.get(
+      `/user/groups/${groupId}/budgets/budgets-list?memberId=${memberId}`
+    );
+  };
+
+  const postGroupBudget = async (groupId, budget) => {
+    return await $axios.post(
+      `/user/groups/${groupId}/budgets/new-budget`,
+      budget
+    );
+  };
+
+  const patchGroupBudget = async (groupId, budgetId, budget) => {
+    return await $axios.post(
+      `/user/groups/${groupId}/budgets/${budgetId}`,
+      budget
+    );
+  };
+
+  const deleteGroupBudget = async (groupId, budgetId) => {
+    return await $axios.delete(`/user/groups/${groupId}/budgets/${budgetId}`);
+  };
+
+  // const
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
     getGroupFeedList,
@@ -44,5 +70,9 @@ export function useGroupApi() {
     getGroupMembers,
     getGroupNoticeList,
     postGroupNotice,
+    getGroupBudget,
+    postGroupBudget,
+    patchGroupBudget,
+    deleteGroupBudget,
   };
 }

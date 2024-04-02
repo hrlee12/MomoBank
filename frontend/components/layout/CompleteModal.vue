@@ -38,7 +38,7 @@ const modalTitle = computed(() => {
   } else if (route.name === "groups-feed-detail") {
     moveLink.value = "/groups/feed/my";
     return "정말로 삭제하시겠습니까?";
-  } else if (route.name === "groups-budget-detail") {
+  } else if (route.name === "groups-budget-budgetId") {
     moveLink.value = "/groups/budget";
     return "정말로 삭제하시겠습니까?";
   } else if (route.name === "groups-menu" && props.leaveGroup) {
