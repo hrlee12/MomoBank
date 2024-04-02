@@ -85,6 +85,22 @@ public class ReportController {
         return ResponseEntity.ok().build();
     }
 
+
+
+    @GetMapping("/ktest")
+    public void KafkaTest (){
+        MonthlyReports monthlyReports = new MonthlyReports();
+        monthlyReports.setId(23);
+        monthlyReports.setReportYear(2025);
+        monthlyReports.setContent("wefowef");
+        monthlyReports.setGroupId(123);
+        monthlyReports.setBestMemberReason("wefwef");
+        monthlyReports.setBestMemberName("wefewf");
+
+        reportService.saveReports(monthlyReports);
+    }
+
+
     @Operation(summary = "월간 리포트 생성",
             description = "매월 데이터를 읽어와서 리포트를 작성합니다.",
             responses = {
