@@ -23,13 +23,6 @@ const fetchMyGroups = async (memberId) => {
   }
 };
 
-onMounted(() => {
-  fetchMyGroups(memberId).then((response) => {
-    myGroups.value = response.data.groupList;
-    console.log(myGroups.value);
-  });
-});
-
 const router = useRouter();
 
 // 이미지 불러오는 메소드
@@ -70,6 +63,11 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
+
+  fetchMyGroups(memberId).then((response) => {
+    myGroups.value = response.data.groupList;
+    console.log(myGroups.value);
+  });
 });
 </script>
 
@@ -128,7 +126,7 @@ onMounted(async () => {
           <h3>{{ group.monthlyFee }}원</h3>
         </div>
         <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
+          <p>{{ group.description }}</p>
           <div class="icon-item">
             <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
             <p>{{ group.joinMembers }}명</p>

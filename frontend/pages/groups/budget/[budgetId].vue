@@ -2,6 +2,44 @@
 import GroupsBottomSheetModal from "~/components/layout/GroupsBottomSheetModal.vue";
 import CompleteModal from "~/components/layout/CompleteModal.vue";
 
+import { useGroupApi } from "~/api/groups";
+
+const { patchGroupBudget, deleteGroupBudget } = useGroupApi();
+
+import { useGroupStore } from "@/stores/group";
+
+const groupStore = useGroupStore();
+
+const { budgetId } = useRoute().params;
+
+const budget = ref({
+  memberId: 2,
+  monthlyDueDate: 11,
+  name: "우오우오우우!!",
+  finalFee: 32000000,
+  finalDueDate: "2024-04-25",
+});
+
+const memberId = 2;
+
+const groupId = groupStore.groupId;
+
+const goBack = () => {
+  window.history.back();
+};
+
+const patchBudget = async () => {
+  console.log(budget.value);
+  try {
+    const response = await patchGroupBudget(groupId, budgetId, budget.value);
+    if (response.status === 200) {
+      goBack();
+    }
+  } catch (error) {
+    console.error(error); // 오류 처리
+  }
+};
+
 definePageMeta({
   layout: "no-footer-bank",
 });
@@ -13,9 +51,7 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const budgetGoal = ref("454545454");
-const targetAmount = ref("21212212");
-const goalDay = ref("2024-03-31");
+const budgetGoal = ref("우가우가우가");
 
 // 삭제 확인,취소를 위한 변수
 const cancelButton = true;
@@ -37,13 +73,11 @@ const visibleBottomModalClick = () => {
   visibleFrequency.value = true;
 };
 
-const frequencyDay = ref("1");
-
 const handleUpdate = (event) => {
   visibleBottomModal.value = event.isVisible;
   visibleFrequency.value = event.budgetAddVisible;
   if (event.frequencyDay.value !== null) {
-    frequencyDay.value = event.frequencyDay.value;
+    budget.value.monthlyDueDate = event.frequencyDay.value;
   }
 };
 
@@ -55,15 +89,35 @@ const editModeOff = () => {
   editMode.value = false;
 };
 
-function deleteModal() {
+const deleteModal = async () => {
   visibleModal.value = true;
-}
+  try {
+    const response = await deleteGroupBudget(groupId, budgetId);
+    if (response.status === 200) {
+      goBack();
+    }
+  } catch (error) {
+    console.error(error); // 오류 처리
+  }
+};
 </script>
 
 <template>
   <div class="h-screen bg-white">
     <div class="px-4 py-2">
       <div v-if="!editMode">
+        <div class="py-3">
+          <div class="py-3 text-xl font-bold">예산 이름</div>
+          <div class="border-b-2 border-main-color">
+            <input
+              type="text"
+              disabled
+              v-model="budget.name"
+              placeholder="예산 이름 입력"
+              class="w-full text-lg"
+            />
+          </div>
+        </div>
         <div class="py-3">
           <div class="py-3 text-xl font-bold">예산 목적</div>
           <div class="border-b-2 border-main-color">
@@ -82,17 +136,17 @@ function deleteModal() {
             <input
               type="text"
               disabled
-              v-model="targetAmount"
+              v-model="budget.finalFee"
               placeholder="목표 금액 입력"
               class="w-full text-lg"
             />
           </div>
         </div>
         <div class="py-3 text-xl font-bold">목표 날짜</div>
-        <div>{{ goalDay }}</div>
+        <div>{{ budget.finalDueDate }}</div>
         <div class="py-3 text-xl font-bold">납입 날짜</div>
         <div class="flex items-center">
-          <div>매월 {{ frequencyDay }}일</div>
+          <div>매월 {{ budget.monthlyDueDate }}일</div>
         </div>
         <div class="flex justify-end px-4 mt-4 space-x-4">
           <button
@@ -113,6 +167,17 @@ function deleteModal() {
       <!-- editMode On -->
       <div v-if="editMode">
         <div class="py-3">
+          <div class="py-3 text-xl font-bold">예산 이름</div>
+          <div class="border-b-2 border-main-color">
+            <input
+              type="text"
+              v-model="budget.name"
+              placeholder="예산 이름 입력"
+              class="w-full text-lg"
+            />
+          </div>
+        </div>
+        <div class="py-3">
           <div class="py-3 text-xl font-bold">예산 목적</div>
           <div class="border-b-2 border-main-color">
             <input
@@ -128,7 +193,7 @@ function deleteModal() {
           <div class="border-b-2 border-main-color">
             <input
               type="text"
-              v-model="targetAmount"
+              v-model="budget.finalFee"
               placeholder="목표 금액 입력"
               class="w-full text-lg"
             />
@@ -141,12 +206,14 @@ function deleteModal() {
             class="border-none"
             id="goalInput"
             name="goalInput"
-            v-model="goalDay"
+            v-model="budget.finalDueDate"
           />
         </div>
         <div class="py-3 text-xl font-bold">납입 날짜</div>
         <div class="flex items-center">
-          <div @click="visibleBottomModalClick">매월 {{ frequencyDay }}일</div>
+          <div @click="visibleBottomModalClick">
+            매월 {{ budget.monthlyDueDate }}일
+          </div>
           <div class="w-5 h-5 rotate-180">
             <img :src="getImageUrl('arrow-icon.png', 0)" alt="arrow-icon" />
           </div>
@@ -166,6 +233,7 @@ function deleteModal() {
             취소
           </button>
           <button
+            @click="patchBudget"
             class="px-4 py-2 font-bold text-white rounded-xl bg-negative-color hover:bg-red-700"
           >
             완료
