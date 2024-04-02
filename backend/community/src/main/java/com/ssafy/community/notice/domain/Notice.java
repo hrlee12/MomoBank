@@ -1,6 +1,7 @@
 package com.ssafy.community.notice.domain;
 
 import com.ssafy.community.feed.domain.GroupInfo;
+import com.ssafy.community.feed.domain.GroupMember;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,4 +42,8 @@ public class Notice {
     @ManyToOne
     @JoinColumn(name = "group_info_id", nullable = false)
     private GroupInfo groupInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "group_member_id", nullable = false)
+    private GroupMember groupMember;
 }
