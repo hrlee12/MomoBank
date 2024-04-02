@@ -46,6 +46,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
+                groupInfo.description,
                 budget.monthlyFee.sum(),
                 groupInfo.groupMembers.size(),
                 Expressions.constant(true)))
