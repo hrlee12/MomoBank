@@ -45,12 +45,12 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-members") {
     return "모임 인원";
   } else if (
-    route.name === "groups-announcement" ||
+    route.name === "groups-announcement-groupId" ||
     route.name === "groups-announcement-detail" ||
     route.name === "groups-announcement-vote"
   ) {
     return "공지사항";
-  } else if (route.name === "groups-announcement-write") {
+  } else if (route.name === "groups-announcement-add") {
     noSideMenu.value = true;
     return "공지사항";
   } else if (
