@@ -1,12 +1,16 @@
 package com.ssafy.user.bank.application;
 
+import com.ssafy.user.bank.domain.Account;
+import com.ssafy.user.bank.domain.repository.AccountRepository;
 import com.ssafy.user.bank.dto.request.CreateAccountRequest;
 import com.ssafy.user.bank.dto.request.CreateCardInfoRequest;
 import com.ssafy.user.bank.dto.request.DeleteAccountRequest;
 import com.ssafy.user.bank.dto.request.DeleteCardRequest;
 import com.ssafy.user.bank.dto.request.PasswordConfirmRequest;
 import com.ssafy.user.bank.dto.request.TransferRequest;
+import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.ApiException;
+import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.exception.ErrorResponse;
 import com.ssafy.user.common.util.RestTemplateUtil;
 import jakarta.transaction.Transactional;
@@ -29,6 +33,7 @@ public class BankCallService {
     private String bankUrl;
 
     private final RestTemplateUtil restTemplateUtil;
+    private final AccountRepository accountRepository;
 
     // 당행 계좌 상품 목록 조회
     public ResponseEntity accountProductList() {
@@ -118,6 +123,14 @@ public class BankCallService {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
         }
+        Account fromAccount = accountCheck(request.fromAccountId());
+        Account toAccount = accountCheck(request.toAccountId());
+
+        fromAccount.updateBalance(fromAccount.getBalance() - request.amount());
+        toAccount.updateBalance(toAccount.getBalance() + request.amount());
+
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
         return response;
     }
 
@@ -132,5 +145,14 @@ public class BankCallService {
             throw new ApiException(errorResponse);
         }
         return response;
+    }
+
+    private Account accountCheck(int accountId) {
+        Account account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+        if (account.isDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_ACCOUNT);
+        }
+        return account;
     }
 }

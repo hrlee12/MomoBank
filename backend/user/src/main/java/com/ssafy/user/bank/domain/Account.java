@@ -60,6 +60,10 @@ public class Account extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public void updateBalance(long balance){
+        this.balance = balance;
+    }
+
     public enum AccountType{
         입출금, 정기예금, 적금
     }
