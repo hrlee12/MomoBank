@@ -2,6 +2,8 @@ package com.ssafy.user.member.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user.bank.domain.QAccount;
+import com.ssafy.user.groupInfo.domain.QGroupInfo;
+import com.ssafy.user.groupMember.domain.QGroupMember;
 import com.ssafy.user.member.domain.QMember;
 import com.ssafy.user.member.dto.response.MemberDTO;
 import com.ssafy.user.member.dto.response.MemberToCheckDTO;
@@ -19,6 +21,8 @@ public class MemberRepositoryCustom {
     private QMember member = QMember.member;
 
     private QAccount account = QAccount.account;
+    private QGroupInfo group = QGroupInfo.groupInfo;
+    private QGroupMember groupMember = QGroupMember.groupMember;
 
 
 //    public Member findMemberByIdAndPhoneNumber(String id, String phoneNumber) {
@@ -83,6 +87,22 @@ public class MemberRepositoryCustom {
             .from(member)
             .where(member.id.eq(id).and(member.phoneNumber.eq(phoneNumber).and(member.isDeleted.eq(false))))
             .fetchOne();
+    }
+
+
+    public Member findMemberToBankHome(String memberId){
+        return queryFactory.select(member)
+                .from(member)
+                .where(member.id.eq(memberId).and(member.isDeleted.eq(false)))
+                .leftJoin(member.accounts, account)
+                .where(account.isDeleted.eq(false))
+                .fetchJoin()
+                .leftJoin(member.groupMembers, groupMember)
+                .where(groupMember.isDeleted.eq(false))
+                .leftJoin(groupMember.groupInfo, group)
+                .fetchJoin()
+                .where(group.isDeleted.eq(false))
+                .fetchOne();
     }
 
 }

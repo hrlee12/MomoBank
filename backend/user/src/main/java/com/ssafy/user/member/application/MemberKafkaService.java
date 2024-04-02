@@ -33,7 +33,7 @@ public class MemberKafkaService {
 
         // 이미 가입된 아이디면 예외처리
         if (memberRepositoryCustom.findMemberToCheckDtoById((String)userInfo.get("id")) != null)
-            throw new NoSuchElementException("해당 그룹의 그룹멤버가 아닙니다.");
+            throw new NoSuchElementException("이미 가입된 아이디입니다.");
 
 
         Member member = Member.builder()
