@@ -2,12 +2,15 @@ package com.ssafy.bank.transfer.application;
 
 import com.ssafy.bank.account.domain.Account;
 import com.ssafy.bank.account.domain.repository.AccountRepository;
+import com.ssafy.bank.account.dto.response.AccountKafkaResponse;
+import com.ssafy.bank.account.dto.response.MemberForKafkaResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.transfer.domain.Transfer;
 import com.ssafy.bank.transfer.domain.repository.TransferRepository;
 import com.ssafy.bank.transfer.dto.request.PasswordConfirmRequest;
 import com.ssafy.bank.transfer.dto.request.TransferRequest;
+import com.ssafy.bank.transfer.dto.response.AccountForKafkaResponse;
 import com.ssafy.bank.transfer.dto.response.PasswordConfirmResponse;
 import com.ssafy.bank.transfer.dto.response.TransferKafkaResponse;
 import com.ssafy.bank.transfer.dto.response.TransferResponse;
@@ -51,14 +54,37 @@ public class TransferService {
 
         transferRepository.save(transfer);
 
+
+
+        AccountForKafkaResponse fromAccountKafka = new AccountForKafkaResponse(
+            fromAccount.getAccountId(),
+            fromAccount.getAccountNumber(),
+            fromAccount.getAccountProduct().getName(),
+            fromAccount.getAccountProduct().getAccountType(),
+            fromAccount.getAccountProduct().getBank().getBankName(),
+            String.valueOf(fromAccount.getAccountProduct().getInterestRate()),
+            String.valueOf(fromAccount.getBalance()),
+            new MemberForKafkaResponse(fromAccount.getMember())
+        );
+        AccountForKafkaResponse toAccountKafka = new AccountForKafkaResponse(
+            toAccount.getAccountId(),
+            toAccount.getAccountNumber(),
+            toAccount.getAccountProduct().getName(),
+            toAccount.getAccountProduct().getAccountType(),
+            toAccount.getAccountProduct().getBank().getBankName(),
+            String.valueOf(toAccount.getAccountProduct().getInterestRate()),
+            String.valueOf(toAccount.getBalance()),
+            new MemberForKafkaResponse(toAccount.getMember())
+        );
+
         TransferKafkaResponse response = new TransferKafkaResponse(
             transfer.getTransferId(),
-            transfer.getAmount(),
+            String.valueOf(transfer.getAmount()),
             transfer.getDescription(),
-            transfer.getFromBalance(),
-            transfer.getToBalance(),
-            transfer.getFromAccount(),
-            transfer.getToAccount()
+            String.valueOf(transfer.getFromBalance()),
+            String.valueOf(transfer.getToBalance()),
+            fromAccountKafka,
+            toAccountKafka
         );
 
         kafkaTemplate.send("transfer", response);

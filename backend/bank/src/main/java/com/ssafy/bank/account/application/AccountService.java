@@ -69,7 +69,7 @@ public class AccountService {
             accountProduct.getAccountType(),
             accountProduct.getBank().getBankName(),
             String.valueOf(accountProduct.getInterestRate()),
-            account.getBalance(),
+            String.valueOf(account.getBalance()),
             memberKafka
         );
 
@@ -110,7 +110,7 @@ public class AccountService {
             accountProduct.getAccountType(),
             accountProduct.getBank().getBankName(),
             String.valueOf(accountProduct.getInterestRate()),
-            account.getBalance(),
+            String.valueOf(account.getBalance()),
             memberKafka
         );
 
