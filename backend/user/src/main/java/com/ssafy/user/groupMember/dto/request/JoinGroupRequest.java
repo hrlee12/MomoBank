@@ -9,6 +9,6 @@ import lombok.Setter;
 public class JoinGroupRequest {
     private int groupId;
     private String memberId;
-    private int accountId;
+    private String accountId;
     private String authToken;
 }
