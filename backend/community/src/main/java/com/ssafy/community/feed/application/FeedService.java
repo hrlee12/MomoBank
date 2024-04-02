@@ -279,7 +279,7 @@ public class FeedService {
                     .build();
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
-            Likes likes = likesRepository.findByFeedAndGroupMember(feed, groupMember);
+            Likes likes = likesRepository.findByFeedIdAndGroupMemberId(feed.getFeedId(), groupMember.getGroupMemberId());
             feedListResponse.setLikedByUser(likes != null);
 
             // 피드 댓글 조회
