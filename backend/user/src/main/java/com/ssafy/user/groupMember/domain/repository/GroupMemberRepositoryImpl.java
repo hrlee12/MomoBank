@@ -28,7 +28,9 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
     public List<GroupMemberDTO> getAllGroupMemberDTO(int groupId) {
         return queryFactory.select(new QGroupMemberDTO(groupMember.groupMemberId,
                                                 groupMember.name,
-                                                groupMember.member.sincerity))
+                                                groupMember.member.sincerity,
+                                                groupMember.role
+                                                ))
                 .from(groupMember)
                 .join(groupMember.member, member)
                 .where(group.groupInfoId.eq(groupId)
