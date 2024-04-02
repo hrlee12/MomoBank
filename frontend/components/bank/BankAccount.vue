@@ -41,6 +41,8 @@ const goNext = (param) => {
   remitStore.setMyAccountInfo(
     accountInfo.accountId,
     accountInfo.accountProductName,
+    accountInfo.accountProductType,
+    accountInfo.accountNumber,
     accountInfo.balance
   );
 

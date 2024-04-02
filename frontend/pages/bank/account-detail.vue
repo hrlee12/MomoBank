@@ -7,105 +7,41 @@ definePageMeta({
   layout: "action",
 });
 
-// account-detail temp result
-const accountInfo = ref({});
-
 // get-transfer temp result
 const transactionHistory = ref([
-  {
-    transferList: [
-      {
-        name: "엄세현",
-        date: "13:24", // 시 분
-        ammount: 1315678,
-        transferType: false, // true 송금 받은거 false 송금 한거
-        balance: 1000000,
-      },
-      {
-        name: "엄세현",
-        date: "13:12", // 시 분
-        ammount: 3000000,
-        transferType: false, // true 송금 받은거 false 송금 한거
-        balance: 2315678,
-      },
-    ],
-    date: "02-19", // 일자
-  },
-  {
-    transferList: [
-      {
-        name: "엄세현",
-        date: "20:24", // 시 분
-        ammount: 30000,
-        transferType: true, // true 송금 받은거 false 송금 한거
-        balance: 5615678,
-      },
-      {
-        name: "엄세현",
-        date: "15:24", // 시 분
-        ammount: 30000,
-        transferType: true, // true 송금 받은거 false 송금 한거
-        balance: 5585678,
-      },
-      {
-        name: "엄세현",
-        date: "12:24", // 시 분
-        ammount: 30000,
-        transferType: true, // true 송금 받은거 false 송금 한거
-        balance: 5555678,
-      },
-    ],
-    date: "02-18", // 일자
-  },
-  {
-    transferList: [
-      {
-        name: "엄세현",
-        date: "13:24", // 시 분
-        ammount: 1315678,
-        transferType: false, // true 송금 받은거 false 송금 한거
-        balance: 1000000,
-      },
-      {
-        name: "엄세현",
-        date: "13:12", // 시 분
-        ammount: 3000000,
-        transferType: false, // true 송금 받은거 false 송금 한거
-        balance: 2315678,
-      },
-    ],
-    date: "02-19", // 일자
-  },
-  {
-    transferList: [
-      {
-        name: "엄세현",
-        date: "20:24", // 시 분
-        ammount: 30000,
-        transferType: true, // true 송금 받은거 false 송금 한거
-        balance: 5615678,
-      },
-      {
-        name: "엄세현",
-        date: "15:24", // 시 분
-        ammount: 30000,
-        transferType: true, // true 송금 받은거 false 송금 한거
-        balance: 5585678,
-      },
-      {
-        name: "엄세현",
-        date: "12:24", // 시 분
-        ammount: 30000,
-        transferType: true, // true 송금 받은거 false 송금 한거
-        balance: 5555678,
-      },
-    ],
-    date: "02-18", // 일자
-  },
+  // {
+  //   transferList: [
+  //     {
+  //       name: "엄세현",
+  //       date: "13:24", // 시 분
+  //       ammount: 1315678,
+  //       transferType: false, // true 송금 받은거 false 송금 한거
+  //       balance: 1000000,
+  //     },
+  //     {
+  //       name: "엄세현",
+  //       date: "13:12", // 시 분
+  //       ammount: 3000000,
+  //       transferType: false, // true 송금 받은거 false 송금 한거
+  //       balance: 2315678,
+  //     },
+  //   ],
+  //   date: "02-19", // 일자
+  // },
 ]);
 
 // 스토어 상태에 접근
 const remitStore = useRemitStore();
+const remitInfo = remitStore.remitInfo;
+// account-detail temp result
+const accountInfo = ref({
+  accountId: remitInfo.myAccountId,
+  accountProductType: remitInfo.myAccountType,
+  accountProductName: remitInfo.myAccountName,
+  accountNumber: remitInfo.myAccountNumber,
+  balance: remitInfo.myAccountBalance,
+});
+
 // 받아온 id로 account-detail과 get-transfer api호출
 import { useBankApi } from "~/api/bank";
 const { getAccountDetail, getTransactionHistory } = useBankApi();
