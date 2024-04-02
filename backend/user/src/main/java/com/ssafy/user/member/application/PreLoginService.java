@@ -173,7 +173,7 @@ public class PreLoginService {
 
         // 임시 비밀번호 저장
         try {
-            restTemplateUtil.send(bankUrl + "api/bank/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
+            restTemplateUtil.send(bankUrl + "/api/bank/member/temporary-passwords", HttpMethod.PUT, toBankRequest);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);

@@ -84,7 +84,7 @@ public class MemberService {
 
         // 전화번호 수정
         try {
-            ResponseEntity response = restTemplateUtil.send(bankUrl + "api/bank/member/phone-numbers", HttpMethod.PUT, request);
+            ResponseEntity response = restTemplateUtil.send(bankUrl + "/api/bank/member/phone-numbers", HttpMethod.PUT, request);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
@@ -118,7 +118,7 @@ public class MemberService {
 
 
         try {
-            ResponseEntity response = restTemplateUtil.send(bankUrl + "api/bank/member/passwords", HttpMethod.PUT, request);
+            ResponseEntity response = restTemplateUtil.send(bankUrl + "/api/bank/member/passwords", HttpMethod.PUT, request);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
             throw new ApiException(errorResponse);
