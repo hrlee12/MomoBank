@@ -33,7 +33,7 @@ const pageTitle = computed(() => {
     route.name === "groups-budget" ||
     route.name === "groups-transaction-history"
   ) {
-    return groupsName;
+    return groupsName.value;
   } else if (route.name === "groups-detail-groupId") {
     return "모임 상세";
   } else if (route.name === "groups-deposit-status") {
