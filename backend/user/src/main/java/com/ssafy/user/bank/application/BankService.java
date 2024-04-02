@@ -15,7 +15,9 @@ import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.util.KafkaUtil;
 import com.ssafy.user.member.domain.Member;
+import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,14 @@ public class BankService {
     private final AccountRepository accountRepository;
     private final TransferRepository transferRepository;
     private final KafkaUtil kafkaUtil;
+    private final MemberRepository memberRepository;
+    private final AccountRepository accountRepository;
 
     @KafkaListener(topics = "createAccount", groupId = "user")
     public void createAccount(Object data) {
         Map<String, Object> accountInfo =  kafkaUtil.dataToMap(data);
+        Member member = memberRepository.findById((int)accountInfo.get("member"))
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
 
         Account account = Account.builder()
             .accountId((int)accountInfo.get("accountId"))
@@ -44,7 +50,7 @@ public class BankService {
             .bankName((String)accountInfo.get("bankName"))
             .interestRate(Float.parseFloat(accountInfo.get("interestRate").toString()))
             .balance(Long.parseLong(accountInfo.get("balance").toString()))
-            .member((Member) accountInfo.get("member"))
+            .member(member)
             .build();
 
         accountRepository.save(account);
@@ -63,14 +69,19 @@ public class BankService {
     public void transfer(Object data) {
         Map<String, Object> transferInfo =  kafkaUtil.dataToMap(data);
 
+        Account fromAccount = accountRepository.findById((int)transferInfo.get("fromAccount"))
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+        Account toAccount = accountRepository.findById((int)transferInfo.get("toAccount"))
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+
         Transfer transfer = Transfer.builder()
             .transferId((int) transferInfo.get("transferId"))
             .amount(Long.parseLong(transferInfo.get("amount").toString()))
             .description((String) transferInfo.get("description"))
             .fromBalance(Long.parseLong(transferInfo.get("fromBalance").toString()))
             .toBalance(Long.parseLong(transferInfo.get("toBalance").toString()))
-            .fromAccount((Account) transferInfo.get("fromAccount"))
-            .toAccount((Account) transferInfo.get("toAccount"))
+            .fromAccount(fromAccount)
+            .toAccount(toAccount)
             .build();
 
         transferRepository.save(transfer);
