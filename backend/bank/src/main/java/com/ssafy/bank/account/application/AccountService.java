@@ -68,6 +68,7 @@ public class AccountService {
             account.getAccountNumber(),
             accountProduct.getAccountType(),
             accountProduct.getBank().getBankName(),
+            accountProduct.getName(),
             String.valueOf(accountProduct.getInterestRate()),
             String.valueOf(account.getBalance()),
             member.getMemberId()
@@ -109,6 +110,7 @@ public class AccountService {
             account.getAccountNumber(),
             accountProduct.getAccountType(),
             accountProduct.getBank().getBankName(),
+            accountProduct.getName(),
             String.valueOf(accountProduct.getInterestRate()),
             String.valueOf(account.getBalance()),
             member.getMemberId()

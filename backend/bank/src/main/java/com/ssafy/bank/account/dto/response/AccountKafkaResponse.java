@@ -14,6 +14,7 @@ public class AccountKafkaResponse {
     private String accountNumber;
     private AccountType accountType;
     private String bankName;
+    private String accountProductName;
     private String interestRate;
     private String balance;
     private int member;
