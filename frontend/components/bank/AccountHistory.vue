@@ -1,23 +1,23 @@
 <script setup>
 defineProps({
-  transferInfoPerDate: Object,
+  history: Object,
 });
 </script>
 
 <template>
   <div class="history-content">
-    <h3 class="item">{{ transferInfoPerDate.date }}</h3>
+    <h3 class="item">{{ history.date }}</h3>
     <div
-      v-for="(list, index) in transferInfoPerDate.transferList"
+      v-for="(list, index) in history.transferlist"
       :key="index"
       class="history-item"
     >
       <div class="item">
         <h2>{{ list.name }}</h2>
         <h2 v-if="list.transferType" class="emphasize">
-          {{ list.ammount.toLocaleString("ko-KR") }}원
+          {{ list.amount.toLocaleString("ko-KR") }}원
         </h2>
-        <h2 v-else>-{{ list.ammount.toLocaleString("ko-KR") }}원</h2>
+        <h2 v-else>-{{ list.amount.toLocaleString("ko-KR") }}원</h2>
       </div>
       <div class="item">
         <p>{{ list.date }}</p>

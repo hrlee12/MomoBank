@@ -1,20 +1,14 @@
 <script setup>
 import BankAccount from "~/components/bank/BankAccount.vue";
 import AccountHistory from "~/components/bank/AccountHistory.vue";
+import BankFooter from "~/components/layout/BankFooter.vue";
 
-const { id } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
 definePageMeta({
   layout: "action",
 });
 
 // account-detail temp result
-const accountInfo = ref({
-  accountId: 0,
-  accountType: "입출금",
-  accountName: "저축은행",
-  accountNumber: "123-1234-12345",
-  balance: 1000000,
-});
+const accountInfo = ref({});
 
 // get-transfer temp result
 const transactionHistory = ref([
@@ -122,8 +116,8 @@ const requestAccountDetail = async () => {
     const memberId = remitStore.memberId;
     const accountId = remitStore.remitInfo.myAccountId;
     const response = await getAccountDetail(memberId, accountId);
-    console.log(response.data);
-    accountInfo.value = response.data;
+    accountInfo.value = response.data.data;
+    console.log("accountInfo: ", accountInfo.value);
   } catch (error) {
     console.error("계좌 상세 정보 요청 실패:", error);
   }
@@ -135,7 +129,8 @@ const requestTransactionHistory = async () => {
     const memberId = remitStore.memberId;
     const accountId = remitStore.remitInfo.myAccountId;
     const response = await getTransactionHistory(memberId, accountId);
-    transactionHistory.value = response.data;
+    transactionHistory.value = response.data.data.totalTransferList;
+    console.log("transactionHistory: ", transactionHistory.value);
   } catch (error) {
     console.error("거래내역 조회 요청 실패:", error);
   }
@@ -154,14 +149,21 @@ onMounted(async () => {
       <BankAccount :accountInfo="accountInfo" />
     </div>
 
-    <div class="history-container">
+    <div
+      v-if="transactionHistory.length == 0 || transactionHistory == undefined"
+      class="history-container center"
+    >
+      조회된 기록이 없습니다.
+    </div>
+    <div v-else class="history-container">
       <AccountHistory
         v-for="(history, index) in transactionHistory"
         :key="index"
-        :transferInfoPerDate="history"
+        :history="history"
       />
     </div>
   </div>
+  <BankFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -189,5 +191,10 @@ onMounted(async () => {
   background-color: white;
   border-radius: 15px;
   padding: 3vh 5vw 10vh 5vw;
+  min-height: 60vh;
+}
+
+.center {
+  text-align: center;
 }
 </style>

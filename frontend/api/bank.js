@@ -24,7 +24,7 @@ export function useBankApi() {
   // 거래내역 조회
   const getTransactionHistory = async (memberId, accountId) => {
     return await $axios.get(
-      `/user/bank/transfer?memberId=${memberId}&accountId=${accountId}`
+      `/user/bank/get-transfer?memberId=${memberId}&accountId=${accountId}`
     );
   };
 

@@ -22,12 +22,6 @@ const NO_HEADER = 2;
 
 // 동적 세그먼트 값을 포함한 라우터 이름을 기반으로 타이틀과 사이드 메뉴 활성화 상태를 결정
 const pageTitle = computed(() => {
-  const id = router.params.id;
-  const number = router.params.number;
-  if (id && router.name.startsWith("bank-")) {
-    return { title: "거래내역", sideMenuActive: FULL_MENU };
-  }
-
   // if (number && router.name.startsWith("user-")) {
   //   return { title: "거래내역", sideMenuActive: NO_SIDE_MENU };
   // }
@@ -40,6 +34,7 @@ const pageTitle = computed(() => {
       sideMenuActive: NO_SIDE_MENU,
     },
 
+    "bank-account-detail": { title: "거래내역", sideMenuActive: FULL_MENU },
     "bank-account-list": { title: "전체계좌", sideMenuActive: FULL_MENU },
     "bank-account-create": { title: "계좌개설", sideMenuActive: FULL_MENU },
     "bank-account-create-agree": {

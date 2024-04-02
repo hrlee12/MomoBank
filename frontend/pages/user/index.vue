@@ -105,6 +105,7 @@ const login = async () => {
 
   p {
     font-size: 1.8vh;
+    margin-top: 5%;
   }
 }
 
