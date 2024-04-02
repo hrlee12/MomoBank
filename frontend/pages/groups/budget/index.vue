@@ -42,27 +42,6 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const budgetList = [
-  {
-    goalDay: "3월 12일",
-    title: "해외 여행 구라야야야ㅑ양야ㅑ",
-    monthPayments: "160,000 원/월",
-    monthly: "매월 1일 입금",
-    status: "납부 완료",
-    goalBudget: 1000000,
-    curBudget: 700000,
-  },
-  {
-    goalDay: "6월 21일",
-    title: "일본 여행",
-    monthPayments: "160,000 원/월",
-    monthly: "매월 11일 입금",
-    status: "미납 1일",
-    goalBudget: 2000000,
-    curBudget: 700000,
-  },
-];
-
 const calPercentage = (goalBudget, curBudget) => {
   return (curBudget / goalBudget) * 100;
 };
