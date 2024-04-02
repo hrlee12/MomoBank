@@ -1,5 +1,6 @@
 package com.ssafy.community.feed.domain;
 
+
 import com.ssafy.community.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ import org.hibernate.annotations.ColumnDefault;
 public class GroupMember extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_member_id")
     private int groupMemberId;
 
@@ -40,7 +40,10 @@ public class GroupMember extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+
+
     public enum memberType {
         모임장, 모임원
     }
 }
+

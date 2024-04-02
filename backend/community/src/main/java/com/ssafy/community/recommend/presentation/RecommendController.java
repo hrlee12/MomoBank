@@ -7,9 +7,11 @@ import com.ssafy.community.recommend.dto.UserSelectionDto;
 import com.ssafy.community.report.dto.ActivityPreferencesDto;
 import com.ssafy.community.report.dto.MonthlyReportDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,19 +28,7 @@ public class RecommendController {
     @Autowired
     private RecommendService recommendService;
 
-    @Operation(summary = "카드 정보 가져오기",
-            description = "카드 정보를 리턴합니다",
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "카드 정보 가져오기 성공",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ActivityPreferencesDto.class))),
-                    @ApiResponse(responseCode = "400",
-                            description = "잘못된 요청 형식"),
-                    @ApiResponse(responseCode = "500",
-                            description = "서버 내부 오류")
-            })
-    @GetMapping("/get-cards")
+
     public ResponseEntity<List<CardDto>> getCards() {
 
         List<CardDto> cards = RecommendService.getCards("card/cards.json");
@@ -51,19 +41,7 @@ public class RecommendController {
     }
 
 
-    @Operation(summary = "카드 카테고리 가져오기",
-        description = "카드의 카테고리를 가져옵니다.",
-        responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "데이터 수집 성공",
-                        content = @Content(mediaType = "application/json",
-                                schema = @Schema(implementation = ActivityPreferencesDto.class))),
-                @ApiResponse(responseCode = "400",
-                        description = "잘못된 요청 형식"),
-                @ApiResponse(responseCode = "500",
-                        description = "서버 내부 오류")
-        })
-    @GetMapping("/get-cards-category")
+
     public ResponseEntity<CardsCategoryDto> getCardsCategory() {
 
 
@@ -79,29 +57,30 @@ public class RecommendController {
 
 
     @Operation(summary = "카드 추천 결과 리턴",
-            description = "유저의 선택을 기반으로 카드 추천 결과와, 설명을 리턴합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "데이터 수집 성공",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ActivityPreferencesDto.class))),
-                    @ApiResponse(responseCode = "400",
-                            description = "잘못된 요청 형식"),
-                    @ApiResponse(responseCode = "500",
-                            description = "서버 내부 오류")
-            })
+            description = "유저의 선택을 기반으로 카드 추천 결과와 설명을 리턴합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "유저의 선택 정보",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    example = "{\"selections\": {\"1\": [0], \"2\": [1], \"3\": [2], \"4\": [1]}}"
+                            )
+                    )
+            )
+    )
     @PostMapping("/recommend-card")
-    public ResponseEntity<String> RecommendCard(
+    public ResponseEntity<List<CardDto>> RecommendCard(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "선택", required = true, content = @Content(schema = @Schema(implementation = UserSelectionDto.class)))
             @RequestBody UserSelectionDto userSelectionDto) {
 
-        recommendService.recommendCard(userSelectionDto, getCards().getBody(), getCardsCategory().getBody());
+        List<CardDto> cards = recommendService.recommendCard(userSelectionDto, getCards().getBody(), getCardsCategory().getBody());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return ResponseEntity.ok()
                 .headers(headers)
-                .body("good");
+                .body(cards);
     }
 
 

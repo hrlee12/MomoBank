@@ -24,15 +24,15 @@ public class NoticeController {
     private final NoticeService noticeService;
 
 
-    @GetMapping("/list")
+    @GetMapping("/list/{groupInfoId}")
     @Operation(summary = "공지사항 리스트 조회", description = "사용자가 전체 공지사항을 최신 순으로 확인할 수 있습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "공지사항 리스트 조회 성공",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = NoticeListResponse.class))})
     })
-    public ResponseEntity<List<NoticeListResponse>> getNoticeList() {
-        List<NoticeListResponse> noticeList = noticeService.getNoticeList();
+    public ResponseEntity<List<NoticeListResponse>> getNoticeList(@PathVariable int groupInfoId) {
+        List<NoticeListResponse> noticeList = noticeService.getNoticeList(groupInfoId);
         return ResponseEntity.ok(noticeList);
     }
 

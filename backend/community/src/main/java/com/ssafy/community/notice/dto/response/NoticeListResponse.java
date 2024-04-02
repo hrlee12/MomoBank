@@ -12,9 +12,13 @@ import java.time.LocalDateTime;
 public class NoticeListResponse {
 
     @Schema(description = "공지사항 제목", example = "새로운 기능 업데이트 안내")
+    private int notedId;
+
     private String title;
 
     private String content;
+
+    private String memberName;
 
     private LocalDateTime createdAt;
 

@@ -9,8 +9,10 @@ import com.ssafy.community.notice.dto.request.NoticeModificationRequest;
 import com.ssafy.community.notice.dto.response.NoticeDetailResponse;
 import com.ssafy.community.notice.dto.response.NoticeListResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,16 +21,21 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final GroupMemberRepository groupMemberRepository;
 
     // 공지사항 리스트 조회
-    public List<NoticeListResponse> getNoticeList() {
-        List<Notice> notices = noticeRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
+    public List<NoticeListResponse> getNoticeList(Integer groupInfoId) {
+        log.info("getNoticeList groupInfoId: {}", groupInfoId);
+
+        List<Notice> notices = noticeRepository.findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(groupInfoId);
         return notices.stream()
                 .map(notice -> NoticeListResponse.builder()
+                        .notedId(notice.getNoticeId())
                         .title(notice.getTitle())
+                        .memberName(notice.getGroupMember().getName())
                         .content(notice.getContent())
                         .createdAt(notice.getCreatedAt())
                         .updatedAt(notice.getUpdatedAt())
@@ -39,6 +46,7 @@ public class NoticeService {
     // 공지사항 작성
     @Transactional
     public void createNotice(NoticeCreationRequest request) {
+        log.info("createNotice request: {}", request);
         Notice notice = new Notice();
         notice.setTitle(request.getTitle());
         notice.setContent(request.getContent());
@@ -46,9 +54,11 @@ public class NoticeService {
         notice.setUpdatedAt(LocalDateTime.now());
         notice.setIsDeleted(false);
 
-        GroupMember groupMember = groupMemberRepository.findGroupMemberByMemberId(request.getMemberId());
+        GroupMember groupMember = groupMemberRepository.findById(request.getGroupMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Group Member ID: " + request.getGroupMemberId()));
 
         notice.setGroupInfo(groupMember.getGroupInfo());
+        notice.setGroupMember(groupMember);
         noticeRepository.save(notice);
 
         // TODO: 여기에 알림 전송 로직 추가 (Firebase Cloud Messaging 사용)
