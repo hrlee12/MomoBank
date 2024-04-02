@@ -34,8 +34,8 @@ public class FeedController {
             @ApiResponse(responseCode = "200", description = "피드 목록 조회 성공",
                     content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<Page<FeedListResponse>> getFeeds(@ParameterObject Pageable pageable, int memberId) {
-        Page<FeedListResponse> feeds = feedService.getFeeds(pageable, memberId);
+    public ResponseEntity<Page<FeedListResponse>> getFeeds(@ParameterObject Pageable pageable, int groupId) {
+        Page<FeedListResponse> feeds = feedService.getFeeds(pageable, groupId);
         return ResponseEntity.ok(feeds);
     }
 

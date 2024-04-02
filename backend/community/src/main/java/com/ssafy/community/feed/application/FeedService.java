@@ -9,6 +9,7 @@ import com.ssafy.community.feed.dto.response.FeedListResponse;
 import com.ssafy.community.feed.dto.response.MediaResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class FeedService {
     private final FeedRepository feedRepository;
     private final LikesRepository likesRepository;
@@ -44,22 +46,23 @@ public class FeedService {
      * - 피드 목록을 조회할 때, 미디어 파일 URL 리스트를 함께 조회한다.
      * - 피드 목록을 조회할 때, 그룹 멤버 ID와 이름을 함께 조회한다. (프로필 이미지는 없음)
      * @param pageable 페이징 정보
-     * @param memberId 사용자 ID
+     * @param groupId 그룹 ID
      * @return 피드 목록
      */
-    public Page<FeedListResponse> getFeeds(Pageable pageable, int memberId) {
-        // 사용자 ID로 그룹 ID 조회
-        Integer groupId = groupMemberRepository.findGroupIdByMemberId(memberId);
-
+    public Page<FeedListResponse> getFeeds(Pageable pageable, int groupId) {
+        log.info("groupId: {}", groupId);
         // 그룹에 속한 피드 목록 조회
         Page<Feed> feeds = feedRepository.findByGroupId(groupId,pageable);
 
         // 피드 목록을 FeedListResponse로 변환
         List<FeedListResponse> feedListResponses = feeds.getContent().stream().map(feed -> {
+
+            String content = feed.getContent();
+            String modifiedContent = content.length() > 30 ? content.substring(0, 30) + "..." : content;
             FeedListResponse dto = FeedListResponse.builder()
                     .feedId(feed.getFeedId())
                     .content(feed.getContent())
-                    .contentOneLine(feed.getContent().substring(0, 30) + "...")
+                    .contentOneLine(modifiedContent)
                     .commentsCount(feed.getCommentsCount())
                     .likesCount(feed.getLikesCount())
                     .createdAt(feed.getCreatedAt())
@@ -68,7 +71,7 @@ public class FeedService {
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
             Likes likes = likesRepository.findByFeedFeedId(feed.getFeedId());
-            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == memberId;
+            boolean likedByUser = likes != null &&  likes.getGroupMember().getGroupMemberId() == groupId;
             dto.setLikedByUser(likedByUser);
 
             // 피드 댓글 조회
@@ -104,12 +107,16 @@ public class FeedService {
         GroupMember groupMember = groupMemberRepository.findById(feedCreateRequest.getGroupMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("GroupMember not found with id " + feedCreateRequest.getGroupMemberId()));
 
+        log.info("groupMemberId: {}", feedCreateRequest.getGroupMemberId());
+
         Feed feed = new Feed();
         feed.setContent(feedCreateRequest.getContent());
         feed.setGroupMember(groupMember);
         feed.setCreatedAt(LocalDateTime.now());
         feed.setUpdatedAt(LocalDateTime.now());
         feed.setIsDeleted(false);
+        feed.setLikesCount(0);
+        feed.setCommentsCount(0);
 
         feed = feedRepository.save(feed); // 피드 정보 먼저 저장
 
@@ -120,7 +127,7 @@ public class FeedService {
             Media media = new Media();
             media.setFeed(feed);
             media.setSequence(sequence++);
-            media.setMediaUrl("http://j10a505.p.ssafy.io/static/images/" + fileName);
+            media.setMediaUrl("http://j10a505.p.ssafy.io/api/community/static/" + fileName);
             media.setMediaType(file.getContentType()); // 파일 타입 결정 로직
             media.setCreatedAt(LocalDateTime.now());
             media.setUpdatedAt(LocalDateTime.now());
@@ -138,12 +145,20 @@ public class FeedService {
      * @param feedId 피드 ID
      * @return 파일명
      */
-    private String saveFileOnServer(MultipartFile file, String feedId) {
+    private String saveFileOnServer(MultipartFile file, String feedId)  {
         String originalFileName = file.getOriginalFilename();
 
         // 파일명에 피드 ID와 원래 파일명을 조합
         String fileName = "Feed" + feedId + "_" + originalFileName;
         Path targetLocation = Paths.get(uploadDir).resolve(fileName);
+        if(!Files.exists(targetLocation)) {
+            try {
+                Files.createDirectories(targetLocation.getParent());
+            } catch (IOException e) {
+                throw new RuntimeException("createDirectories Error",e);
+            }
+        }
+
         try {
             // 파일 저장 로직
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);

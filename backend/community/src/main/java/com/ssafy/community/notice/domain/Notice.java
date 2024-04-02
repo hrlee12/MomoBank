@@ -1,21 +1,25 @@
 package com.ssafy.community.notice.domain;
+
+import com.ssafy.community.feed.domain.GroupInfo;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "announcement")
+@Table(name = "notice")
 @Schema(description = "공지사항 정보")
-public class Announcement {
+public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "공지사항 ID", example = "1")
-    private Integer announcementId;
+    @Column(name = "notice_id")
+    private Integer noticeId;
 
     @Schema(description = "제목", example = "새 공지사항")
     private String title;
@@ -34,6 +38,7 @@ public class Announcement {
     @Schema(description = "삭제 여부", example = "false")
     private Boolean isDeleted;
 
-    @Schema(description = "그룹 ID", example = "1")
-    private Integer groupId;
+    @ManyToOne
+    @JoinColumn(name = "group_info_id", nullable = false)
+    private GroupInfo groupInfo;
 }

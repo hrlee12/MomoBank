@@ -11,6 +11,17 @@ server:
     context-path: /api/community
 
 spring:
+  kafka:
+    producer:
+      bootstrap-servers: my-kafka.default.svc.cluster.local:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: my-kafka.default.svc.cluster.local:9092
+      group-id: community
+      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   profiles:
     active: local
   config:
@@ -26,6 +37,8 @@ spring:
   web:
     resources:
       static-locations: file:/uploads/feed/
+
+
 
 #logging
 logging:

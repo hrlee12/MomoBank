@@ -40,7 +40,7 @@ public abstract class BaseEntity {
 
     public boolean softDelete() {
         if (isDeleted)
-            throw new IllegalStateException(ErrorCode.ALREADY_DELETED.getMessage());
+            throw new IllegalStateException(com.ssafy.user.common.ErrorCode.ALREADY_DELETED.getMessage());
         this.isDeleted = true;
         return true;
     }
