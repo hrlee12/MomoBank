@@ -6,6 +6,30 @@ import { useBankApi } from "@/api/bank";
 
 const { getMyAccountList } = useBankApi();
 
+import { useGroupApi } from "~/api/groups";
+
+const { getMyGroups } = useGroupApi();
+
+const myGroups = ref([]);
+
+const memberId = 2;
+
+const fetchMyGroups = async (memberId) => {
+  try {
+    const response = await getMyGroups(memberId);
+    return response.data;
+  } catch (error) {
+    console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
+
+onMounted(() => {
+  fetchMyGroups(memberId).then((response) => {
+    myGroups.value = response.data.groupList;
+    console.log(myGroups.value);
+  });
+});
+
 const router = useRouter();
 
 // 이미지 불러오는 메소드
@@ -29,17 +53,20 @@ const myAccountList = ref([]);
 const isLastSlide = ref(false);
 
 // 각각의 그룹 페이지로 이동
-const goToGroup = (param) => {
-  router.push(`/groups`);
+const goToGroup = (groupId) => {
+  router.push(`/groups/` + groupId);
 };
+
+// remitStore 사용
+const remitStore = useRemitStore();
 
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {
   try {
-    const memberId = 13; // 예시 ID
+    const memberId = remitStore.memberId; // 예시 ID
     const response = await getMyAccountList(memberId);
     myAccountList.value = response.data.data.myAccountList;
-    console.log(myAccountList.value);
+    console.log("사용자 전체 계좌 리스트: ", myAccountList.value);
   } catch (error) {
     console.error(error);
   }
@@ -90,16 +117,21 @@ onMounted(async () => {
 
     <!-- 메인 모임 리스트 -->
     <div class="club-container content">
-      <div class="club-content" @click="goToGroup('5반 5린이들')">
+      <div
+        v-for="group in myGroups"
+        :key="group.id"
+        class="club-content"
+        @click="goToGroup(group.groupId)"
+      >
         <div class="club-item">
-          <h2>5반 5린이들</h2>
-          <h3>160,000원</h3>
+          <h2>{{ group.name }}</h2>
+          <h3>{{ group.monthlyFee }}원</h3>
         </div>
         <div class="club-item">
           <p>5반 5린이들과 함께하는 모임</p>
           <div class="icon-item">
             <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
+            <p>{{ group.joinMembers }}명</p>
           </div>
         </div>
       </div>

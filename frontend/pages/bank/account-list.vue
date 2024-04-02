@@ -12,10 +12,13 @@ definePageMeta({
 const myAccountList = ref([]);
 // { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
 
+// 스토어 상태에 접근
+const remitStore = useRemitStore();
+
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {
   try {
-    const memberId = 13; // 예시 ID
+    const memberId = remitStore.memberId;
     const response = await getMyAccountList(memberId);
     myAccountList.value = response.data.data.myAccountList;
     console.log(myAccountList);
