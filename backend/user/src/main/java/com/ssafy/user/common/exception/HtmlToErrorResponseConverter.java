@@ -28,7 +28,7 @@ public class HtmlToErrorResponseConverter extends AbstractHttpMessageConverter<E
         return ErrorResponse.builder()
             .status(404)
             .message("CONVERTER_ERROR")
-            .body("컨버터에러")
+            .body(html)
             .build();
     }
 
