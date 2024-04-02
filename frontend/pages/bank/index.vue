@@ -57,13 +57,16 @@ const goToGroup = (groupId) => {
   router.push(`/groups/` + groupId);
 };
 
+// remitStore 사용
+const remitStore = useRemitStore();
+
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {
   try {
-    const memberId = 13; // 예시 ID
+    const memberId = remitStore.memberId; // 예시 ID
     const response = await getMyAccountList(memberId);
     myAccountList.value = response.data.data.myAccountList;
-    console.log(myAccountList.value);
+    console.log("사용자 전체 계좌 리스트: ", myAccountList.value);
   } catch (error) {
     console.error(error);
   }
