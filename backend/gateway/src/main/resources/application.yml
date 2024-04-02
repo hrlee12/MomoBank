@@ -3,24 +3,35 @@ server:
 
 
 spring:
+  config:
+    import: classpath:application-private.yml
   application:
     name: gateway
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: http://10.43.229.25:8082
-          predicates:
-            - Path=/api/user/**
-        - id: community-service
-          uri: http://10.43.116.89:8083
-          predicates:
-            - Path=/api/community/**
-        - id: bank-service
-          uri: http://10.43.68.76:8084
-          predicates:
-            - Path=/api/bank/**
-
+      globalcors:
+        corsConfigurations:
+          '[/**]': # 모든 경로에 대해 CORS 설정을 적용합니다.
+            allowedOrigins:
+              - "http://j10a505.p.ssafy.io"
+              - "https://j10a505.p.ssafy.io"
+              - "http://localhost"
+              - "http://localhost:3000"
+              - "http://community.default.svc.cluster.local:8083"
+              - "http://bank.default.svc.cluster.local:8084"
+              - "http://user.default.svc.cluster.local:8082"
+            allowedMethods: # 허용할 HTTP 메서드를 지정합니다.
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: # 허용할 HTTP 헤더를 지정합니다.
+              - Content-Type
+              - Authorization
+              - Accept
+              - Origin
+              - X-Requested-With
+            allowCredentials: true # 크레덴셜(쿠키, HTTP 인증 및 클라이언트 SSL 인증 정보)을 지원하도록 허용합니다.
 
 
 
@@ -52,4 +63,8 @@ springdoc:
 openapi:
   service:
     # API Gateway 포트
-    url: http://localhost:8081
+    url: http://j10a505.p.ssafy.io/api
+
+
+
+

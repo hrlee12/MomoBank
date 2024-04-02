@@ -14,18 +14,35 @@ server:
 
 openapi:
   service:
-    # API Gateway 포트
-    url: http://localhost:8081
+    url: http://j10a505.p.ssafy.io/api/community
 spring:
+  kafka:
+    producer:
+      bootstrap-servers: my-kafka.default.svc.cluster.local:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: my-kafka.default.svc.cluster.local:9092
+      group-id: community
+      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   profiles:
     active: local
   config:
     jpa:
       hibernate:
-        ddl-auto: create
+        ddl-auto: update
       properties:
         hibernate:
           format_sql: true
+
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: file:/uploads/feed/
+
 
 
 #logging

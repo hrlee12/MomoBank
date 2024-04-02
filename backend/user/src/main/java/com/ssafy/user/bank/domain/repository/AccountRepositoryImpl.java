@@ -148,6 +148,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
             list.addAll(from);
             list.addAll(to);
             Collections.sort(list, (o1, o2) -> o1.getDate().compareTo(o2.getDate()));
+            if(list.size()==0) continue;
             response.add(new GetTransferListPerDateResponse(date.toLocalDate(), list));
         }
         return new GetTransferListResponse(response);

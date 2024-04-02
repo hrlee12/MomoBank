@@ -49,4 +49,14 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
             .fetchOne();
     }
 
+    @Override
+    public GroupMember findGroupMemberByMemberAndGroupInfo(Member member, GroupInfo groupInfo){
+        QGroupMember groupMember = QGroupMember.groupMember;
+        return queryFactory
+            .selectFrom(groupMember)
+            .where(groupMember.member.eq(member),
+                groupMember.groupInfo.eq(groupInfo))
+            .fetchOne();
+    }
+
 }
