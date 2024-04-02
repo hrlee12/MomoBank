@@ -47,6 +47,7 @@ public class BankService {
             .accountProductName((String)accountInfo.get("accountProductName"))
             .accountType(accountInfo.get("accountType").equals("입출금자유예금")? AccountType.입출금 : accountInfo.get("accountType").equals("정기예금")? AccountType.정기예금 : AccountType.적금)
             .bankName((String)accountInfo.get("bankName"))
+            .accountProductName((String) accountInfo.get("accountProductName"))
             .interestRate(Float.parseFloat(accountInfo.get("interestRate").toString()))
             .balance(Long.parseLong(accountInfo.get("balance").toString()))
             .member(member)
