@@ -9,6 +9,7 @@ import com.ssafy.community.notice.dto.request.NoticeModificationRequest;
 import com.ssafy.community.notice.dto.response.NoticeDetailResponse;
 import com.ssafy.community.notice.dto.response.NoticeListResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +21,16 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final GroupMemberRepository groupMemberRepository;
 
     // 공지사항 리스트 조회
     public List<NoticeListResponse> getNoticeList(Integer groupId) {
-        List<Notice> notices = noticeRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
+        log.info("getNoticeList groupId: {}", groupId);
+
+        List<Notice> notices = noticeRepository.findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(groupId);
         return notices.stream()
                 .map(notice -> NoticeListResponse.builder()
                         .notedId(notice.getNoticeId())
@@ -42,6 +46,7 @@ public class NoticeService {
     // 공지사항 작성
     @Transactional
     public void createNotice(NoticeCreationRequest request) {
+        log.info("createNotice request: {}", request);
         Notice notice = new Notice();
         notice.setTitle(request.getTitle());
         notice.setContent(request.getContent());
