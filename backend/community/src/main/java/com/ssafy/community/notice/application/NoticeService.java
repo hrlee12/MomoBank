@@ -26,7 +26,7 @@ public class NoticeService {
 
     // 공지사항 리스트 조회
     public List<NoticeListResponse> getNoticeList(Integer groupId) {
-        List<Notice> notices = noticeRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
+        List<Notice> notices = noticeRepository.findAllByGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(groupId);
         return notices.stream()
                 .map(notice -> NoticeListResponse.builder()
                         .notedId(notice.getNoticeId())
