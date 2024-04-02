@@ -1,8 +1,10 @@
 <script setup>
 import BankFooter from "~/components/layout/BankFooter.vue";
 import { useRouter } from "vue-router"; // useRouter 추가
+import { useUserApi } from "~/api/user";
 
 const router = useRouter(); // useRouter 인스턴스 생성
+const { getMyPageData } = useUserApi();
 
 definePageMeta({
   layout: "user",
@@ -15,25 +17,45 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
+// 유저 정보
 const userInfo = {
-  id: "ssafy",
-  name: "김성수",
-  birth: "2000-03-01",
-  phone: "01012341234",
+  id: "",
+  name: "",
+  birth: "",
+  phone: "",
 };
 
+// 휴대전화번호에 '-' 추가
 const onPhone = () => {
   userInfo.phone = userInfo.phone
     .replace(/[^0-9]/g, "")
     .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
 };
 
+// 수정 구분 처리
 const goEdit = (param) => {
   var pageName = param == 0 ? "phone-edit" : "password-edit";
   router.push(`/bank/profile/${pageName}`);
 };
 
-onPhone();
+// 유저 스토어 불러오기
+import { useRemitStore } from "~/stores/remitStore";
+const remitStore = useRemitStore();
+
+// 유저 정보 불러오는 api 요청
+const getUserInfo = async () => {
+  try {
+    const response = await getMyPageData(remitStore.memberId);
+    console.log("유저데이터 불러오기 성공: ", response.data.data);
+  } catch (error) {
+    console.log("유저데이터 불러오기 실패: ", error);
+  }
+};
+
+onMounted(() => {
+  getUserInfo();
+  onPhone();
+});
 </script>
 
 <template>

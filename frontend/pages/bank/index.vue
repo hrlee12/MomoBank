@@ -67,7 +67,8 @@ onMounted(async () => {
       </div>
       <NuxtLink to="/bank/notice">
         <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt=""
-      /></NuxtLink>
+        visiblity: hidden /></NuxtLink
+      >
     </nav>
   </header>
 
@@ -173,7 +174,7 @@ header {
 
     .menu {
       display: flex;
-      min-width: 80%;
+      min-width: 90%;
 
       a {
         display: flex;
