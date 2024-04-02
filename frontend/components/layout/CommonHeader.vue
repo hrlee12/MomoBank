@@ -18,15 +18,19 @@ const router = useRoute();
 // 라우터 이름에 따른 타이틀 및 sideMenuActive 상태 매핑
 const NO_SIDE_MENU = 0;
 const FULL_MENU = 1;
-const ONLY_ARROW = 2;
+const NO_HEADER = 2;
 
 // 동적 세그먼트 값을 포함한 라우터 이름을 기반으로 타이틀과 사이드 메뉴 활성화 상태를 결정
 const pageTitle = computed(() => {
   const id = router.params.id;
+  const number = router.params.number;
   if (id && router.name.startsWith("bank-")) {
     return { title: "거래내역", sideMenuActive: FULL_MENU };
   }
 
+  // if (number && router.name.startsWith("user-")) {
+  //   return { title: "거래내역", sideMenuActive: NO_SIDE_MENU };
+  // }
   // 정적 라우터 이름에 대한 설정
   const staticRoutesInfo = {
     "user-signup": { title: "회원가입", sideMenuActive: NO_SIDE_MENU },
@@ -59,7 +63,6 @@ const pageTitle = computed(() => {
       title: "송금확인",
       sideMenuActive: NO_SIDE_MENU,
     },
-    user: { title: "", sideMenuActive: ONLY_ARROW },
     "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
     "bank-group-create-account-select": {
       title: "계좌선택",
@@ -75,17 +78,17 @@ const pageTitle = computed(() => {
   };
 
   return (
-    staticRoutesInfo[router.name] || { title: "", sideMenuActive: ONLY_ARROW }
+    staticRoutesInfo[router.name] || { title: "", sideMenuActive: NO_HEADER }
   );
 });
 
-const isSideMenuActive = computed(
-  () => pageTitle.value.sideMenuActive !== NO_SIDE_MENU
-);
+const isSideMenuActive = computed(() => pageTitle.value.sideMenuActive);
 </script>
 
 <template>
-  <header :style="{ visibility: isSideMenuActive == 2 ? 'hidden' : 'visible' }">
+  <header
+    :style="{ visibility: isSideMenuActive === 2 ? 'hidden' : 'visible' }"
+  >
     <div class="link-container left" @click="goBack">
       <img
         class="double"

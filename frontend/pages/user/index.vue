@@ -84,14 +84,6 @@ const login = async () => {
       <NuxtLink to="/user/authenicate">
         <button class="second-btn login-item">새 계정 만들기</button></NuxtLink
       >
-      <div class="icon-item">
-        <p class="login-item">간편 로그인</p>
-        <img
-          class="login-item"
-          :src="getImageUrl('kakako-icon.png', 0)"
-          alt=""
-        />
-      </div>
     </div>
   </div>
 </template>
