@@ -56,10 +56,13 @@ public class FeedService {
 
         // 피드 목록을 FeedListResponse로 변환
         List<FeedListResponse> feedListResponses = feeds.getContent().stream().map(feed -> {
+
+            String content = feed.getContent();
+            String modifiedContent = content.length() > 30 ? content.substring(0, 30) + "..." : content;
             FeedListResponse dto = FeedListResponse.builder()
                     .feedId(feed.getFeedId())
                     .content(feed.getContent())
-                    .contentOneLine(feed.getContent().substring(0, 30) + "...")
+                    .contentOneLine(modifiedContent)
                     .commentsCount(feed.getCommentsCount())
                     .likesCount(feed.getLikesCount())
                     .createdAt(feed.getCreatedAt())
