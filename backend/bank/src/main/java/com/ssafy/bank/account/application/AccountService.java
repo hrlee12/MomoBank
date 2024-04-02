@@ -10,6 +10,7 @@ import com.ssafy.bank.account.dto.response.AccountResponse;
 import com.ssafy.bank.account.dto.response.BankResponse;
 import com.ssafy.bank.account.dto.response.AccountKafkaResponse;
 import com.ssafy.bank.account.dto.response.GetAllAccountProductResponse;
+import com.ssafy.bank.account.dto.response.MemberForKafkaResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
@@ -60,6 +61,8 @@ public class AccountService {
 
         accountRepository.save(account);
 
+        MemberForKafkaResponse memberKafka = new MemberForKafkaResponse(member);
+
         AccountKafkaResponse response = new AccountKafkaResponse(
             account.getAccountId(),
             account.getAccountNumber(),
@@ -67,7 +70,7 @@ public class AccountService {
             accountProduct.getBank().getBankName(),
             accountProduct.getInterestRate(),
             account.getBalance(),
-            account.getMember()
+            memberKafka
         );
 
         log.info("AccountKafkaResponse : {}", response);
@@ -99,6 +102,8 @@ public class AccountService {
 
         account.softDelete();
 
+        MemberForKafkaResponse memberKafka = new MemberForKafkaResponse(member);
+
         AccountKafkaResponse response = new AccountKafkaResponse(
             account.getAccountId(),
             account.getAccountNumber(),
@@ -106,7 +111,7 @@ public class AccountService {
             accountProduct.getBank().getBankName(),
             accountProduct.getInterestRate(),
             account.getBalance(),
-            account.getMember()
+            memberKafka
         );
 
         kafkaTemplate.send("deleteAccount", response);
