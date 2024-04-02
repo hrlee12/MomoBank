@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Integer>, AccountRepositoryCustom {
 //    Optional<List<Account>> findByMember_memberId(int memberId);
 
+
 }
