@@ -67,6 +67,8 @@ public class FeedService {
                     .likesCount(feed.getLikesCount())
                     .createdAt(feed.getCreatedAt())
                     .updatedAt(feed.getUpdatedAt())
+                    .groupMemberId(feed.getGroupMember().getGroupMemberId())
+                    .groupMemberName(feed.getGroupMember().getMember().getName())
                     .build();
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
@@ -279,7 +281,7 @@ public class FeedService {
                     .build();
 
             // 특정 사용자가 좋아요를 눌렀는지 여부 확인
-            Likes likes = likesRepository.findByFeedAndGroupMember(feed, groupMember);
+            Likes likes = likesRepository.findByFeedIdAndGroupMemberId(feed.getFeedId(), groupMember.getGroupMemberId());
             feedListResponse.setLikedByUser(likes != null);
 
             // 피드 댓글 조회

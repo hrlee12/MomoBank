@@ -10,6 +10,7 @@ import com.ssafy.bank.account.dto.response.AccountResponse;
 import com.ssafy.bank.account.dto.response.BankResponse;
 import com.ssafy.bank.account.dto.response.AccountKafkaResponse;
 import com.ssafy.bank.account.dto.response.GetAllAccountProductResponse;
+import com.ssafy.bank.account.dto.response.MemberForKafkaResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.member.domain.Member;
@@ -19,11 +20,13 @@ import java.security.SecureRandom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -32,6 +35,7 @@ public class AccountService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public AccountResponse createAccount(CreateAccountRequest request) {
+        log.info("CreateAccountRequest : {}", request);
         Member member = memberCheck(request.memberId());
 
         AccountProduct accountProduct = accountProductRepository.findById(
@@ -57,6 +61,8 @@ public class AccountService {
 
         accountRepository.save(account);
 
+        MemberForKafkaResponse memberKafka = new MemberForKafkaResponse(member);
+
         AccountKafkaResponse response = new AccountKafkaResponse(
             account.getAccountId(),
             account.getAccountNumber(),
@@ -64,8 +70,10 @@ public class AccountService {
             accountProduct.getBank().getBankName(),
             accountProduct.getInterestRate(),
             account.getBalance(),
-            account.getMember()
+            memberKafka
         );
+
+        log.info("AccountKafkaResponse : {}", response);
 
         kafkaTemplate.send("createAccount", response);
 
@@ -94,6 +102,8 @@ public class AccountService {
 
         account.softDelete();
 
+        MemberForKafkaResponse memberKafka = new MemberForKafkaResponse(member);
+
         AccountKafkaResponse response = new AccountKafkaResponse(
             account.getAccountId(),
             account.getAccountNumber(),
@@ -101,7 +111,7 @@ public class AccountService {
             accountProduct.getBank().getBankName(),
             accountProduct.getInterestRate(),
             account.getBalance(),
-            account.getMember()
+            memberKafka
         );
 
         kafkaTemplate.send("deleteAccount", response);

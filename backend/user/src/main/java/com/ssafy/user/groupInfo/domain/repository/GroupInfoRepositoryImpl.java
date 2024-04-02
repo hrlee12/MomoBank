@@ -68,7 +68,8 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
                 groupMember.totalFee,
                 budget.monthlyFee.sum().coalesce(0L),
                 groupInfo.account.balance,
-                groupInfo.groupMembers.size()
+                groupInfo.groupMembers.size(),
+                groupMember.groupMemberId
             ))
             .from(groupInfo).groupBy(groupInfo.groupInfoId)
             .leftJoin(groupInfo.groupMembers, groupMember)

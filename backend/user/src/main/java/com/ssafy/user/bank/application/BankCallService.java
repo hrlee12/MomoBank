@@ -11,6 +11,7 @@ import com.ssafy.user.common.exception.ErrorResponse;
 import com.ssafy.user.common.util.RestTemplateUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestClient;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class BankCallService {
 
     @Value("${bank.url}")
@@ -32,7 +34,7 @@ public class BankCallService {
     public ResponseEntity accountProductList() {
         ResponseEntity response;
         try {
-            response = restTemplateUtil.send(bankUrl + "/accounts/account-products", HttpMethod.GET,
+            response = restTemplateUtil.send(bankUrl + "/api/bank/accounts/account-products", HttpMethod.GET,
                 null);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
@@ -45,7 +47,7 @@ public class BankCallService {
     public ResponseEntity bankList() {
         ResponseEntity response;
         try {
-            response = restTemplateUtil.send(bankUrl + "/accounts/bank-list", HttpMethod.GET,
+            response = restTemplateUtil.send(bankUrl + "/api/bank/accounts/bank-list", HttpMethod.GET,
                 null);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
@@ -57,10 +59,13 @@ public class BankCallService {
     public ResponseEntity createAccount(CreateAccountRequest request) {
         ResponseEntity response;
         try {
-            response = restTemplateUtil.send(bankUrl + "/accounts/create-account", HttpMethod.POST,
+            log.info("CreateAccountRequest: {}", request);
+            log.info("send to {}", bankUrl + "/api/bank/accounts/create-account");
+            response = restTemplateUtil.send(bankUrl + "/api/bank/accounts/create-account", HttpMethod.POST,
                 request);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
+            log.info("createAccount errorResponse: {}", errorResponse);
             throw new ApiException(errorResponse);
         }
         return response;
@@ -70,7 +75,7 @@ public class BankCallService {
     public ResponseEntity deleteAccount(DeleteAccountRequest request) {
         ResponseEntity response;
         try {
-            response = restTemplateUtil.send(bankUrl + "/accounts/delete-account",
+            response = restTemplateUtil.send(bankUrl + "/api/bank/accounts/delete-account",
                 HttpMethod.DELETE, request);
         } catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
@@ -107,7 +112,7 @@ public class BankCallService {
     public ResponseEntity transfer(TransferRequest request){
         ResponseEntity response;
         try{
-            response = restTemplateUtil.send(bankUrl + "/transfers/transfer",
+            response = restTemplateUtil.send(bankUrl + "/api/bank/transfers/transfer",
                 HttpMethod.POST, request);
         }catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
@@ -120,7 +125,7 @@ public class BankCallService {
     public ResponseEntity passwordConfirm(PasswordConfirmRequest request){
         ResponseEntity response;
         try{
-            response = restTemplateUtil.send(bankUrl + "/transfers/password-confirm",
+            response = restTemplateUtil.send(bankUrl + "/api/bank/transfers/password-confirm",
                 HttpMethod.POST, request);
         }catch (HttpClientErrorException e) {
             ErrorResponse errorResponse = e.getResponseBodyAs(ErrorResponse.class);
