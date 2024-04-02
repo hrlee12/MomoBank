@@ -14,7 +14,7 @@ public class AccountKafkaResponse {
     private String accountNumber;
     private AccountType accountType;
     private String bankName;
-    private float interestRate;
+    private String interestRate;
     private long balance;
     private MemberForKafkaResponse member;
 }
