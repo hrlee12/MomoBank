@@ -239,4 +239,50 @@ public class FeedService {
                 .content(comment.getContent())
                 .build();
     }
+
+    public List<FeedListResponse> getGroupMemberFeeds(Integer groupMemberId) {
+        // 그룹 멤버 ID로 그룹 멤버 정보 조회
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid group member ID"));
+
+        // 그룹 멤버가 작성한 피드 목록 조회
+        List<Feed> feeds = feedRepository.findByGroupMember(groupMember);
+
+        // 피드 목록을 FeedListResponse로 변환
+        return feeds.stream().map(feed -> {
+            String content = feed.getContent();
+            String modifiedContent = content.length() > 30 ? content.substring(0, 30) + "..." : content;
+
+            FeedListResponse feedListResponse = FeedListResponse.builder()
+                    .feedId(feed.getFeedId())
+                    .content(feed.getContent())
+                    .contentOneLine(modifiedContent)
+                    .commentsCount(feed.getCommentsCount())
+                    .likesCount(feed.getLikesCount())
+                    .createdAt(feed.getCreatedAt())
+                    .updatedAt(feed.getUpdatedAt())
+                    .build();
+
+            // 특정 사용자가 좋아요를 눌렀는지 여부 확인
+            Likes likes = likesRepository.findByFeedAndGroupMember(feed, groupMember);
+            feedListResponse.setLikedByUser(likes != null);
+
+            // 피드 댓글 조회
+            List<Comments> comments = commentsRepository.findAllByFeedFeedId(feed.getFeedId());
+            feedListResponse.setComments(comments.stream().map(this::convertToCommentDto).collect(Collectors.toList()));
+
+            // 미디어 파일 정보 조회 및 설정
+            List<Media> mediaList = mediaRepository.findByFeedFeedIdOrderBySequenceAsc(feed.getFeedId());
+            List<MediaResponse> mediaResponses = mediaList.stream()
+                    .map(media -> new MediaResponse(media.getMediaId(), media.getSequence(), media.getMediaType(), media.getMediaUrl()))
+                    .collect(Collectors.toList());
+            feedListResponse.setMediaList(mediaResponses);
+
+            // 그룹 멤버 정보 설정
+            feedListResponse.setGroupMemberId(groupMember.getGroupMemberId());
+            feedListResponse.setGroupMemberName(groupMember.getName());
+
+            return feedListResponse;
+        }).collect(Collectors.toList());
+    }
 }

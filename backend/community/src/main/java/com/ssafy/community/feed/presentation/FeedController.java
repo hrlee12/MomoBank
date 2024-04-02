@@ -4,6 +4,7 @@ import com.ssafy.community.feed.dto.*;
 import com.ssafy.community.feed.dto.request.FeedCreateRequest;
 import com.ssafy.community.feed.dto.request.FeedUpdateRequest;
 import com.ssafy.community.feed.dto.response.FeedListResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -122,6 +123,13 @@ public class FeedController {
     public ResponseEntity<String> deleteComment(@PathVariable Integer feedId, @PathVariable Integer commentId) {
         feedService.deleteComment(commentId);
         return ResponseEntity.ok("댓글이 성공적으로 삭제되었습니다.");
+    }
+
+    @Operation(summary = "그룹 내 사용자가 작성한 피드 조회", description = "그룹 내에서 사용자가 작성한 피드를 조회합니다.")
+    @GetMapping("/group/myfeed")
+    public ResponseEntity<List<FeedListResponse>> getGroupMemberFeeds(@RequestParam Integer groupMemberId) {
+        List<FeedListResponse> feedListResponse = feedService.getGroupMemberFeeds(groupMemberId);
+        return ResponseEntity.ok(feedListResponse);
     }
 
 
