@@ -18,6 +18,8 @@ public class NoticeListResponse {
 
     private String content;
 
+    private String memberName;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
