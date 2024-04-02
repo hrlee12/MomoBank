@@ -49,7 +49,7 @@ const goNext = (param) => {
     accountInfo.balance
   );
 
-  if (param == 0) $router.push(`/bank/${accountId}`);
+  if (param == 0) $router.push(`/bank/${accountInfo.accountId}`);
   else if (param == 1) $router.push("/bank/remit");
 };
 </script>
@@ -69,12 +69,15 @@ const goNext = (param) => {
       <KebabMenu />
     </div>
     <div class="money-content">
-      <h1 v-if="!hide">{{ accountInfo.balance.toLocaleString("ko-KR") }}원</h1>
-      <h1 v-if="hide">잔액 숨김 중</h1>
+      <h1 v-if="!hide && accountInfo.balance != 0">
+        {{ accountInfo.balance.toLocaleString("ko-KR") }}원
+      </h1>
+      <h1 v-else-if="!hide">{{ accountInfo.balance }}원</h1>
+      <h1 v-else-if="hide">잔액 숨김 중</h1>
 
       <button @click="hideActive()">
         <p v-if="!hide">숨김</p>
-        <p v-if="hide">보기</p>
+        <p v-else-if="hide">보기</p>
       </button>
     </div>
 
@@ -157,6 +160,7 @@ const goNext = (param) => {
   text-align: center;
   width: 50%;
   border-radius: 0 m !important;
+  font-size: 2.2vh;
 
   div {
     margin-top: 6vh;

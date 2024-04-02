@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useRemitStore = defineStore({
   id: "remitStore",
   state: () => ({
+    memberId: 2, // 로그인한 사용자 고유 인덱스 아이디
     remitInfo: {
       myAccountId: 0, // 내 계좌 고유 인덱스 아이디
       myAccountName: "내 계좌명", // 내 계좌 명

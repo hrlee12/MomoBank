@@ -15,7 +15,7 @@ const myAccountList = ref([]);
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {
   try {
-    const memberId = 13; // 예시 ID
+    const memberId = 1; // 예시 ID
     const response = await getMyAccountList(memberId);
     myAccountList.value = response.data.data.myAccountList;
     console.log(myAccountList);
