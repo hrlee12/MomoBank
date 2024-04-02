@@ -53,7 +53,8 @@ public class GroupInfoService {
     public GetGroupDetailsResponse getGroupDetails(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-        return GetGroupDetailsResponse.from(groupInfo);
+        GroupMember groupMember = groupMemberRepository.findGroupMemberByMemberAndGroupInfo(member, groupInfo);
+        return GetGroupDetailsResponse.from(groupInfo, groupMember);
     }
 
     // 각 모임원이 달마다 납입한 금액 조회
