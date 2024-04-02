@@ -48,7 +48,8 @@ public enum ErrorCode {
     NO_AUTHORITY(FORBIDDEN, "자원에 접근할 수 있는 권한이 없습니다."),
     NO_AUTHENTICATION(UNAUTHORIZED, "로그인이 필요한 작업입니다."),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "만료된 리프레쉬 토큰입니다."),
-    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "유효하지 않은 리프레쉬 토큰입니다.");
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "유효하지 않은 리프레쉬 토큰입니다."),
+    CONVERTER_ERROR(BAD_REQUEST, "컨버터 에러~");
     private final HttpStatus status;
     private final String message;
 
