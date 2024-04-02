@@ -83,8 +83,8 @@ public class TransferService {
             transfer.getDescription(),
             String.valueOf(transfer.getFromBalance()),
             String.valueOf(transfer.getToBalance()),
-            fromAccountKafka,
-            toAccountKafka
+            fromAccount.getAccountId(),
+            toAccount.getAccountId()
         );
 
         kafkaTemplate.send("transfer", response);

@@ -8,8 +8,8 @@ public record TransferKafkaResponse(
     String description,
     String fromBalance,
     String toBalance,
-    AccountForKafkaResponse fromAccount,
-    AccountForKafkaResponse toAccount
+    int fromAccount,
+    int toAccount
 ) {
 
 }
