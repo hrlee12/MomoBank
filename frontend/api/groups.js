@@ -60,6 +60,12 @@ export function useGroupApi() {
     return await $axios.delete(`/user/groups/${groupId}/budgets/${budgetId}`);
   };
 
+  const getTransactionHistory = async (memberId, accountId) => {
+    return await $axios.get(
+      `/user/bank/get-transfer?memberId=${memberId}&accountId=${accountId}`
+    );
+  };
+
   // const
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
@@ -74,5 +80,6 @@ export function useGroupApi() {
     postGroupBudget,
     patchGroupBudget,
     deleteGroupBudget,
+    getTransactionHistory,
   };
 }
