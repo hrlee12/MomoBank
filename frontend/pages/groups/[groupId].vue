@@ -1,6 +1,4 @@
 <!-- TODO : API 연동 시 변경 사항
-- DB 데이터 연결
-- NuxtLink 연결
 - 피드 게시글 상세보기 눌렀을 떄 다른 게시글까지 변경되는거 수정
 - api 연동할 때 파일명 변경하기
 - 예산, 거래내역 링크 연결 모두 id로 연결되기 때문에 link 설정 다 동적으로 변경해줘야함.
@@ -116,13 +114,7 @@ const toggleText = () => {
         <div v-if="!groupData.status" class="items-center">
           <p class="text-negative-color text-[13px]">납부 요망</p>
         </div>
-        <div class="w-8 h-6 mr-4">
-          <img
-            class="rotate-90"
-            :src="getImageUrl('arrow-icon.png', 0)"
-            alt="arrow-icon"
-          />
-        </div>
+        <div class="w-8 h-6 mr-4"></div>
       </div>
 
       <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->

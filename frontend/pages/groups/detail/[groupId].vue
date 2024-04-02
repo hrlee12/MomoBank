@@ -59,13 +59,7 @@ const getImageUrl = (imageName, idx) => {
         <p v-else class="text-positive-color text-[13px]">납부 완료</p>
       </div>
 
-      <div class="w-8 h-6 mr-4">
-        <img
-          class="rotate-90"
-          :src="getImageUrl('arrow-icon.png', 0)"
-          alt="arrow-icon"
-        />
-      </div>
+      <div class="w-8 h-6 mr-4"></div>
     </div>
     <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->
     <AccountInformation></AccountInformation>

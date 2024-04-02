@@ -9,6 +9,7 @@ export const useGroupStore = defineStore("group", {
     groupId: undefined,
     paymentStatus: undefined,
     groupMemberId: undefined,
+    accountId: 5,
   }),
   actions: {
     updateGroupHeaderName(newName) {
