@@ -11,7 +11,11 @@ const groupDesc = ref("");
 
 const router = useRouter();
 
+const groupStore = useGroupStore();
+
 const goNext = () => {
+  groupStore.createGroupName(groupName);
+  groupStore.createGroupDesc(groupDesc);
   router.push(`/bank/group-create/account-select/`);
 };
 </script>

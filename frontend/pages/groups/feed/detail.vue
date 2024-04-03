@@ -1,12 +1,69 @@
 <script setup>
 import CompleteModal from "~/components/layout/CompleteModal.vue";
 import GroupsBottomSheetModal from "~/components/layout/GroupsBottomSheetModal.vue";
+import { useRoute } from 'vue-router';
+import { useGroupApi } from "~/api/groups";
+const { getMyFeed } = useGroupApi();
+
+const route = useRoute();
+const feedId = route.query.feedId;
+
+
+
+
+const fetchMyFeed = async (groupId) => {
+  try {
+    const response = await getMyFeed(groupId);
+
+    const filteredData = response.data.filter(data => data.feedId == feedId);
+
+    for (var i = 0; i < filteredData[0].comments.length; i++) {
+      console.log(filteredData[0].comments[i]);
+      filteredData[0].comments[i].id = filteredData[0].comments[i].commentId
+      filteredData[0].comments[i].value = filteredData[0].comments[i].content
+
+    }
+    feed.value.comments = filteredData[0].comments;
+
+    console.log(JSON.stringify(filteredData[0].mediaList));
+
+
+    const convertArray = (original) => {
+      return original.map((item, index) => {
+        return {
+          id: item.mediaId,
+          url: item.mediaUrl
+        };
+      });
+    };
+    feed.value.image = convertArray(filteredData[0].mediaList);
+    imageList.value = convertArray(filteredData[0].mediaList);
+    feed.value.contents = filteredData[0].content
+    feed.value.name = filteredData[0].groupMemberName
+    feed.value.likeCnt = filteredData[0].likesCount
+    feed.value.commentsCnt = filteredData[0].commentsCount
+
+
+    return response.data;
+  } catch (error) {
+    console.error("모임 인원 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
+
+onMounted(() => {
+  // 경고!! 여기서는 10번 유저를 임시로 했는데, 실제 로그인한 그룹 멤버 아이디로 바꾸어줘야함
+  fetchMyFeed(10).then((response) => {
+
+  });
+});
+
+
 
 definePageMeta({
   layout: "groups",
 });
 
-const feed = {
+const feed = ref({
   id: 6,
   likeCnt: 6,
   contents: "5반 5린이들과 함께간 일본 후쿠오카에서 사진 한장!",
@@ -24,9 +81,9 @@ const feed = {
     { id: 15, url: "tiger-image3.jpg" },
     { id: 16, url: "image-1.png" },
   ],
-};
+});
 
-const imageList = ref(feed.image);
+const imageList = ref(feed.value.image);
 
 const getImageUrl = (imageName, idx) => {
   // Note: You might need to adjust the path depending on your project structure
@@ -40,7 +97,7 @@ const showFullText = ref(false);
 const isTextOverflow = computed(() => {
   // 이 예제에서는 단순화를 위해 길이를 기준으로 판단합니다.
   // 실제로는 텍스트와 컨테이너의 너비를 비교하는 등의 방법을 사용할 수 있습니다.
-  return feed.contents.length > 20;
+  return feed.value.contents.length > 20;
 });
 
 const toggleText = () => {
@@ -58,7 +115,6 @@ const visibleComments = ref(false);
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
 };
-
 const editMode = ref(false);
 
 const selectOption = (option) => {
@@ -104,44 +160,25 @@ const handleUpdate = (event) => {
   <div class="h-screen bg-white">
     <div class="flex items-center px-4 pt-4">
       <div class="mr-2">
-        <img
-          class="rounded-full w-11 h-11"
-          :src="getImageUrl('tiger-image.jpg', 1)"
-          alt="tiger-image"
-        />
+        <img class="rounded-full w-11 h-11" :src="getImageUrl('tiger-image.jpg', 1)" alt="tiger-image" />
       </div>
-      <div class="text-xl font-bold basis-11/12">김성수</div>
+      <div class="text-xl font-bold basis-11/12">{{ feed.name }}</div>
       <div v-if="!editMode" class="w-1">
-        <img
-          @click="toggleDropdown"
-          :src="getImageUrl('kebab-icon.png', 0)"
-          alt="kebab-icon"
-        />
+        <img @click="toggleDropdown" :src="getImageUrl('kebab-icon.png', 0)" alt="kebab-icon" />
       </div>
       <div v-if="editMode" class="relative right-0">
-        <div
-          class="absolute top-[-0.8rem] w-10 font-bold text-main-color right-14"
-        >
+        <div class="absolute top-[-0.8rem] w-10 font-bold text-main-color right-14">
           <div>수정</div>
         </div>
-        <div
-          class="absolute right-0 top-[-0.8rem] w-10 font-bold text-negative-color"
-          @click="cancelEdit"
-        >
+        <div class="absolute right-0 top-[-0.8rem] w-10 font-bold text-negative-color" @click="cancelEdit">
           <div>취소</div>
         </div>
       </div>
     </div>
     <div class="relative">
-      <div
-        v-if="isDropdownVisible"
-        class="absolute right-0 z-50 h-24 bg-white border-2 w-28"
-      >
+      <div v-if="isDropdownVisible" class="absolute right-0 z-50 h-24 bg-white border-2 w-28">
         <div class="text-center">
-          <div
-            @click="selectOption('edit')"
-            class="px-2 py-3 border-b border-gray-color"
-          >
+          <div @click="selectOption('edit')" class="px-2 py-3 border-b border-gray-color">
             수정
           </div>
           <div @click="selectOption('delete')" class="pt-3">삭제</div>
@@ -150,51 +187,29 @@ const handleUpdate = (event) => {
     </div>
 
     <Swiper class="container w-full h-80">
-      <SwiperSlide
-        v-for="item in imageList"
-        :key="item.id"
-        class="w-full h-auto mt-4"
-      >
+      <SwiperSlide v-for="item in imageList" :key="item.id" class="w-full h-auto mt-4">
         <div v-if="editMode" class="relative">
-          <div
-            class="absolute top-0 w-10 h-10 text-2xl font-bold border-4 border-white rounded-full right-2"
-            @click="removeImage(item.id)"
-          >
+          <div class="absolute top-0 w-10 h-10 text-2xl font-bold border-4 border-white rounded-full right-2"
+            @click="removeImage(item.id)">
             <p class="text-center">X</p>
           </div>
         </div>
-        <img
-          :src="getImageUrl(item.url, 1)"
-          alt=""
-          class="object-cover w-full h-full"
-        />
+        <img :src="item.url" alt="" class="object-cover w-full h-full" />
       </SwiperSlide>
     </Swiper>
     <div class="px-3 py-4 border-b border-light-gray-color">
       <img :src="getImageUrl('like.png', 0)" alt="like" class="w-5 h-5" />
-      <div class="pt-1 font-bold">좋아요 {{ feed.commentsCnt }}개</div>
-      <div
-        v-if="!showFullText && !editMode"
-        class="pt-1 overflow-hidden w-72 text-ellipsis whitespace-nowrap"
-      >
+      <div class="pt-1 font-bold">좋아요 {{ feed.likeCnt }}개</div>
+      <div v-if="!showFullText && !editMode" class="pt-1 overflow-hidden w-72 text-ellipsis whitespace-nowrap">
         {{ feed.contents }}
       </div>
-      <div
-        v-if="isTextOverflow && !showFullText && !editMode"
-        @click="toggleText"
-        class="pt-1"
-      >
+      <div v-if="isTextOverflow && !showFullText && !editMode" @click="toggleText" class="pt-1">
         더보기
       </div>
       <div v-if="editMode">
-        <textarea
-          type="text"
-          name="contents"
-          id="contents"
-          class="w-full overflow-hidden text-base border-none resize-none"
-          v-model="feed.contents"
-          @input="adjustHeight"
-        ></textarea>
+        <textarea type="text" name="contents" id="contents"
+          class="w-full overflow-hidden text-base border-none resize-none" v-model="feed.value.contents"
+          @input="adjustHeight"></textarea>
       </div>
       <div v-if="showFullText && !editMode" @click="toggleText" class="pt-2">
         {{ feed.contents }}
@@ -206,17 +221,10 @@ const handleUpdate = (event) => {
       <div>{{ feed.created }}</div>
     </div>
   </div>
-  <CompleteModal
-    v-if="visibleModal"
-    :cancelButton="cancelButton"
-    @visible-modal="isVisibleModal"
-    class="z-50"
-  ></CompleteModal>
-  <GroupsBottomSheetModal
-    :isComments="visibleComments"
-    :isVisible="visibleBottomModal"
-    @comments-update="handleUpdate"
-  ></GroupsBottomSheetModal>
+  <CompleteModal v-if="visibleModal" :cancelButton="cancelButton" @visible-modal="isVisibleModal" class="z-50">
+  </CompleteModal>
+  <GroupsBottomSheetModal :isComments="visibleComments" :isVisible="visibleBottomModal" @comments-update="handleUpdate">
+  </GroupsBottomSheetModal>
   <div v-if="visibleBottomModal" class="modal-bg"></div>
 </template>
 <style lang="scss" scoped>

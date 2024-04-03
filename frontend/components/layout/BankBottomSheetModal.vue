@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from "vue";
+import { useBankApi } from "~/api/bank.js";
+const { getBankList } = useBankApi();
 
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
@@ -46,20 +48,23 @@ const stopDrag = () => {
   document.removeEventListener("touchmove", dragging);
 };
 
-// 임시 데이터
-const bankList = ref([
-  { id: 0, name: "모모은행", bankLogoUrl: "logo-icon.png" },
-  { id: 1, name: "모뭬은행", bankLogoUrl: "logo-icon.png" },
-  { id: 2, name: "모무은행", bankLogoUrl: "logo-icon.png" },
-  { id: 3, name: "모먀은행", bankLogoUrl: "logo-icon.png" },
-  { id: 4, name: "모묘은행", bankLogoUrl: "logo-icon.png" },
-  { id: 5, name: "모미은행", bankLogoUrl: "logo-icon.png" },
-  { id: 6, name: "모뫄은행", bankLogoUrl: "logo-icon.png" },
-  { id: 7, name: "모므은행", bankLogoUrl: "logo-icon.png" },
-  { id: 8, name: "모머은행", bankLogoUrl: "logo-icon.png" },
-  { id: 9, name: "모먀은행", bankLogoUrl: "logo-icon.png" },
-  { id: 10, name: "모며은행", bankLogoUrl: "logo-icon.png" },
-]);
+// 은행 리스트 조회 api
+
+const requestBankList = async () => {
+  try {
+    const resopnse = await getBankList();
+    bankList.value = resopnse.data.data;
+    console.log("은행 리스트 조회 성공: ", bankList.value);
+  } catch (error) {
+    console.log("은행 리스트 조회 실패: ", error);
+  }
+};
+
+onMounted(async () => {
+  await requestBankList();
+});
+const bankLogoUrl = "logo-icon.png";
+const bankList = ref([]); //{ id: 0, name: "모모은행" }
 
 // 은행 선택시 함수
 const selectedBank = (bankInfo) => {
@@ -86,8 +91,8 @@ const selectedBank = (bankInfo) => {
             class="method-content"
             @click="selectedBank(bank)"
           >
-            <img :src="getImageUrl(`${bank.bankLogoUrl}`, 0)" alt="" />
-            <p>{{ bank.name }}</p>
+            <img :src="getImageUrl(`${bankLogoUrl}`, 0)" alt="" />
+            <p>{{ bank.companyName }}</p>
           </div>
         </div>
       </div>

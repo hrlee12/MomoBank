@@ -14,7 +14,10 @@ const accountNumber = computed(() => groupStore.accountNumber);
     </div>
   </div>
   <div class="flex justify-center">
-    <div class="font-bold text-[28px]">2,345,678</div>
+    <div v-if="groupStore.groupBalance !== null" class="font-bold text-[28px]">
+      {{ groupStore.groupBalance.toLocaleString("ko-KR") }}
+    </div>
+    <div v-else class="font-bold text-[28px]">0</div>
     <div class="text-[15px] pt-4 pl-1 pr-2">원</div>
     <div
       class="flex items-center justify-center w-8 mt-3 bg-light-gray-color rounded-xl h-7"

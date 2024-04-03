@@ -1,6 +1,37 @@
 <script setup>
 import GroupsBottomSheetModal from "~/components/layout/GroupsBottomSheetModal.vue";
 
+import { useGroupApi } from "~/api/groups";
+
+const { postGroupBudget } = useGroupApi();
+
+import { useGroupStore } from "@/stores/group";
+
+const groupStore = useGroupStore();
+const remitStore = useRemitStore();
+
+const budget = ref({
+  memberId: remitStore.memberId,
+  monthlyDueDate: null,
+  name: "",
+  finalFee: null,
+  finalDueDate: null,
+});
+
+const groupId = groupStore.groupId;
+
+const postBudget = async () => {
+  console.log(budget.value);
+  try {
+    const response = await postGroupBudget(groupId, budget.value);
+    if (response.status === 200) {
+      goBack();
+    }
+  } catch (error) {
+    console.error(error); // 오류 처리
+  }
+};
+
 definePageMeta({
   layout: "no-footer-bank",
 });
@@ -13,14 +44,11 @@ const getImageUrl = (imageName, idx) => {
 };
 
 const budgetGoal = ref("");
-const targetAmount = ref("");
 
 // 이체주기 선택
 const visibleFrequency = ref(false);
 
 const visibleBottomModal = ref(false);
-
-const frequencyDay = ref(null);
 
 const visibleBottomModalClick = () => {
   visibleBottomModal.value = true;
@@ -30,14 +58,22 @@ const visibleBottomModalClick = () => {
 const handleUpdate = (event) => {
   visibleBottomModal.value = event.isVisible;
   visibleFrequency.value = event.budgetAddVisible;
-  frequencyDay.value = event.frequencyDay.value;
+  // frequencyDay.value = event.frequencyDay.value;
+  budget.value.monthlyDueDate = event.frequencyDay.value;
+};
+
+const goBack = () => {
+  window.history.back();
 };
 
 // TODO: 확인 버튼 클릭시 저장 API 호출
 </script>
 <template>
   <div class="relative">
-    <div class="absolute right-5 top-[-2.4rem] font-bold text-main-color">
+    <div
+      @click="postBudget"
+      class="absolute right-5 top-[-2.4rem] font-bold text-main-color"
+    >
       확인
     </div>
   </div>
@@ -48,7 +84,7 @@ const handleUpdate = (event) => {
         <div class="border-b-2 border-main-color">
           <input
             type="text"
-            v-model="budgetGoal"
+            v-model="budget.name"
             placeholder="예산 목적 입력"
             class="w-full text-lg"
           />
@@ -59,7 +95,7 @@ const handleUpdate = (event) => {
         <div class="border-b-2 border-main-color">
           <input
             type="text"
-            v-model="targetAmount"
+            v-model="budget.finalFee"
             placeholder="목표 금액 입력"
             class="w-full text-lg"
           />
@@ -67,11 +103,18 @@ const handleUpdate = (event) => {
       </div>
       <div class="py-3 text-xl font-bold">언제까지 모아야 하나요?</div>
       <div>
-        <input type="date" class="border-none" name="goalInput" />
+        <input
+          type="date"
+          class="border-none"
+          name="goalInput"
+          v-model="budget.finalDueDate"
+        />
       </div>
       <div class="py-3 text-xl font-bold">며칟날 입금할 건가요?</div>
       <div
-        v-if="frequencyDay === null || frequencyDay === 'null'"
+        v-if="
+          budget.monthlyDueDate === null || budget.monthlyDueDate === 'null'
+        "
         class="flex items-center"
       >
         <div @click="visibleBottomModalClick">이체주기 선택</div>
@@ -81,23 +124,23 @@ const handleUpdate = (event) => {
       </div>
       <div
         v-if="
-          frequencyDay !== null &&
-          frequencyDay !== '말일' &&
-          frequencyDay !== 'null'
+          budget.monthlyDueDate !== null &&
+          budget.monthlyDueDate !== '말일' &&
+          budget.monthlyDueDate !== 'null'
         "
         @click="visibleBottomModalClick"
       >
-        매월 {{ frequencyDay }}일
+        매월 {{ budget.monthlyDueDate }}일
       </div>
       <div
         v-if="
-          frequencyDay !== null &&
-          frequencyDay === '말일' &&
-          frequencyDay !== 'null'
+          budget.monthlyDueDate !== null &&
+          budget.monthlyDueDate === '말일' &&
+          budget.monthlyDueDate !== 'null'
         "
         @click="visibleBottomModalClick"
       >
-        매월 {{ frequencyDay }}
+        매월 {{ budget.monthlyDueDate }}
       </div>
     </div>
     <GroupsBottomSheetModal

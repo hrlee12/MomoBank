@@ -1,10 +1,13 @@
 <script setup>
-
 const isEditMode = ref(false);
 
 definePageMeta({
   layout: "groups",
 });
+
+const { notedId } = useRoute().params; // 가로안에 들어가는 변수 명은 해당 []안에 들어간 이름과 통일
+
+// notedId에 해당하는 공지사항 상세 정보 가져오기
 
 // Define a method to dynamically require images
 const getImageUrl = (imageName, idx) => {

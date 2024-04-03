@@ -1,6 +1,8 @@
 <script setup>
 import BankBottomSheetModal from "~/components/layout/BankBottomSheetModal.vue";
 import { useNuxtApp } from "#app";
+import { useBankApi } from "~/api/bank";
+const { getTargetAccountInfo } = useBankApi();
 
 // Nuxt 앱 인스턴스에서 $router를 가져옵니다.
 const { $router } = useNuxtApp();
@@ -17,7 +19,12 @@ const getImageUrl = (imageName, idx) => {
 };
 
 const isModalVisible = ref(false); // 모달창 상태 변수
-const targetAccountNumber = ref(""); // 전송할 목표 계좌 번호
+const targetAccount = ref({
+  id: Number,
+  number: "",
+  userName: "",
+}); // 전송할 목표 계좌 번호
+
 const bankInfo = ref({
   id: Number,
   name: "",
@@ -25,14 +32,42 @@ const bankInfo = ref({
 
 // emit 받아오기 (isVisible, bankInfo)
 const handleUpdate = (eventPayload) => {
+  console.log("선택한 은행사 정보: ", eventPayload.bankInfo);
   isModalVisible.value = eventPayload.isVisible;
-  if (eventPayload.bankInfo != "") bankInfo.value = eventPayload.bankInfo;
+  if (eventPayload.bankInfo != "") {
+    bankInfo.value.id = eventPayload.bankInfo.bankId;
+    bankInfo.value.name = eventPayload.bankInfo.companyName;
+  }
 };
 
-const goNext = () => {
-  remitInfo.targetAccountNumber = targetAccountNumber.value;
-  remitInfo.targetAccountBankName = bankInfo.value.name;
-  $router.push("/bank/remit/money-input");
+// 송금 대상이 존재하는지 확인
+const checkTarget = async () => {
+  await getTargetAccountInfo(
+    {
+      myAccountId: remitStore.memberId,
+      bankName: bankInfo.value.name,
+      accountNumber: targetAccount.value.number,
+    },
+    (data) => {
+      targetAccount.value.id = data.data.data.to.accountId;
+      targetAccount.value.userName = data.data.data.to.name;
+      console.log("송금 대상 요청이 존재합니다: ", data.data);
+
+      // 얻어낸 정보 pinia에 저장
+      remitInfo.targetAccountBankId = bankInfo.value.id;
+      remitInfo.targetAccountId = targetAccount.value.id;
+      remitInfo.targetAccountNumber = targetAccount.value.number;
+      remitInfo.targetAccountUserName = targetAccount.value.userName;
+      remitInfo.targetAccountBankName = bankInfo.value.name;
+
+      // 페이지 이동
+      $router.push("/bank/remit/money-input");
+    },
+    (error) => {
+      console.log("송금할 수 있는 계좌가 아닙니다: ", error);
+      alert("송금할 수 있는 계좌가 아닙니다.");
+    }
+  );
 };
 </script>
 
@@ -41,7 +76,11 @@ const goNext = () => {
     <h1>어떤 계좌로 보낼까요?</h1>
     <!-- 계좌번호 입력란 -->
     <div class="input-item">
-      <input type="text" v-model="targetAccountNumber" placeholder="계좌번호" />
+      <input
+        type="text"
+        v-model="targetAccount.number"
+        placeholder="계좌번호"
+      />
     </div>
     <!-- 은행사 선택란 -->
     <div class="input-item" @click="isModalVisible = true">
@@ -58,12 +97,12 @@ const goNext = () => {
   <!-- 다음 버튼 -->
   <div class="btn-container">
     <button
-      v-if="targetAccountNumber == '' || bankInfo.name == ''"
+      v-if="targetAccount.number == '' || bankInfo.name == ''"
       class="second-btn"
     >
       다음
     </button>
-    <button v-else class="prime-btn" @click="goNext()">다음</button>
+    <button v-else class="prime-btn" @click="checkTarget()">다음</button>
   </div>
   <!-- 모달 -->
   <BankBottomSheetModal :isVisible="isModalVisible" @update="handleUpdate" />

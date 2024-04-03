@@ -9,6 +9,11 @@ export const useGroupStore = defineStore("group", {
     groupId: undefined,
     paymentStatus: undefined,
     groupMemberId: undefined,
+    accountId: 5,
+    groupBalance: null,
+    groupRole: null,
+    createGroupName: "",
+    createGroupDesc: "",
   }),
   actions: {
     updateGroupHeaderName(newName) {
@@ -25,6 +30,18 @@ export const useGroupStore = defineStore("group", {
     },
     updateGroupMemberId(newGroupMemberId) {
       this.groupMemberId = newGroupMemberId;
+    },
+    updateGroupBalance(newGroupBalance) {
+      this.groupBalance = newGroupBalance;
+    },
+    updateGroupRole(newGroupRole) {
+      this.groupRole = newGroupRole;
+    },
+    createGroupName(newGroupName) {
+      this.createGroupName = newGroupName;
+    },
+    createGroupDesc(newGroupDesc) {
+      this.createGroupDesc = newGroupDesc;
     },
   },
 });

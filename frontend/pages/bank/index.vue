@@ -12,9 +12,12 @@ const { getMyGroups } = useGroupApi();
 
 const myGroups = ref([]);
 
-const memberId = 2;
+// remitStore 사용
+const remitStore = useRemitStore();
 
-const fetchMyGroups = async (memberId) => {
+const memberId = remitStore.memberId;
+
+const fetchMyGroups = async () => {
   try {
     const response = await getMyGroups(memberId);
     return response.data;
@@ -22,13 +25,6 @@ const fetchMyGroups = async (memberId) => {
     console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
   }
 };
-
-onMounted(() => {
-  fetchMyGroups(memberId).then((response) => {
-    myGroups.value = response.data.groupList;
-    console.log(myGroups.value);
-  });
-});
 
 const router = useRouter();
 
@@ -57,9 +53,6 @@ const goToGroup = (groupId) => {
   router.push(`/groups/` + groupId);
 };
 
-// remitStore 사용
-const remitStore = useRemitStore();
-
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {
   try {
@@ -70,6 +63,11 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
+
+  fetchMyGroups(memberId).then((response) => {
+    myGroups.value = response.data.groupList;
+    console.log(myGroups.value);
+  });
 });
 </script>
 
@@ -84,14 +82,15 @@ onMounted(async () => {
             :src="getImageUrl ? getImageUrl('user-icon.png', 0) : ''"
             alt=""
           />
-          <h1>엄세현</h1></NuxtLink
+          <h1>{{ remitStore.memberName }}</h1></NuxtLink
         >
 
         <NuxtLink to="/bank/account-list" class="list-link">전체계좌</NuxtLink>
       </div>
       <NuxtLink to="/bank/notice">
         <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt=""
-      /></NuxtLink>
+        visiblity: hidden /></NuxtLink
+      >
     </nav>
   </header>
 
@@ -125,39 +124,17 @@ onMounted(async () => {
       >
         <div class="club-item">
           <h2>{{ group.name }}</h2>
-          <h3>{{ group.monthlyFee }}원</h3>
+
+          <h3 v-if="group.monthlyFee !== null">
+            {{ group.monthlyFee.toLocaleString("ko-KR") }}원
+          </h3>
+          <h3 v-else>{{ group.monthlyFee }}원</h3>
         </div>
         <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
+          <p>{{ group.description }}</p>
           <div class="icon-item">
             <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
             <p>{{ group.joinMembers }}명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>달려라 자전거</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>자전거 스프린터들의 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>두근두근 여행모</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
           </div>
         </div>
       </div>
@@ -202,7 +179,7 @@ header {
 
     .menu {
       display: flex;
-      min-width: 80%;
+      min-width: 90%;
 
       a {
         display: flex;

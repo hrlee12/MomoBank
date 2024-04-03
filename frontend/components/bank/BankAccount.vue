@@ -41,6 +41,8 @@ const goNext = (param) => {
   remitStore.setMyAccountInfo(
     accountInfo.accountId,
     accountInfo.accountProductName,
+    accountInfo.accountProductType,
+    accountInfo.accountNumber,
     accountInfo.balance
   );
 
@@ -87,7 +89,7 @@ onMounted(() => {});
     </div>
   </div>
   <div v-else class="content account-content account-menu">
-    <NuxtLink to="/bank/remit"
+    <NuxtLink to="/bank/account-create"
       ><div><img :src="getImageUrl('add-icon.png', 0)" alt="" /></div>
       <h1>계좌 개설</h1></NuxtLink
     >

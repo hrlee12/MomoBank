@@ -2,10 +2,12 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router"; // useRouter 추가
 import { useUserApi } from "@/api/user";
+import { useRemitStore } from "~/stores/remitStore";
 
 const { loginRequest } = useUserApi();
 
 const router = useRouter(); // useRouter 인스턴스 생성
+const remitStore = useRemitStore();
 
 definePageMeta({
   layout: "user",
@@ -49,7 +51,9 @@ const login = async () => {
     (data) => {
       console.log(data);
       // 모든 검증을 통과했을 때
-      console.log(loginInfo.value);
+      remitStore.memberId = data.data.data.memberId;
+      remitStore.memberName = data.data.data.name;
+      remitStore.memberLoginId = data.data.data.id;
       router.push(`/bank`);
     },
     // 로그인 실패시

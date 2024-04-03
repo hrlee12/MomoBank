@@ -1,11 +1,9 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useBankApi } from "~/api/bank";
-import { useRemitStore } from "~/stores/remitStore";
 
-const remitStore = useRemitStore();
 const router = useRouter();
-const { createBankAccount } = useBankApi();
+const { confirmAccountPassword } = useBankApi();
 
 definePageMeta({
   layout: "action",
@@ -20,7 +18,7 @@ const getImageUrl = (imageName, idx) => {
 const name = ref("");
 
 // 비밀번호 숫자를 저장할 배열
-const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "-"];
+const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, ""];
 
 // 입력 패스워드
 const inputPasswordArray = ref(["", "", "", ""]);
@@ -72,7 +70,7 @@ const checkEnterNumber = (number) => {
     ) {
       // 비밀번호 입력이 끝났으면 비밀번호 String화 및 api 호출
       changePasswordArrayToString();
-      requestCreateBankAccount();
+      requestPasswordConfirm();
     } else {
       failPass.value = true;
       checkPassword.value = ["", "", "", ""];
@@ -80,18 +78,33 @@ const checkEnterNumber = (number) => {
   }
 };
 
-const backspace = () => {
-  // 입력된 마지막 인덱스를 찾습니다.
-  const lastIndex = inputPasswordArray.value.lastIndexOf(
-    inputPasswordArray.value
-      .slice()
-      .reverse()
-      .find((value) => value !== "")
-  );
+const backspace = (menu) => {
+  if (menu == 0) {
+    // 입력된 마지막 인덱스를 찾습니다.
+    const lastIndex = inputPasswordArray.value.lastIndexOf(
+      inputPasswordArray.value
+        .slice()
+        .reverse()
+        .find((value) => value !== "")
+    );
 
-  // 입력된 마지막 인덱스의 값을 지웁니다.
-  if (lastIndex !== -1) {
-    inputPasswordArray.value[lastIndex] = "";
+    // 입력된 마지막 인덱스의 값을 지웁니다.
+    if (lastIndex !== -1) {
+      inputPasswordArray.value[lastIndex] = "";
+    }
+  } else if (menu == 1) {
+    // 입력된 마지막 인덱스를 찾습니다.
+    const lastIndex = checkPassword.value.lastIndexOf(
+      checkPassword.value
+        .slice()
+        .reverse()
+        .find((value) => value !== "")
+    );
+
+    // 입력된 마지막 인덱스의 값을 지웁니다.
+    if (lastIndex !== -1) {
+      checkPassword.value[lastIndex] = "";
+    }
   }
 };
 
@@ -105,31 +118,31 @@ const changePasswordArrayToString = () => {
   }
 };
 
+import { useRemitStore } from "~/stores/remitStore";
+const remitStore = useRemitStore();
 name.value = remitStore.memberName;
-const requestCreateBankAccount = async () => {
-  // 계좌 생성 요청 api 호출
-  const response = await createBankAccount(
+const requestPasswordConfirm = async () => {
+  // 비밀번호가 맞는지 확인
+  await confirmAccountPassword(
     {
-      memberId: remitStore.memberId,
-      accountProductId: remitStore.createBankAccountProductId,
-      accountPassword: stringPassword.value,
+      accountId: remitStore.remitInfo.myAccountId,
+      password: stringPassword.value,
     },
     (data) => {
-      console.log("계좌 생성에 성공했습니다: ", data.data);
-      alert("계좌 생성에 성공했습니다.");
-
-      passValidation.value = true;
-      checkPassBoolean.value = false;
+      console.log("비밀번호가 조회되었습니다: ", data.data.data.isApproved);
+      if (data.data.data.isApproved == true)
+        router.push("/bank/remit/confirm-remit");
+      else if (data.data.data.isApproved == false) {
+        alert("올바른 계좌 비밀번호가 아닙니다.");
+        checkPassBoolean.value = false;
+        inputPasswordArray.value = "";
+        checkPassword.value = "";
+      }
     },
     (error) => {
-      console.log("계좌 생성에 실패했습니다: ", error);
+      console.log("조회할 수 없습니다.: ", error);
     }
   );
-};
-
-const goNext = async () => {
-  // 메인 페이지 이동
-  router.push("/bank");
 };
 </script>
 
@@ -169,12 +182,12 @@ const goNext = async () => {
       </div>
       <div class="grid grid-cols-3 gap-[2rem]">
         <button
-          v-for="number in keypadNumbers"
+          v-for="(number, index) in keypadNumbers"
           :key="number"
           @click="enterNumber(number)"
           class="flex items-center justify-center w-12 h-12 text-3xl font-bold text-gray-color"
         >
-          <div v-if="number != '-'">{{ number }}</div>
+          <div v-if="index != keypadNumbers.length - 1">{{ number }}</div>
           <div v-else>
             <div class="w-8 h-8" @click="backspace">
               <img
@@ -225,12 +238,12 @@ const goNext = async () => {
       </div>
       <div class="grid grid-cols-3 gap-[2rem]">
         <button
-          v-for="number in keypadNumbers"
+          v-for="(number, index) in keypadNumbers"
           :key="number"
           @click="checkEnterNumber(number)"
           class="flex items-center justify-center w-12 h-12 text-3xl font-bold text-gray-color"
         >
-          <div v-if="number != '-'">{{ number }}</div>
+          <div v-if="index != keypadNumbers.length - 1">{{ number }}</div>
           <div v-else>
             <div class="w-8 h-8" @click="backspace">
               <img
@@ -253,12 +266,6 @@ const goNext = async () => {
       <div class="text-3xl font-bold">통장을 만들었어요</div>
     </div>
   </div>
-  <button
-    class="w-11/12 bg-main-color text-white h-10 rounded-xl absolute bottom-5"
-    @click="goNext()"
-  >
-    다음
-  </button>
 </template>
 
 <style></style>
