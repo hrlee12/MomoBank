@@ -66,9 +66,9 @@ export function useBankApi() {
   };
 
   // 카드 추천 리스트 조회
-  const getCardRecommendList = (data, success, fail) => {
-    return $axios
-      .post(`user/bank/password-confirm`, data)
+  const getCardRecommendList = async (data, success, fail) => {
+    return await $axios
+      .post(`community/recommend/recommend-card`, data)
       .then(success)
       .catch(fail);
   };

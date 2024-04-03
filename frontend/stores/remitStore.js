@@ -21,6 +21,7 @@ export const useRemitStore = defineStore({
       targetAccountBankLogoUrl: "송금 계좌 은행사 로고 이미지 URL",
       remitAmount: 0, //송금할 금액
     },
+    surveyData: { selections: {} },
   }),
   actions: {
     setMyAccountInfo(id, name, type, number, balance) {

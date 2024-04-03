@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "#vue-router";
-import SimpleRecommend from "~/components/bank/SimpleRecommend.vue";
 import { useBankApi } from "~/api/bank";
+import SimpleRecommend from "~/components/bank/SimpleRecommend.vue";
 
 const { getCardRecommendList } = useBankApi();
 
@@ -80,9 +80,12 @@ const cardSelect = (id) => {
 };
 
 // 카드 추천 리스트 조회
+const remitStore = useRemitStore();
 onMounted(async () => {
   try {
-    const response = await getCardRecommendList();
+    const response = await getCardRecommendList(remitStore.surveyData);
+    console.log(response.data);
+    cardList.value = response.data;
   } catch (error) {
     console.log("카드 조회 실패: ", error);
   }

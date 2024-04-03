@@ -53,6 +53,32 @@ const surveyList = ref([
     options: ["예측 불가능", "30만원 이하", "30만원 이상"],
   },
 ]);
+
+// 선택 상태 동적 초기화
+const selectedOptions = ref({});
+
+const toggleOption = (surveyIndex, optionIndex) => {
+  if (!selectedOptions.value[surveyIndex]) {
+    selectedOptions.value[surveyIndex] = [];
+  }
+
+  const currentIndex = selectedOptions.value[surveyIndex].indexOf(optionIndex);
+  if (currentIndex === -1) {
+    // 선택되지 않은 경우, 추가
+    selectedOptions.value[surveyIndex].push(optionIndex);
+  } else {
+    // 이미 선택된 경우, 제거
+    selectedOptions.value[surveyIndex].splice(currentIndex, 1);
+  }
+};
+
+// 스토어에 설문조사 내용 저장
+const submitSurvey = () => {
+  console.log(selectedOptions.value);
+  const remitStore = useRemitStore();
+  remitStore.surveyData.selections = selectedOptions.value;
+  router.push(`/bank/account-create/card-select`);
+};
 </script>
 
 <template>
@@ -68,14 +94,30 @@ const surveyList = ref([
         :key="optionIndex"
         class="survey-item"
       >
+        <!-- 마지막 항목일 때 라디오 버튼 사용 -->
         <input
-          type="checkbox"
-          :checked="selectedOptions[surveyIndex]?.includes(optionIndex)"
-          @click="toggleOption(surveyIndex, optionIndex)"
+          v-if="surveyIndex === surveyList.length - 1"
+          type="radio"
+          :id="`checkbox-${surveyIndex + 1}-${optionIndex}`"
+          :name="`survey-${surveyIndex + 1}`"
+          :value="optionIndex"
+          @change="() => toggleOption(surveyIndex + 1, optionIndex)"
         />
-        <p>{{ option }}</p>
+        <!-- 그 외 항목에는 체크박스 사용 -->
+        <input
+          v-else
+          type="checkbox"
+          :id="`checkbox-${surveyIndex + 1}-${optionIndex}`"
+          :checked="selectedOptions[surveyIndex + 1]?.includes(optionIndex)"
+          @change="() => toggleOption(surveyIndex + 1, optionIndex)"
+        />
+        <label :for="`checkbox-${surveyIndex + 1}-${optionIndex}`">{{
+          option
+        }}</label>
       </div>
     </div>
+    <button v-if="selectedOptions.length < 4" class="second-btn">다음</button>
+    <button v-else class="prime-btn" @click="submitSurvey">다음</button>
   </div>
 </template>
 
@@ -83,7 +125,7 @@ const surveyList = ref([
 @import "~/assets/css/main.scss";
 
 .survey-container {
-  padding: 0 5%;
+  padding: 5%;
 }
 
 .survey-content {
@@ -92,7 +134,7 @@ const surveyList = ref([
 
 .survey-item {
   display: flex;
-  padding: 1% 0;
+  padding: 2% 0;
 
   input {
     margin: 0 2%;

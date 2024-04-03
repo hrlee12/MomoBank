@@ -9,6 +9,7 @@ const { getMyAccountList } = useBankApi();
 const { createNewGroup } = useGroupApi();
 
 const remitStore = useRemitStore();
+const groupStore = useGroupStore();
 
 definePageMeta({
   layout: "action",
@@ -46,6 +47,7 @@ const isLoading = ref(false); // 로딩 상태 관리
 const method = ref(-1);
 
 const selectAccount = (index) => {
+  console.log(index);
   selectedId.value = index;
   isSelected.value = true;
   // console.log(selectedId.value + " " + isSelected.value);
@@ -74,9 +76,16 @@ const goCreateBankAccount = () => {
 
 const requestCreateNewGroup = async () => {
   const response = await createNewGroup(
-    {},
+    {
+      memberId: remitStore.memberId,
+      description: groupStore.createGroupDesc,
+      groupName: groupStore.createGroupName,
+      myAccountId: selectedId.value,
+      accountId: selectedId.value,
+    },
     (data) => {
       alert("모임이 성공적으로 생성되었습니다.");
+      console.log(response.data);
     },
     (error) => {
       alert("모임을 생성하는데 실패했습니다.");
@@ -108,9 +117,9 @@ const makeGroup = () => {
     <div
       v-for="(account, index) in myAccountList"
       :key="index"
-      @click="selectAccount(index)"
+      @click="selectAccount(account.accountId)"
       class="account"
-      :class="{ selected: selectedId == index }"
+      :class="{ selected: selectedId == account.accountId }"
     >
       <SimpleAccount
         :accountName="account.accountProductName"
