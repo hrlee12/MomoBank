@@ -30,12 +30,14 @@ import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class GroupInfoService {
 
     private final GroupInfoRepository groupInfoRepository;
@@ -93,6 +95,8 @@ public class GroupInfoService {
             groupInfo.getGroupName()
         );
 
+        log.info("CreateGroupKafkaResponse : {}", groupResponse);
+
         kafkaTemplate.send("createGroup", groupResponse);
 
         GroupMember groupMember = GroupMember.builder()
@@ -117,6 +121,8 @@ public class GroupInfoService {
         );
 
         kafkaTemplate.send("createGroupMemberAsGroupCreated", groupMemberRessponse);
+
+        log.info("CreateGroupMemberKafkaResponse : {}", groupMemberRessponse);
 
         return CreateNewGroupResponse.from(groupInfo);
     }
