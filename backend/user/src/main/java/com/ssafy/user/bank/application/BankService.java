@@ -108,6 +108,7 @@ public class BankService {
     public SearchAccountResponse searchAccount(int accountId, String bankName, String accountNumber) {
         SearchFromAccountResponse from = accountRepository.findFromAccountByBankAndAccount(accountId);
         SearchToAccountResponse to = accountRepository.findToAccountByBankAndAccount(bankName, accountNumber);
+        if(accountId == to.getAccountId()) throw new CustomException(ErrorCode.SAME_ACCOUNT);
         return new SearchAccountResponse(from, to);
     }
 

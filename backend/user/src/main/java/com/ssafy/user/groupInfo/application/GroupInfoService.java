@@ -110,19 +110,19 @@ public class GroupInfoService {
 
         groupMemberRepository.save(groupMember);
 
-//
-//        CreateGroupMemberKafkaResponse groupMemberRessponse = new CreateGroupMemberKafkaResponse(
-//            groupMember.getGroupMemberId(),
-//            groupMember.getGroupInfo().getGroupInfoId(),
-//            groupMember.getMember().getMemberId(),
-//            String.valueOf(groupMember.getTotalFee()),
-//            groupMember.getName(),
-//            groupMember.getRole().toString()
-//        );
-//
-//        kafkaTemplate.send("createGroupMemberAsGroupCreated", groupMemberRessponse);
-//
-//        log.info("CreateGroupMemberKafkaResponse : {}", groupMemberRessponse);
+
+        CreateGroupMemberKafkaResponse groupMemberRessponse = new CreateGroupMemberKafkaResponse(
+            groupMember.getGroupMemberId(),
+            groupMember.getGroupInfo().getGroupInfoId(),
+            groupMember.getMember().getMemberId(),
+            String.valueOf(groupMember.getTotalFee()),
+            groupMember.getName(),
+            groupMember.getRole().toString()
+        );
+
+        kafkaTemplate.send("createGroupMemberAsGroupCreated", groupMemberRessponse);
+
+        log.info("CreateGroupMemberKafkaResponse : {}", groupMemberRessponse);
 
         return CreateNewGroupResponse.from(groupInfo);
     }
