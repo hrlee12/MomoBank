@@ -1,5 +1,6 @@
 <script setup>
 defineProps({
+  groupId: Number,
   groupName: String,
   groupMoney: Number,
   state: Boolean,
@@ -17,23 +18,23 @@ const getImageUrl = (imageName, idx) => {
 </script>
 
 <template>
-  <div class="content">
+  <nuxtLink :to="`/groups/${groupId}`" class="content">
     <div class="item">
       <h2>{{ groupName }}</h2>
       <h2>{{ groupMoney.toLocaleString("ko-KR") }}원</h2>
     </div>
     <div class="item right">
       <p v-if="state" class="ok bold">납부 완료</p>
-      <p v-else class="not-ok bold">미납 {{ delayDate }}일</p>
+      <p v-else class="not-ok bold">납부 요망</p>
     </div>
     <div class="item">
       <p class="description">{{ groupDescription }}</p>
       <div class="icon-item">
         <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-        <p>6명</p>
+        <p>{{ groupMemberCount }}</p>
       </div>
     </div>
-  </div>
+  </nuxtLink>
 </template>
 
 <style lang="scss" scoped>

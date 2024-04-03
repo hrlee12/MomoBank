@@ -205,7 +205,7 @@ const calPercentage = (goalBudget, curBudget) => {
     </nuxt-link>
 
     <!-- 예산 추가 -->
-    <nuxt-link to="/groups/budget/add">
+    <nuxt-link v-if="groupStore.groupRole === '모임장'" to="/groups/budget/add">
       <div
         class="flex items-center justify-center w-11/12 h-16 mx-auto mt-5 bg-light-gray-color rounded-xl"
       >
