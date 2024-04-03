@@ -339,8 +339,15 @@ public class FeedService {
     public void createGroup(Object data) {
         Map<String, Object> groupInfoInfo = kafkaUtil.dataToMap(data);
 
-        Member member = memberRepository.findById((int) groupInfoInfo.get("createdBy"))
-            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
+//        Member member = memberRepository.findById((int) groupInfoInfo.get("createdBy"))
+//            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
+
+        Member member = memberRepository.findById((int) groupInfoInfo.get("memberId"))
+            .orElse(null);
+
+        if (member == null) {
+            log.info("member null : {}", member);
+        }
 
         GroupInfo groupInfo = GroupInfo.builder()
             .groupInfoId((int)groupInfoInfo.get("groupInfoId"))
@@ -356,11 +363,25 @@ public class FeedService {
     public void createGroupMemberAsGroupCreated(Object data) {
         Map<String, Object> groupMemberInfo = kafkaUtil.dataToMap(data);
 
+//        Member member = memberRepository.findById((int) groupMemberInfo.get("memberId"))
+//            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
+
         Member member = memberRepository.findById((int) groupMemberInfo.get("memberId"))
-            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
+            .orElse(null);
+
+        if (member == null) {
+            log.info("member : {}", member);
+        }
+
+//        GroupInfo groupInfo = groupInfoRepository.findById((int) groupMemberInfo.get("groupInfoId"))
+//            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_GROUP_INFO));
 
         GroupInfo groupInfo = groupInfoRepository.findById((int) groupMemberInfo.get("groupInfoId"))
-            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_GROUP_INFO));
+            .orElse(null);
+
+        if (groupInfo == null) {
+            log.info("groupInfo : {}", groupInfo);
+        }
 
         GroupMember groupMember = GroupMember.builder()
             .groupMemberId((int)groupMemberInfo.get("groupMemberId") )
