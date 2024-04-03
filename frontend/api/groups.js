@@ -66,9 +66,14 @@ export function useGroupApi() {
     );
   };
 
-  // const
   const getMyFeed = async (groupMemberId) => {
-    return await $axios.get(`/community/feeds/group/myfeed?groupMemberId=${groupMemberId}`);
+    return await $axios.get(
+      `/community/feeds/group/myfeed?groupMemberId=${groupMemberId}`
+    );
+  };
+
+  const createNewGroup = async (data, success, fail) => {
+    return await $axios.post(`/user/groups/new-group`, data);
   };
 
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
@@ -85,6 +90,7 @@ export function useGroupApi() {
     patchGroupBudget,
     deleteGroupBudget,
     getTransactionHistory,
-    getMyFeed
+    getMyFeed,
+    createNewGroup,
   };
 }

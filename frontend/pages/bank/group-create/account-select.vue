@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
-import Loading from "~/components/layout/Loading.vue";
-import { useBankApi } from "@/api/bank";
+import { useBankApi } from "~/api/bank";
+import { useGroupApi } from "~/api/groups";
 
 const { getMyAccountList } = useBankApi();
+const { createNewGroup } = useGroupApi();
 
 const remitStore = useRemitStore();
 
@@ -71,8 +72,22 @@ const goCreateBankAccount = () => {
   router.push("/bank/account-create");
 };
 
+const requestCreateNewGroup = async () => {
+  const response = await createNewGroup(
+    {},
+    (data) => {
+      alert("모임이 성공적으로 생성되었습니다.");
+    },
+    (error) => {
+      alert("모임을 생성하는데 실패했습니다.");
+      console.log(error);
+    }
+  );
+};
+
 const makeGroup = () => {
   // group 생성 api 호출
+  requestCreateNewGroup();
 };
 </script>
 

@@ -56,7 +56,46 @@ const surveyList = ref([
 </script>
 
 <template>
-  <div></div>
+  <div class="survey-container">
+    <div
+      v-for="(survey, surveyIndex) in surveyList"
+      :key="surveyIndex"
+      class="survey-content"
+    >
+      <h3>{{ surveyIndex + 1 }}. {{ survey.question }}</h3>
+      <div
+        v-for="(option, optionIndex) in survey.options"
+        :key="optionIndex"
+        class="survey-item"
+      >
+        <input
+          type="checkbox"
+          :checked="selectedOptions[surveyIndex]?.includes(optionIndex)"
+          @click="toggleOption(surveyIndex, optionIndex)"
+        />
+        <p>{{ option }}</p>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "~/assets/css/main.scss";
+
+.survey-container {
+  padding: 0 5%;
+}
+
+.survey-content {
+  padding: 3% 0;
+}
+
+.survey-item {
+  display: flex;
+  padding: 1% 0;
+
+  input {
+    margin: 0 2%;
+  }
+}
+</style>

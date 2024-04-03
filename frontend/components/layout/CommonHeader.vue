@@ -49,6 +49,10 @@ const pageTitle = computed(() => {
       title: "계좌 비밀번호 입력",
       sideMenuActive: NO_SIDE_MENU,
     },
+    "bank-account-create-survey": {
+      title: "카드 설문조사",
+      sideMenuActive: NO_SIDE_MENU,
+    },
     "bank-account-create-card-select": {
       title: "카드선택",
       sideMenuActive: NO_SIDE_MENU,
