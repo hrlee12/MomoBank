@@ -4,7 +4,11 @@ package com.ssafy.user.member.presentation;
 import com.ssafy.user.common.CommonResponse;
 import com.ssafy.user.member.application.AuthService;
 import com.ssafy.user.member.dto.request.LoginRequest;
+import com.ssafy.user.member.dto.response.LoginResponse;
+import com.ssafy.user.member.dto.response.MypageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -47,17 +51,19 @@ public class AuthController {
 
     @Operation(summary = "로그인", description = "로그인 성공 시, 헤더에 어세스 토큰과 리프레쉬 토큰을 포함시켜 응답한다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "200", description = "로그인 성공",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LoginResponse.class))}),
             @ApiResponse(responseCode = "400", description = "제공된 정보와 일치하는 회원 정보 없음")
     })
     @PostMapping("/login")
     public ResponseEntity login (@Valid @RequestBody LoginRequest request) throws Exception {
 
-        Map<String, String> tokens = authService.login(request);
+        Map<String, Object> data = authService.login(request);
 
 
 
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "로그인 성공.", null, tokens);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "로그인 성공.", (LoginResponse)data.get("member"), (Map<String, String>)data.get("jwtTokens"));
     }
 
 
