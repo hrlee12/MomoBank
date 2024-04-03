@@ -29,12 +29,8 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     private QGroupInfo group = QGroupInfo.groupInfo;
-    private QGroupMember groupMember = QGroupMember.groupMember;
-    private QMember member = new QMember("member");
     private QMember accountMember = new QMember("accountMember");
     private QAccount account = QAccount.account;
-    private QTransfer fromTransfer = new QTransfer("fromTransfer");
-    private QTransfer toTransfer = new QTransfer("toTransfer");
 
 
     public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId) {
@@ -92,10 +88,13 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             List<GetFeesPerMonthResponse> feesPerMonthList = new ArrayList<>();
             long total = 0;
             for(int month = 1; month <= 12; month++){
-                long amount = queryFactory.select(transfer.amount.sum().coalesce(0L))
+                if(year == start.getYear() && month < start.getMonthValue()) continue;
+                if(year == LocalDateTime.now().getYear() && month > LocalDateTime.now().getMonthValue()) break;
+                long amount = queryFactory
+                    .select(transfer.amount.sum().coalesce(0L))
                     .from(transfer)
-                    .where(transfer.fromAccount.member.eq(member),
-                        transfer.createdAt.month().eq(month),
+                    .groupBy(transfer.fromAccount.member.eq(member))
+                    .where(transfer.createdAt.month().eq(month),
                         transfer.createdAt.year().eq(year)).fetchOne();
 
                 GetFeesPerMonthResponse feesPerMonth = new GetFeesPerMonthResponse(month, amount);

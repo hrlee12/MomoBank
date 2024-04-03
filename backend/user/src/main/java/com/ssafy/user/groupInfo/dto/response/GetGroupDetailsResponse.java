@@ -20,6 +20,7 @@ public class GetGroupDetailsResponse {
     private String accountNumber;
     private long balance;
     private int groupMemberId;
+    private GroupMember.memberType role;
     public static GetGroupDetailsResponse from(GroupInfo groupInfo, GroupMember groupMember){
         return new GetGroupDetailsResponse(
             groupInfo.getGroupName(),
@@ -27,7 +28,8 @@ public class GetGroupDetailsResponse {
             true, // status
             groupInfo.getAccount().getAccountNumber(),
             groupInfo.getAccount().getBalance(),
-            groupMember.getGroupMemberId()
+            groupMember.getGroupMemberId(),
+            groupMember.getRole()
         );
     }
 }
