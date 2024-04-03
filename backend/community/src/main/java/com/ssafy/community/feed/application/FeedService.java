@@ -343,7 +343,7 @@ public class FeedService {
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
 
         GroupInfo groupInfo = GroupInfo.builder()
-            .groupInfoId((int) groupInfoInfo.get("groupInfoId"))
+            .groupInfoId((int)groupInfoInfo.get("groupInfoId"))
             .member(member)
             .groupName((String) groupInfoInfo.get("groupName"))
             .description((String) groupInfoInfo.get("description"))
@@ -356,15 +356,15 @@ public class FeedService {
     public void createGroupMemberAsGroupCreated(Object data) {
         Map<String, Object> groupMemberInfo = kafkaUtil.dataToMap(data);
 
-        Member member = memberRepository.findById((int) groupMemberInfo.get("memberID"))
+        Member member = memberRepository.findById((int) groupMemberInfo.get("memberId"))
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
 
         GroupInfo groupInfo = groupInfoRepository.findById((int) groupMemberInfo.get("groupInfoId"))
             .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_GROUP_INFO));
 
         GroupMember groupMember = GroupMember.builder()
-            .groupMemberId((int)groupMemberInfo.get("memberID") )
-            .name((String)groupMemberInfo.get("memberID"))
+            .groupMemberId((int)groupMemberInfo.get("groupMemberId") )
+            .name((String)groupMemberInfo.get("name"))
             .role((memberType)groupMemberInfo.get("role"))
             .totalFee(Long.parseLong(groupMemberInfo.get("totalFee").toString()))
             .groupInfo(groupInfo)
