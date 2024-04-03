@@ -57,6 +57,7 @@ onMounted(() => {
     groupStore.updateGroupId(groupId);
     groupStore.updatePaymentStatus(groupData.value.status);
     groupStore.updateGroupMemberId(groupData.value.groupMemberId);
+    groupStore.updateGroupBalance(groupData.value.balance);
     console.log(groupData.value.groupMemberId);
   });
 });

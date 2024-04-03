@@ -15,7 +15,6 @@ const fetchGroupNoticeList = async (groupId) => {
     return response.data;
   } catch (error) {
     console.error("공지사항 목록을 불러오는 데 실패했습니다.", error);
-    
   }
 };
 
@@ -24,6 +23,7 @@ const groupNoticeData = ref({});
 onMounted(() => {
   fetchGroupNoticeList(groupId).then((response) => {
     groupNoticeData.value = response;
+    console.log(groupNoticeData.value);
   });
 });
 
@@ -46,7 +46,7 @@ const getImageUrl = (imageName, idx) => {
       </nuxt-link>
     </div>
     <div v-for="notice in groupNoticeData" :key="notice.id">
-      <nuxt-link to="/groups/detail">
+      <nuxt-link :to="`/groups/announcement/detail/${notice.notedId}`">
         <div class="flex justify-center">
           <div
             class="flex flex-col justify-center-center w-11/12 h-11 mt-8 pl-5 border-b-[1px] border-light-gray-color"

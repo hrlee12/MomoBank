@@ -20,7 +20,7 @@ defineProps({
         <h2 v-else>-{{ list.amount.toLocaleString("ko-KR") }}원</h2>
       </div>
       <div class="item">
-        <p>{{ list.date.split("T")[0] }} {{ list.date.slice(11, 16) }}</p>
+        <p>{{ list.date.slice(11, 16) }}</p>
         <p>{{ list.balance.toLocaleString("ko-KR") }}원</p>
       </div>
     </div>
