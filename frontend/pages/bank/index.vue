@@ -123,39 +123,17 @@ onMounted(async () => {
       >
         <div class="club-item">
           <h2>{{ group.name }}</h2>
-          <h3>{{ group.monthlyFee }}원</h3>
+
+          <h3 v-if="group.monthlyFee !== null">
+            {{ group.monthlyFee.toLocaleString("ko-KR") }}원
+          </h3>
+          <h3 v-else>{{ group.monthlyFee }}원</h3>
         </div>
         <div class="club-item">
           <p>{{ group.description }}</p>
           <div class="icon-item">
             <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
             <p>{{ group.joinMembers }}명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>달려라 자전거</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>자전거 스프린터들의 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>두근두근 여행모</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
           </div>
         </div>
       </div>
