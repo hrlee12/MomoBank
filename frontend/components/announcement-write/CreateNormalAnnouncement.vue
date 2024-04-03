@@ -11,6 +11,16 @@ function completeWrite() {
 function goBeforeStep() {
   emit("change-step", "SelectAnnouncementType");
 }
+
+const selectFile = () => {
+  document.getElementById("fileInput").click();
+};
+
+const handleFileSelect = (event) => {
+  files.value.push(event.target.files[0]);
+};
+
+const files = ref([]);
 </script>
 <template>
   <div class="px-6 py-6">
@@ -27,12 +37,48 @@ function goBeforeStep() {
         class="w-full h-full overflow-y-auto whitespace-normal"
       ></textarea>
     </div>
-    <div class="mb-5 border-b-[1px] h-9 border-gray-color">
+    <div
+      v-for="item in files"
+      :key="item.A"
+      class="flex justify-between items-center h-10 border-b-[1px] border-light-gray-color mt-2"
+    >
+      <div class="text-lg font-semibold text-gray-color">
+        {{ item.name }}
+      </div>
+
+      <div
+        v-if="files.length === 0"
+        class="w-[30px] h-[30px] flex justify-center items-center border-2 border-light-gray-color"
+      >
+        <div>+</div>
+      </div>
+      <div
+        v-if="files.length !== 0"
+        @click="removeFileImage(item.name)"
+        class="w-[30px] h-[30px] flex justify-center items-center border-2 border-light-gray-color"
+      >
+        <div>-</div>
+      </div>
+    </div>
+    <div
+      class="flex justify-between items-center h-10 border-b-[1px] border-light-gray-color mb-4"
+    >
+      <div class="text-lg font-semibold text-gray-color">
+        새로운 이미지 추가
+      </div>
       <input
         type="file"
-        accept="image/png, image/jpeg, image/gif"
-        placeholder="이미지 추가"
+        hidden
+        id="fileInput"
+        @change="handleFileSelect"
+        accept="image/png, image/jpeg"
       />
+      <div
+        @click="selectFile"
+        class="w-[30px] h-[30px] flex justify-center items-center border-2 border-light-gray-color"
+      >
+        <div>+</div>
+      </div>
     </div>
     <div class="flex justify-between">
       <div>

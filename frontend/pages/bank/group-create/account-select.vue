@@ -3,9 +3,29 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
 import Loading from "~/components/layout/Loading.vue";
+import { useBankApi } from "@/api/bank";
+
+const { getMyAccountList } = useBankApi();
+
+const remitStore = useRemitStore();
 
 definePageMeta({
   layout: "action",
+});
+
+// 슬라이드 데이터
+const myAccountList = ref([]);
+
+// 전체 계좌 리스트 받는 함수
+onMounted(async () => {
+  try {
+    const memberId = remitStore.memberId; // 예시 ID
+    const response = await getMyAccountList(memberId);
+    myAccountList.value = response.data.data.myAccountList;
+    console.log("사용자 전체 계좌 리스트: ", myAccountList.value);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // 이미지 불러오는 메소드
@@ -16,18 +36,7 @@ const getImageUrl = (imageName, idx) => {
 };
 
 const accounts = ref([
-  { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
-  { accountName: "효리은행", accountNumber: "123-1234-12346", money: 2000000 },
-  { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
-  { accountName: "소이은행", accountNumber: "123-1234-12348", money: 100000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
-  {
-    accountName: "민우은행",
-    accountNumber: "123-1234-12349",
-    money: 100000000,
-  },
+  // { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
 ]);
 
 const isSelected = ref(false);
@@ -58,6 +67,10 @@ const loadData = async () => {
   }
 };
 
+const goCreateBankAccount = () => {
+  router.push("/bank/account-create");
+};
+
 const goNext = () => {
   loadData(); // goNext가 호출되면 loadData 함수 실행
 };
@@ -74,24 +87,24 @@ const goNext = () => {
         <img :src="getImageUrl('card-icon.png', 0)" alt="" />
         <h3>기존 계좌 연결</h3>
       </div>
-      <div class="method-content" @click="method = 1">
+      <div class="method-content" @click="goCreateBankAccount">
         <img :src="getImageUrl('logo-icon.png', 0)" alt="" />
-        <h3>신규 계좌 연결</h3>
+        <h3>신규 계좌 생성</h3>
       </div>
     </div>
   </div>
   <div v-else-if="method == 0" class="account-container">
     <div
-      v-for="(account, index) in accounts"
+      v-for="(account, index) in myAccountList"
       :key="index"
       @click="selectAccount(index)"
       class="account"
       :class="{ selected: selectedId == index }"
     >
       <SimpleAccount
-        :accountName="account.accountName"
+        :accountName="account.accountProductName"
         :accountNumber="account.accountNumber"
-        :money="account.money"
+        :money="account.balance"
         :status="false"
       />
     </div>

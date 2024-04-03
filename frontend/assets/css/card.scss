@@ -1,13 +1,12 @@
 .left {
   text-align: left;
+  align-self: center;
+  min-width: 035%;
 }
 .right {
-  text-align: right;
+  text-align: end;
   align-self: center;
-}
-
-.emphasize {
-  color: $primary-color !important;
+  width: 55%;
 }
 
 p {
