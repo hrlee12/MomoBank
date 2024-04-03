@@ -1,11 +1,18 @@
 <script setup>
 import { ref } from "vue";
-
 const isVisible = ref(false);
 
 const toggleMenu = (event) => {
   event.stopPropagation();
   isVisible.value = !isVisible.value;
+};
+
+// 이벤트를 발생시키기 위한 emits 옵션 정의
+const emit = defineEmits(["deleteAccount"]);
+
+const requestAccountDeletion = async () => {
+  // accountDeletion 이벤트를 발생시키며 부모 컴포넌트에 알림
+  emit("deleteAccount");
 };
 </script>
 
@@ -15,7 +22,7 @@ const toggleMenu = (event) => {
     <figure></figure>
     <figure></figure>
     <ul class="dropdown" :class="{ active: isVisible }">
-      <li>삭제하기</li>
+      <li @click="requestAccountDeletion">삭제하기</li>
     </ul>
   </div>
 </template>

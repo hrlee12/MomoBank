@@ -65,6 +65,18 @@ export function useBankApi() {
       .catch(fail);
   };
 
+  // 카드 추천 리스트 조회
+  const getCardRecommendList = (data, success, fail) => {
+    return $axios
+      .post(`user/bank/password-confirm`, data)
+      .then(success)
+      .catch(fail);
+  };
+
+  const deleteBankAccount = (data) => {
+    return $axios.delete(`/user/bank/delete-account`, data);
+  };
+
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
     getMyAccountList,
@@ -76,5 +88,7 @@ export function useBankApi() {
     getBankAccountTypeList,
     createBankAccount,
     confirmAccountPassword,
+    getCardRecommendList,
+    deleteBankAccount,
   };
 }

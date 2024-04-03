@@ -66,15 +66,14 @@ export function useGroupApi() {
     );
   };
 
-  const postSplitBalance = async (groupId) => {
-    return await $axios.post(`/user/groups/${groupId}/split-balance`);
-  };
-
-  // const
   const getMyFeed = async (groupMemberId) => {
     return await $axios.get(
       `/community/feeds/group/myfeed?groupMemberId=${groupMemberId}`
     );
+  };
+
+  const createNewGroup = async (data, success, fail) => {
+    return await $axios.post(`/user/groups/new-group`, data);
   };
 
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
@@ -92,6 +91,6 @@ export function useGroupApi() {
     deleteGroupBudget,
     getTransactionHistory,
     getMyFeed,
-    postSplitBalance,
+    createNewGroup,
   };
 }

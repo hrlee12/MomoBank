@@ -2,14 +2,12 @@
 import KebabMenu from "@/components/ui/KebabMenu";
 import { ref } from "vue";
 import { useNuxtApp } from "#app";
+import { useBankApi } from "~/api/bank";
 
-// Nuxt 앱 인스턴스에서 $router를 가져옵니다.
-const { $router } = useNuxtApp();
-
-// 스토어 상태에 접근
-const remitStore = useRemitStore();
-
-const historyMenuActive = ref(true);
+const { $router } = useNuxtApp(); // Nuxt 앱 인스턴스에서 $router를 가져옵니다.
+const { deleteBankAccount } = useBankApi(); // bank api 함수 가져오기
+const remitStore = useRemitStore(); // 스토어 상태에 접근
+const historyMenuActive = ref(true); // 거래 내역 페이지 확인 변수
 
 const { accountInfo } = defineProps({
   accountInfo: Object,
@@ -52,7 +50,9 @@ const goNext = (param) => {
   } else if (param == 1) $router.push("/bank/remit");
 };
 
-onMounted(() => {});
+const handleAccountDeletion = async () => {
+  // 계좌 삭제 요청 처리
+};
 </script>
 
 <template>
@@ -66,7 +66,7 @@ onMounted(() => {});
           </p>
         </div>
       </div>
-      <KebabMenu />
+      <KebabMenu @deleteAccount="handleAccountDeletion" />
     </div>
     <div class="money-content">
       <h1 v-if="!hide && accountInfo.balance != undefined">
