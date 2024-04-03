@@ -24,6 +24,7 @@ export function useBankApi() {
       .then(success)
       .catch(fail);
   };
+
   // 계좌 상세 정보
   const getAccountDetail = async (memberId, accountId) => {
     return await $axios.get(
@@ -56,6 +57,14 @@ export function useBankApi() {
       .catch(fail);
   };
 
+  // 계좌 비밀번호 확인
+  const confirmAccountPassword = (data, success, fail) => {
+    return $axios
+      .post(`user/bank/password-confirm`, data)
+      .then(success)
+      .catch(fail);
+  };
+
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
     getMyAccountList,
@@ -66,5 +75,6 @@ export function useBankApi() {
     getTargetAccountInfo,
     getBankAccountTypeList,
     createBankAccount,
+    confirmAccountPassword,
   };
 }

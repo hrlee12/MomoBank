@@ -1,7 +1,9 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useBankApi } from "~/api/bank";
+import { useRemitStore } from "~/stores/remitStore";
 
+const remitStore = useRemitStore();
 const router = useRouter();
 const { createBankAccount } = useBankApi();
 
@@ -15,7 +17,7 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const name = ref("김성수");
+const name = ref("");
 
 // 비밀번호 숫자를 저장할 배열
 const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "-"];
@@ -103,14 +105,13 @@ const changePasswordArrayToString = () => {
   }
 };
 
-import { useRemitStore } from "~/stores/remitStore";
-const remiStore = useRemitStore();
+name.value = remitStore.memberName;
 const requestCreateBankAccount = async () => {
   // 계좌 생성 요청 api 호출
   const response = await createBankAccount(
     {
-      memberId: 2,
-      accountProductId: remiStore.createBankAccountProductId,
+      memberId: remitStore.memberId,
+      accountProductId: remitStore.createBankAccountProductId,
       accountPassword: stringPassword.value,
     },
     (data) => {

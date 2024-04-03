@@ -91,7 +91,7 @@ onMounted(() => {
 @import "~/assets/css/card.scss";
 
 .card-container {
-  padding: 10% 0;
+  padding-bottom: 15%;
   display: flex;
   flex-direction: column;
   width: 100%;
