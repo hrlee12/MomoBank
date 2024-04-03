@@ -2,51 +2,32 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SimpleRecommend from "~/components/bank/SimpleRecommend.vue";
+import BankFooter from "~/components/layout/BankFooter.vue";
+import { useBankApi } from "~/api/bank";
 
 const router = useRouter();
+const { getBankAccountTypeList } = useBankApi();
 const allAccountProducts = ref([
-  {
-    accountProductList: [
-      {
-        accountProductId: 1,
-        accountProductName: "name",
-        bankName: "모모",
-        description: "description",
-        interestRate: 1.1,
-      }, // account
-    ],
-    accountType: "입출금자유예금",
-  }, // product
-  {
-    accountProductList: [
-      {
-        accountProductId: 2,
-        accountProductName: "name",
-        bankName: "모모",
-        description: "description",
-        interestRate: 1.4,
-      },
-    ],
-    accountType: "입출금자유예금",
-    accountType: "정기예금",
-  },
-  {
-    accountProductList: [
-      {
-        accountProductId: 3,
-        accountProductName: "name",
-        bankName: "모모",
-        description: "description",
-        interestRate: 1.2,
-      },
-    ],
-    accountType: "입출금자유예금",
-    accountType: "적금",
-  },
+  // {
+  //   accountProductList: [
+  //     {
+  //       accountProductId: 1,
+  //       accountProductName: "name",
+  //       bankName: "모모",
+  //       description: "description",
+  //       interestRate: 1.1,
+  //     }, // account
+  //   ],
+  //   accountType: "입출금자유예금",
+  // }, // product
 ]);
+
+import { useRemitStore } from "~/stores/remitStore";
+const remitStore = useRemitStore();
 
 const accountSelect = (id) => {
   console.log(id);
+  remitStore.createBankAccountProductId = id;
   router.push(`/bank/account-create/account-agree`);
 };
 
@@ -60,18 +41,40 @@ const getImageUrl = (imageName, idx) => {
 definePageMeta({
   layout: "action",
 });
+
+const requestCreatableBankAccountTypeList = async () => {
+  try {
+    const response = await getBankAccountTypeList();
+    console.log(
+      "생성 가능한 계좌 목록 조회 성공: ",
+      response.data.data.allAccountProducts
+    );
+    allAccountProducts.value = response.data.data.allAccountProducts;
+  } catch (error) {
+    console.log("생성 가능한 계좌 목록 조회 실패: ", error);
+  }
+};
+
+onMounted(() => {
+  requestCreatableBankAccountTypeList();
+});
 </script>
 
 <template>
   <div class="card-container">
     <div class="content">
-      <div v-for="(product, index) in allAccountProducts" :key="index">
+      <div
+        v-for="(product, index) in allAccountProducts"
+        :key="index"
+        class="gap"
+      >
         <div class="left">{{ product.accountType }}</div>
         <SimpleRecommend
           v-for="(account, index) in product.accountProductList"
           :key="index"
           :id="account.accountProductId"
           :name="account.accountProductName"
+          :description="account.description"
           :interest="account.interestRate"
           :imgUrl="getImageUrl('logo-icon.png', 0)"
           :corpName="account.bankName"
@@ -80,6 +83,7 @@ definePageMeta({
       </div>
     </div>
   </div>
+  <BankFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -106,5 +110,9 @@ definePageMeta({
   color: black;
   font-weight: bold;
   width: 50%;
+}
+
+.gap {
+  padding: 3% 0;
 }
 </style>

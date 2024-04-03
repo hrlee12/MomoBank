@@ -70,7 +70,7 @@ const checkEnterNumber = (number) => {
     ) {
       // 비밀번호 입력이 끝났으면 비밀번호 String화 및 api 호출
       changePasswordArrayToString();
-      requestCreateBankAccount();
+      requestPasswordConfirm();
     } else {
       failPass.value = true;
       checkPassword.value = ["", "", "", ""];
@@ -105,7 +105,7 @@ const changePasswordArrayToString = () => {
 
 import { useRemitStore } from "~/stores/remitStore";
 const remiStore = useRemitStore();
-const requestCreateBankAccount = async () => {
+const requestPasswordConfirm = async () => {
   // 계좌 생성 요청 api 호출
   const response = await createBankAccount(
     {

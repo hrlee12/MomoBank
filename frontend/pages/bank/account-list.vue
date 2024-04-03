@@ -45,7 +45,7 @@ onMounted(async () => {
         :status="true"
       />
     </div>
-    <AddBox to="/bank/remit" />
+    <AddBox to="/bank/account-create" />
   </div>
 </template>
 

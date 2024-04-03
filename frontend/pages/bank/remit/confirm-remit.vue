@@ -12,7 +12,7 @@ const remitStore = useRemitStore();
 const remitInfo = remitStore.remitInfo;
 
 const formattedMoney = remitInfo.remitAmount.toLocaleString("ko-KR"); // 숫자를 한국어 통화 형식으로 변환
-const menuIdx = ref(0);
+const menuIdx = ref(0); // 메뉴 인덱스 (0 - 확인 페이지, 1 - 송금 성공 페이지, 2 - 송금 실패 페이지)
 
 // 이미지 불러오는 메소드
 const getImageUrl = (imageName, idx) => {
@@ -22,9 +22,8 @@ const getImageUrl = (imageName, idx) => {
 };
 
 const goNext = () => {
-  remit();
-
-  if (menuIdx.value == 3) $router.push("/bank/");
+  if (menuIdx.value == 0) remit();
+  else $router.push("/bank/");
 };
 
 const remit = async () => {
@@ -36,9 +35,10 @@ const remit = async () => {
       amount: remitInfo.remitAmount,
     },
     (data) => {
-      console.log(data);
+      menuIdx.value = 1;
     },
     (error) => {
+      menuIdx.value = 2;
       console.log(error);
     }
   );
