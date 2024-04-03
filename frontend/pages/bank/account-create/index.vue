@@ -22,7 +22,7 @@ const allAccountProducts = ref([
   // }, // product
 ]);
 
-import { useRemitStore } from "~/stores/userStore";
+import { useRemitStore } from "~/stores/remitStore";
 const remitStore = useRemitStore();
 
 const accountSelect = (id) => {

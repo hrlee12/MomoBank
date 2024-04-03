@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useRemitStore = defineStore({
   id: "remitStore",
   state: () => ({
-    memberId: 2, // 로그인한 사용자 고유 인덱스 아이디
+    memberId: -1, // 로그인한 사용자 고유 인덱스 아이디
     memberLoginId: "사용자 로그인 아이디",
     memberName: "사용자 이름",
     createBankAccountProductId: 0, // 계좌 개설 시 선택한 계좌 제품 아이디
