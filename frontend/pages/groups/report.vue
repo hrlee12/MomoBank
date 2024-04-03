@@ -13,21 +13,19 @@ const months = ref([]);
 const selectedMonth = ref("");
 
 const reportAndBestMember = ref({
-  groupInfo: null,
-  reportYear: 2024,
-  reportMonth: 3,
-  content:
-    "# 1. 회계\n\n- **불완전 납부**: 김철수님이 15,000원을 미납하셨습니다. 다음 회차에는 납부를 잊지 말아주세요.\n- **초과 입금**: 이영희님께서는 30,000원을 초과 납부하셨습니다. 너무 감사합니다! 모임의 발전에 큰 도움이 됩니다.\n- **완납**: 홍길동님은 물론이고 모임비를 제때 납부하셨습니다. 감사합니다!\n\n# 2. 게시판 활동\n\n- '**함께 본 시간을 달리는 소녀**': 작성자 홍길동님, 좋아요 120개와 댓글 2개라는 큰 사랑을 받았습니다. 영화에 대한 세심한 후기와 그날의 모임에 대한 이야기가 독자들의 공감을 얻었네요.\n- '**오늘의 영화 후기**': 작성자 김철수님, 좋아요 95개, 댓글 2개를 얻으셨습니다. 영화에 대한 깊이 있는 생각을 공유해주셔서 감사합니다.\n- '**카페에서의 작은 모임**': 작성자 이영희님, 좋아요 110개, 댓글 2개를 얻었습니다. 모임 전의 모습을 공유해주셔서 더욱 풍성해진 회원님들의 이야기를 만나보았습니다.\n",
-  createdAt: null,
-  bestMember: {
-    bestMember: {
-      id: 1,
-      name: "홍길동",
+  "groupInfo": null,
+  "reportYear": 2024,
+  "reportMonth": 3,
+  "content": "### 1. 회원 상황\n- 미납 회비:\n  - 곽민우: 30,000원 초과 납부\n  - 엄세현: 3,000원 미납\n  - 손준성: 15,000원 미납\n  - 명소이: 10,000원 초과 납부\n\n### 2. 게시물 분석\n가장 인기 있는 게시물:\n- 작성자: 곽민우\n- 글 타이틀: 보드게임카페 정말 재미있었어 !\n- 내용: 다함께 너무 재미있는 시간을 보내서 좋았어요. 진짜 레전드였어 !!\n- 작성 일시: 2024-03-15\n- 좋아요 수: 3\n- 댓글 수: 2\n\n이 게시물이 좋은 이유:\n- 팀 활동을 강조하는 긍정적인 내용\n- 다른 회원들의 참여 유도\n- 높은 좋아요 및 댓글 수\n\n### 3. 베스트 멤버\n- 회비를 완납한 회원 중 베스트 멤버 선정\n- 베스트 멤버: 김성수\n- 선정 이유: 회비 완납 및 게시판 활동에 적극적으로 참여함",
+  "createdAt": null,
+  "bestMember": {
+    "bestMember": {
+      "id": 1,
+      "name": "김성수"
     },
-    reason:
-      "홍길동님은 모임비를 제때 납부하고 게시판 활동에서 큰 사랑을 받아 베스트 멤버로 선정되었습니다.",
-  },
-});
+    "reason": "김성수님은 회비를 완납하였고, 게시판 활동에 적극적으로 참여하여 베스트 멤버로 선정되었습니다."
+  }
+})
 
 const reportData = ref({ recommendations: [] });
 
@@ -58,8 +56,7 @@ const goalBudgetReport = () => {
 
 onMounted(() => {
   const now = new Date();
-  for (let i = 4; i >= 0; i--) {
-    // 최근 5개월을 포함
+  for (let i = 0; i >= 0; i--) { // 최근 5개월을 포함
     const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
     months.value.push(`${month.getFullYear()}년 ${month.getMonth() + 1}월`);
   }
@@ -135,35 +132,22 @@ definePageMeta({
     <!-- 연간, 월별 -->
     <!-- 게시글, 정보 탭-->
     <div class="flex justify-center mt-4">
-      <button
-        class="w-1/2 pb-2 font-bold border-b-[1px] border-main-color"
-        :class="
-          tab === 'statusReport'
-            ? 'w-1/2 pb-2 font-bold border-b-[1px] border-main-color'
-            : 'w-1/2 font-bold border-transparent'
-        "
-        @click="selectTab('statusReport')"
-      >
+      <button class="w-1/2 pb-2 font-bold border-b-[1px] border-main-color" :class="tab === 'statusReport'
+          ? 'w-1/2 pb-2 font-bold border-b-[1px] border-main-color'
+          : 'w-1/2 font-bold border-transparent'
+        " @click="selectTab('statusReport')">
         상태
       </button>
-      <button
-        class="w-1/2 pb-2 font-bold border-b-[1px] border-main-color"
-        :class="
-          tab === 'monthReport'
-            ? 'w-1/2 pb-2 font-bold border-b-[1px] border-main-color'
-            : 'w-1/2 font-bold border-transparent'
-        "
-        @click="selectTab('monthReport')"
-      >
+      <button class="w-1/2 pb-2 font-bold border-b-[1px] border-main-color" :class="tab === 'monthReport'
+          ? 'w-1/2 pb-2 font-bold border-b-[1px] border-main-color'
+          : 'w-1/2 font-bold border-transparent'
+        " @click="selectTab('monthReport')">
         월간 리포트
       </button>
     </div>
 
     <!-- 연간 or 원별 데이터 출력-->
-    <div
-      v-if="tab === 'statusReport'"
-      class="container px-2 pt-4 mx-auto bg-white"
-    >
+    <div v-if="tab === 'statusReport'" class="container px-2 pt-4 mx-auto bg-white">
       <!-- 년도 선택 드롭박스 -->
       <div class="flex justify-between">
         <div></div>
@@ -173,33 +157,19 @@ definePageMeta({
       </div>
       <div v-show="showGoalBudget === false">
         <!-- 예산 모집 상태 소제목 -->
-        <div
-          class="flex items-center cursor-pointer"
-          @click="goalBudgetReport()"
-        >
+        <div class="flex items-center cursor-pointer" @click="goalBudgetReport()">
           <div class="font-bold">예산 모집 상태</div>
           <div class="flex items-center rotate-180">
-            <img
-              class="h-5 opacity-50 w-7"
-              :src="getImageUrl('arrow-icon.png', 0)"
-              alt="arrow2-icon"
-            />
+            <img class="h-5 opacity-50 w-7" :src="getImageUrl('arrow-icon.png', 0)" alt="arrow2-icon" />
           </div>
         </div>
       </div>
       <div v-show="showGoalBudget === true">
         <!-- 예산 모집 상태 소제목 -->
-        <div
-          class="flex items-center cursor-pointer"
-          @click="goalBudgetReport()"
-        >
+        <div class="flex items-center cursor-pointer" @click="goalBudgetReport()">
           <div class="font-bold">예산 모집 상태</div>
           <div class="flex items-center -rotate-90">
-            <img
-              class="h-5 opacity-50 w-7"
-              :src="getImageUrl('arrow-icon.png', 0)"
-              alt="arrow2-icon"
-            />
+            <img class="h-5 opacity-50 w-7" :src="getImageUrl('arrow-icon.png', 0)" alt="arrow2-icon" />
           </div>
         </div>
         <!-- 그래프 보여주고(막대그래프) -->
@@ -215,10 +185,7 @@ definePageMeta({
       </div>
     </div>
 
-    <div
-      v-if="tab === 'monthReport'"
-      class="container px-2 pt-4 mx-auto bg-white"
-    >
+    <div v-if="tab === 'monthReport'" class="container px-2 pt-4 mx-auto bg-white">
       <!-- 년도 선택 드롭박스 -->
       <div class="flex justify-between">
         <div></div>
@@ -256,11 +223,7 @@ definePageMeta({
         </p>
 
         <div class="recommendations-container">
-          <div
-            class="recommendation-item"
-            v-for="(recommendation, index) in reportData.recommendations"
-            :key="index"
-          >
+          <div class="recommendation-item" v-for="(recommendation, index) in reportData.recommendations" :key="index">
             <!-- 아이콘 -->
 
             <!-- 추천과 이유 텍스트 -->
