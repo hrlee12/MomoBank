@@ -1,4 +1,6 @@
 <script setup>
+const groupStore = useGroupStore();
+
 // TODO : 생각해보니 Footer가 현재 바라보고 있는 모임 id를 기준으로 link가 설정되어야함.
 const getImageUrl = (imageName, idx) => {
   if (idx == 0) return "/icon/" + imageName;
@@ -6,8 +8,10 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
+const groupId = computed(() => groupStore.groupId);
+const tempPath = "/groups/" + groupId.value;
 const menuItems = [
-  { name: "모임메인", path: "/groups", icon: "main2-icon.png" },
+  { name: "모임메인", path: tempPath, icon: "main2-icon.png" },
   { name: "예산", path: "/groups/budget", icon: "budget-icon.png" },
   { name: "마이피드", path: "/groups/feed/my", icon: "user-icon.png" },
   { name: "리포트", path: "/groups/report", icon: "report-icon.png" },

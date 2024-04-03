@@ -59,7 +59,6 @@ onMounted(async () => {
     const memberId = remitStore.memberId; // 예시 ID
     const response = await getMyAccountList(memberId);
     myAccountList.value = response.data.data.myAccountList;
-    console.log("사용자 전체 계좌 리스트: ", myAccountList.value);
   } catch (error) {
     console.error(error);
   }

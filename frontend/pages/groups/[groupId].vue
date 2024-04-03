@@ -13,7 +13,7 @@ const { groupId } = useRoute().params; // 가로안에 들어가는 변수 명�
 
 import { useGroupApi } from "~/api/groups";
 
-const { getGroupFeedList, getGroupHome } = useGroupApi();
+const { getGroupFeedList, getGroupHome, getGroupNoticeList } = useGroupApi();
 
 const fetchGroupFeeds = async (groupId) => {
   try {
@@ -39,13 +39,28 @@ const fetchGroupHome = async (groupId, memberId) => {
   }
 };
 
-const curDate = new Date();
+const fetchGroupNoticeList = async (groupId) => {
+  try {
+    const response = await getGroupNoticeList(groupId);
+    return response.data;
+  } catch (error) {
+    console.error("그룹 공지사항 데이터를 불러오는 데 실패했습니다.", error);
+  }
+};
 
 const feedList = ref(null);
+const noticeTitle = ref("");
 
 onMounted(() => {
   fetchGroupFeeds(groupId).then((response) => {
-    feedList.value = response.content;
+    if (response.content[0].length !== 0) {
+      feedList.value = response.content;
+    }
+    console.log(feedList.value);
+  });
+
+  fetchGroupNoticeList(groupId).then((response) => {
+    noticeTitle.value = response[0].title;
   });
 
   fetchGroupHome(groupId, memberId).then((response) => {
@@ -76,9 +91,7 @@ const getImageUrl = (imageName, idx) => {
 
 // 피드 내용 상세보기(더보기 클릭)
 
-const fullText = ref(
-  "5반5린이들과 함께간 일본 후쿠오카에서 사진 한장!!!!!!!!!!!!!!!!!!!!!!!"
-);
+const fullText = ref(noticeTitle.value);
 const showFullText = ref(false);
 
 const displayText = computed(() => {
@@ -147,7 +160,7 @@ const toggleText = () => {
   </div>
 
   <!-- 공지사항 -->
-  <nuxt-link :to="`/groups/announcement/${groupId}`">
+  <nuxt-link v-if="noticeTitle !== ''" :to="`/groups/announcement/${groupId}`">
     <div
       class="flex items-center justify-between w-full h-12 mx-auto mt-2 bg-white rounded-xl"
     >
@@ -155,84 +168,88 @@ const toggleText = () => {
         <img class="w-8 h-8 ml-4" :src="getImageUrl('notice-icon.png', 0)" />
       </div>
       <div class="overflow-hidden text-ellipsis whitespace-nowrap w-52">
-        드디어 일본여행! Let's go!!!!!!!!!!!!!!!!!!!
+        {{ noticeTitle }}
       </div>
       <div class="mr-3 text-sm font-semibold text-gray-color">전체보기</div>
     </div>
   </nuxt-link>
 
   <!-- 피드리스트 -->
-
-  <div
-    v-for="item in feedList"
-    :key="item.id"
-    class="w-full h-full pb-0 mx-auto mt-2 bg-white"
-  >
-    <div class="pb-4 border-b-2 border-light-gray-color">
-      <!-- 프로필, 닉네임, 게시일 -->
-      <div class="flex items-center pt-3 ml-2">
-        <div>
+  <div v-if="feedList === null" class="font-bold text-center">
+    <p>피드가 존재하지 않습니다.</p>
+  </div>
+  <div class="pb-16">
+    <div
+      v-for="item in feedList"
+      :key="item.id"
+      class="w-full h-full mx-auto mt-2 bg-white"
+    >
+      <div class="pb-4 border-b-2 border-light-gray-color">
+        <!-- 프로필, 닉네임, 게시일 -->
+        <div class="flex items-center pt-3 ml-2">
+          <div>
+            <img
+              class="w-8 h-8"
+              :src="getImageUrl('user-icon-3.png', 0)"
+              alt="user-icon"
+            />
+          </div>
+          <div class="ml-2">{{ item.groupMemberName }}</div>
+          <div class="ml-2 text-sm text-gray-color">
+            {{ item.createdAt.slice(0, 10) }}
+          </div>
+        </div>
+        <!-- 이미지 -->
+        <div class="mt-2">
           <img
-            class="w-8 h-8"
-            :src="getImageUrl('user-icon-3.png', 0)"
-            alt="user-icon"
+            class="w-full h-64"
+            :src="item.mediaList[0].mediaUrl"
+            alt="image-1"
           />
         </div>
-        <div class="ml-2">{{ item.groupMemberName }}</div>
-        <div class="ml-2 text-sm text-gray-color">
-          {{ new Date(item.updatedAt) }}
+        <!-- 하트 -->
+        <div class="w-6 h-6 mt-2 ml-2">
+          <img :src="getImageUrl('like.png', 0)" alt="like" />
         </div>
-      </div>
-      <!-- 이미지 -->
-      <div class="mt-2">
-        <img
-          class="w-full h-64"
-          :src="item.mediaList[0].mediaUrl"
-          alt="image-1"
-        />
-      </div>
-      <!-- 하트 -->
-      <div class="w-6 h-6 mt-2 ml-2">
-        <img :src="getImageUrl('like.png', 0)" alt="like" />
-      </div>
-      <!-- 좋아요 -->
-      <div class="ml-2 font-bold text-[13px]">
-        좋아요 {{ item.likesCount }}개
-      </div>
+        <!-- 좋아요 -->
+        <div class="ml-2 font-bold text-[13px]">
+          좋아요 {{ item.likesCount }}개
+        </div>
 
-      <!-- 피드 더보기 상세 내용 -->
-      <div
-        v-if="!showFullText"
-        class="ml-2 overflow-hidden cursor-pointer w-72 text-ellipsis whitespace-nowrap text-gray-color"
-        @click="toggleText"
-      >
-        {{ item.content }}
-      </div>
+        <!-- 피드 더보기 상세 내용 -->
+        <div
+          v-if="!showFullText"
+          class="ml-2 overflow-hidden cursor-pointer w-72 text-ellipsis whitespace-nowrap text-gray-color"
+          @click="toggleText"
+        >
+          {{ item.content }}
+        </div>
 
-      <div
-        v-if="isTextOverflow && !showFullText"
-        class="ml-2 cursor-pointer text-gray-color"
-        @click="toggleText"
-      >
-        더보기
-      </div>
+        <div
+          v-if="isTextOverflow && !showFullText"
+          class="ml-2 cursor-pointer text-gray-color"
+          @click="toggleText"
+        >
+          더보기
+        </div>
 
-      <div
-        v-if="showFullText"
-        class="ml-2 cursor-pointer text-gray-color"
-        @click="toggleText"
-      >
-        {{ fullText }}
-      </div>
+        <div
+          v-if="showFullText"
+          class="ml-2 cursor-pointer text-gray-color"
+          @click="toggleText"
+        >
+          {{ fullText }}
+        </div>
 
-      <!-- 댓글 모두 보기 -->
-      <div class="mt-2 ml-2 cursor-pointer text-gray-color text-[15px]">
-        댓글 {{ item.commentsCount }}개 모두 보기
-      </div>
+        <!-- 댓글 모두 보기 -->
+        <div class="mt-2 ml-2 cursor-pointer text-gray-color text-[15px]">
+          댓글 {{ item.commentsCount }}개 모두 보기
+        </div>
 
-      <!-- 댓글 달기 -->
-      <div class="ml-2 cursor-pointer text-gray-color text-[15px]">
-        댓글 달기
+        <!-- 댓글 달기 -->
+        <div class="ml-2 cursor-pointer text-gray-color text-[15px]">
+          댓글 달기
+        </div>
       </div>
     </div>
   </div>

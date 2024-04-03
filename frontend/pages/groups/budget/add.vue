@@ -43,7 +43,6 @@ const getImageUrl = (imageName, idx) => {
   else console.log("Image code error");
 };
 
-const budgetGoal = ref("");
 
 // 이체주기 선택
 const visibleFrequency = ref(false);
