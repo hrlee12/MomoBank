@@ -4,15 +4,15 @@
 
 # 모두가 모이는 뱅킹, 모모뱅크
 
-![Untitled](readme%20md%20a3f0b0cf44df49a788f0d2f80e231211/Untitled.png)
+![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled.png?ref_type=heads)
 
 ## 개요
 
 프로젝트명: 모모뱅크
 
-프로젝트 기간(6주):  2024.02.26 ~ 2024.04.05
+프로젝트 기간(6주): 2024.02.26 ~ 2024.04.05
 
-팀원(6명): 손준성(Back-Infra), 곽민우(Back-Infra), 명소이(Back-Api), 이효리(Back-api), 김성수(front), 엄세현(front) 
+팀원(6명): 손준성(Back-Infra), 곽민우(Back-Infra), 명소이(Back-Api), 이효리(Back-api), 김성수(front), 엄세현(front)
 
 호스팅 url: [https://j10a505.p.ssafy.io/](https://j10a505.p.ssafy.io/)
 
@@ -52,7 +52,7 @@
 
 ## 시스템 구성도
 
-![Untitled](readme%20md%20a3f0b0cf44df49a788f0d2f80e231211/Untitled%201.png)
+![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%201.png?ref_type=heads)
 
 ```jsx
 [ 클라이언트 ]
@@ -88,14 +88,14 @@
 ### Server
 
 - AWS EC2 Lightsail
-    - Ubuntu 20.04
-    - Kubernetes v1.28.7+k3s1
+  - Ubuntu 20.04
+  - Kubernetes v1.28.7+k3s1
 - Kubernetes Cluster Components
-    - Jenkins 2.440.1
-    - Kafka Clients 3.7.0.jar
-    - MariaDB 11.3.2
-    - Oracle 23c
-    - Ingress NginX 1.10.0
+  - Jenkins 2.440.1
+  - Kafka Clients 3.7.0.jar
+  - MariaDB 11.3.2
+  - Oracle 23c
+  - Ingress NginX 1.10.0
 
 ### Frontend
 
@@ -106,11 +106,11 @@
 
 - Java OpenJDK 17
 - Gradle 8.5
-    - Spring Data JPA
-    - Spring Data Redis
-    - Spring Data Elasticsearch
-    - Lombok
-    - Querydsl
+  - Spring Data JPA
+  - Spring Data Redis
+  - Spring Data Elasticsearch
+  - Lombok
+  - Querydsl
 
 ### Microservices Architecture
 
@@ -124,14 +124,13 @@
 MSA구조로 다음과같이 세 개의 ERD가 존재합니다.
 
 - **User**: MariaDB
-    
-    ![Untitled](readme%20md%20a3f0b0cf44df49a788f0d2f80e231211/Untitled%202.png)
-    
+
+  ![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%202.png?ref_type=heads)
 
 - **Bank**: Oracle DB
 
-![Untitled](readme%20md%20a3f0b0cf44df49a788f0d2f80e231211/Untitled%203.png)
+![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%203.png?ref_type=heads)
 
 - **Community**: MariaDB
 
-![Untitled](readme%20md%20a3f0b0cf44df49a788f0d2f80e231211/Untitled%204.png)
+![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%204.png?ref_type=heads)
