@@ -342,7 +342,7 @@ public class FeedService {
 //        Member member = memberRepository.findById((int) groupInfoInfo.get("createdBy"))
 //            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
 
-        Member member = memberRepository.findById((int) groupInfoInfo.get("memberId"))
+        Member member = memberRepository.findById((int) groupInfoInfo.get("createdBy"))
             .orElse(null);
 
         if (member == null) {
