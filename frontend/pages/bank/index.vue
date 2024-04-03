@@ -26,25 +26,6 @@ const fetchMyGroups = async () => {
   }
 };
 
-import { useGroupApi } from "~/api/groups";
-
-const { getMyGroups } = useGroupApi();
-
-const myGroups = ref([]);
-
-// remitStore 사용
-const remitStore = useRemitStore();
-
-const memberId = remitStore.memberId;
-
-const fetchMyGroups = async () => {
-  try {
-    const response = await getMyGroups(memberId);
-    return response.data;
-  } catch (error) {
-    console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
-  }
-};
 const router = useRouter();
 
 // 이미지 불러오는 메소드
