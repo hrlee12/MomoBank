@@ -60,7 +60,7 @@ onMounted(async () => {
             :src="getImageUrl ? getImageUrl('user-icon.png', 0) : ''"
             alt=""
           />
-          <h1>엄세현</h1></NuxtLink
+          <h1>{{ remitStore.memberName }}</h1></NuxtLink
         >
 
         <NuxtLink to="/bank/account-list" class="list-link">전체계좌</NuxtLink>

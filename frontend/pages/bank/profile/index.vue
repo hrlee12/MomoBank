@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import BankFooter from "~/components/layout/BankFooter.vue";
 import { useRouter } from "vue-router"; // useRouter 추가
 import { useUserApi } from "~/api/user";
@@ -18,16 +19,16 @@ const getImageUrl = (imageName, idx) => {
 };
 
 // 유저 정보
-const userInfo = {
+const userInfo = ref({
   id: "",
   name: "",
-  birth: "",
-  phone: "",
-};
+  birthDate: "",
+  phoneNumber: "",
+});
 
 // 휴대전화번호에 '-' 추가
 const onPhone = () => {
-  userInfo.phone = userInfo.phone
+  userInfo.value.phoneNumber = userInfo.value.phoneNumber
     .replace(/[^0-9]/g, "")
     .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
 };
@@ -45,16 +46,17 @@ const remitStore = useRemitStore();
 // 유저 정보 불러오는 api 요청
 const getUserInfo = async () => {
   try {
-    const response = await getMyPageData(remitStore.memberId);
-    console.log("유저데이터 불러오기 성공: ", response.data.data);
+    const response = await getMyPageData(remitStore.memberLoginId);
+    userInfo.value = response.data.data;
+    onPhone();
+    console.log("유저데이터 불러오기 성공: ", userInfo.value);
   } catch (error) {
     console.log("유저데이터 불러오기 실패: ", error);
   }
 };
 
-onMounted(() => {
-  getUserInfo();
-  onPhone();
+onMounted(async () => {
+  await getUserInfo();
 });
 </script>
 
@@ -64,25 +66,25 @@ onMounted(() => {
     <div class="club-content">
       <div class="item">
         <p>아이디</p>
-        <h3>{{ userInfo.id }}</h3>
+        <h3 v-if="userInfo != undefined">{{ userInfo.id }}</h3>
       </div>
     </div>
     <div class="club-content">
       <div class="item">
         <p>이름</p>
-        <h3>{{ userInfo.name }}</h3>
+        <h3 v-if="userInfo != undefined">{{ userInfo.name }}</h3>
       </div>
     </div>
     <div class="club-content">
       <div class="item">
         <p>생년월일</p>
-        <h3>{{ userInfo.birth }}</h3>
+        <h3 v-if="userInfo != undefined">{{ userInfo.birthDate }}</h3>
       </div>
     </div>
     <div class="club-content">
       <div class="item">
         <p>전화번호</p>
-        <h3>{{ userInfo.phone }}</h3>
+        <h3 v-if="userInfo != undefined">{{ userInfo.phoneNumber }}</h3>
         <img
           :src="getImageUrl('arrow-icon2.png', 0)"
           alt="phone number edit"

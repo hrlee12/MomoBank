@@ -22,8 +22,12 @@ const allAccountProducts = ref([
   // }, // product
 ]);
 
+import { useRemitStore } from "~/stores/userStore";
+const remitStore = useRemitStore();
+
 const accountSelect = (id) => {
   console.log(id);
+  remitStore.createBankAccountProductId = id;
   router.push(`/bank/account-create/account-agree`);
 };
 

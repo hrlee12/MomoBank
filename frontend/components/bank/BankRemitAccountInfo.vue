@@ -49,8 +49,8 @@ const checkTarget = async () => {
       accountNumber: targetAccount.value.number,
     },
     (data) => {
-      targetAccount.value.id = data.data.from.accountId;
-      targetAccount.value.userName = data.data.from.name;
+      targetAccount.value.id = data.data.data.to.accountId;
+      targetAccount.value.userName = data.data.data.to.name;
       console.log("송금 대상 요청이 존재합니다: ", data.data);
 
       // 얻어낸 정보 pinia에 저장
@@ -58,15 +58,16 @@ const checkTarget = async () => {
       remitInfo.targetAccountId = targetAccount.value.id;
       remitInfo.targetAccountNumber = targetAccount.value.number;
       remitInfo.targetAccountUserName = targetAccount.value.userName;
+      remitInfo.targetAccountBankName = bankInfo.value.name;
+
+      // 페이지 이동
+      $router.push("/bank/remit/money-input");
     },
     (error) => {
       console.log("송금할 수 있는 계좌가 아닙니다: ", error);
       alert("송금할 수 있는 계좌가 아닙니다.");
     }
   );
-
-  // 페이지 이동
-  $router.push("/bank/remit/money-input");
 };
 </script>
 

@@ -68,8 +68,9 @@ const checkEnterNumber = (number) => {
       inputPasswordArray.value[2] === checkPassword.value[2] &&
       inputPasswordArray.value[3] === checkPassword.value[3]
     ) {
-      passValidation.value = true;
-      checkPassBoolean.value = false;
+      // 비밀번호 입력이 끝났으면 비밀번호 String화 및 api 호출
+      changePasswordArrayToString();
+      requestCreateBankAccount();
     } else {
       failPass.value = true;
       checkPassword.value = ["", "", "", ""];
@@ -95,31 +96,39 @@ const backspace = () => {
 // 입력된 숫자 배열을 하나의 숫자로 바꾼다.
 const stringPassword = ref("");
 const changePasswordArrayToString = () => {
-  for (digit in checkPassword) {
-    stringPassword.value += digit;
+  console.log("비밀번호 배열: ", checkPassword.value);
+  for (const digit in checkPassword.value) {
+    stringPassword.value += checkPassword.value[digit];
+    console.log("직렬화된 비밀번호: ", stringPassword.value);
   }
 };
 
+import { useRemitStore } from "~/stores/userStore";
+const remiStore = useRemitStore();
+const requestCreateBankAccount = async () => {
+  // 계좌 생성 요청 api 호출
+  const response = await createBankAccount(
+    {
+      memberId: 2,
+      accountProductId: remiStore.createBankAccountProductId,
+      accountPassword: stringPassword.value,
+    },
+    (data) => {
+      console.log("계좌 생성에 성공했습니다: ", data.data);
+      alert("계좌 생성에 성공했습니다.");
+
+      passValidation.value = true;
+      checkPassBoolean.value = false;
+    },
+    (error) => {
+      console.log("계좌 생성에 실패했습니다: ", error);
+    }
+  );
+};
+
 const goNext = async () => {
-  if (failPass.value) {
-    // 계좌 생성 요청 api 호출
-    const response = await createBankAccount(
-      {
-        memberId: 2,
-        accountProductId: 0,
-        accountPassword: stringPassword.value,
-      },
-      (data) => {
-        console.log("계좌 생성에 성공했습니다: ", data.data);
-        alert("계좌 생성에 성공했습니다.");
-        // 메인 페이지 이동
-        router.push("/bank");
-      },
-      (error) => {
-        console.log("계좌 생성에 실패했습니다: ", error);
-      }
-    );
-  }
+  // 메인 페이지 이동
+  router.push("/bank");
 };
 </script>
 
