@@ -73,6 +73,7 @@ export function useGroupApi() {
   };
 
   const createNewGroup = async (data, success, fail) => {
+    console.log("in axios");
     return await $axios.post(`/user/groups/new-group`, data);
   };
 
