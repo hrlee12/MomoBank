@@ -84,7 +84,7 @@ public class GroupMemberService {
         inviteRepository.save(invite);
 
         // 초대코드로 uri 생성
-        String uri = "https://j10a505.p.ssafy.io/" + "/groups/join/" + groupId + "-" + encryptUtil.hashEncrypt(
+        String uri = "https://j10a505.p.ssafy.io" + "/groups/join/" + groupId + "-" + encryptUtil.hashEncrypt(
             String.valueOf(groupId), secretKey);
 
         return uri;
