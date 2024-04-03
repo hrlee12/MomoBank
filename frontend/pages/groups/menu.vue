@@ -1,6 +1,13 @@
 <script setup>
 import CompleteModal from "~/components/layout/CompleteModal.vue";
 
+import { useGroupApi } from "~/api/groups";
+
+const { postSplitBalance } = useGroupApi();
+
+const groupStore = useGroupStore();
+const remitStore = useRemitStore();
+
 definePageMeta({
   layout: "no-footer-bank",
 });
