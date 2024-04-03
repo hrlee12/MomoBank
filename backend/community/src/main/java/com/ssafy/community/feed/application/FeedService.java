@@ -386,7 +386,7 @@ public class FeedService {
         GroupMember groupMember = GroupMember.builder()
             .groupMemberId((int)groupMemberInfo.get("groupMemberId") )
             .name((String)groupMemberInfo.get("name"))
-            .role((memberType)groupMemberInfo.get("role"))
+            .role(GroupMember.memberType.모임원)
             .totalFee(Long.parseLong(groupMemberInfo.get("totalFee").toString()))
             .groupInfo(groupInfo)
             .member(member)
