@@ -149,7 +149,7 @@ const calPercentage = (goalBudget, curBudget) => {
             </div>
             <div
               v-if="!budgetItem.status"
-              class="text-positive-color text-[13px]"
+              class="text-negative-color text-[13px]"
             >
               납부 요망
             </div>

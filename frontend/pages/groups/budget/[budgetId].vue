@@ -167,22 +167,11 @@ const deleteModal = async () => {
       <!-- editMode On -->
       <div v-if="editMode">
         <div class="py-3">
-          <div class="py-3 text-xl font-bold">예산 이름</div>
-          <div class="border-b-2 border-main-color">
-            <input
-              type="text"
-              v-model="budget.name"
-              placeholder="예산 이름 입력"
-              class="w-full text-lg"
-            />
-          </div>
-        </div>
-        <div class="py-3">
           <div class="py-3 text-xl font-bold">예산 목적</div>
           <div class="border-b-2 border-main-color">
             <input
               type="text"
-              v-model="budgetGoal"
+              v-model="budget.name"
               placeholder="예산 목적 입력"
               class="w-full text-lg"
             />

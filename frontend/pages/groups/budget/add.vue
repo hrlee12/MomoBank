@@ -83,22 +83,11 @@ const goBack = () => {
   <div class="h-screen bg-white">
     <div class="px-4 py-2">
       <div class="py-3">
-        <div class="py-3 text-xl font-bold">예산 이름은 무엇인가요?</div>
-        <div class="border-b-2 border-main-color">
-          <input
-            type="text"
-            v-model="budget.name"
-            placeholder="예산 이름 입력"
-            class="w-full text-lg"
-          />
-        </div>
-      </div>
-      <div class="py-3">
         <div class="py-3 text-xl font-bold">어떤 목적의 예산인가요?</div>
         <div class="border-b-2 border-main-color">
           <input
             type="text"
-            v-model="budgetGoal"
+            v-model="budget.name"
             placeholder="예산 목적 입력"
             class="w-full text-lg"
           />

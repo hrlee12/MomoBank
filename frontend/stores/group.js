@@ -10,6 +10,7 @@ export const useGroupStore = defineStore("group", {
     paymentStatus: undefined,
     groupMemberId: undefined,
     accountId: 5,
+    groupBalance: null,
   }),
   actions: {
     updateGroupHeaderName(newName) {
@@ -26,6 +27,9 @@ export const useGroupStore = defineStore("group", {
     },
     updateGroupMemberId(newGroupMemberId) {
       this.groupMemberId = newGroupMemberId;
+    },
+    updateGroupBalance(newGroupBalance) {
+      this.groupBalance = newGroupBalance;
     },
   },
 });
