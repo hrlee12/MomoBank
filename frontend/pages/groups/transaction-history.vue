@@ -5,12 +5,13 @@ import AccountHistory from "~/components/bank/AccountHistory.vue";
 import { useGroupStore } from "@/stores/group";
 
 const groupStore = useGroupStore();
+const remitStore = useRemitStore();
 
 import { useGroupApi } from "~/api/groups";
 
 const { getTransactionHistory } = useGroupApi();
 
-const memberId = 2;
+const memberId = remitStore.memberId;
 
 const fetchTransactionHistory = async () => {
   try {

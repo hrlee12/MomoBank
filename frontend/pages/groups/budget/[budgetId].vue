@@ -10,6 +10,8 @@ import { useGroupStore } from "@/stores/group";
 
 const groupStore = useGroupStore();
 
+const remitStore = useRemitStore();
+
 const { budgetId } = useRoute().params;
 
 const budget = ref({
@@ -20,7 +22,7 @@ const budget = ref({
   finalDueDate: "2024-04-25",
 });
 
-const memberId = 2;
+const memberId = remitStore.memberId;
 
 const groupId = groupStore.groupId;
 

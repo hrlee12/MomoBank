@@ -8,16 +8,15 @@ const { postGroupBudget } = useGroupApi();
 import { useGroupStore } from "@/stores/group";
 
 const groupStore = useGroupStore();
+const remitStore = useRemitStore();
 
 const budget = ref({
-  memberId: 2,
+  memberId: remitStore.memberId,
   monthlyDueDate: null,
   name: "",
   finalFee: null,
   finalDueDate: null,
 });
-
-const memberId = 2;
 
 const groupId = groupStore.groupId;
 
@@ -50,8 +49,6 @@ const budgetGoal = ref("");
 const visibleFrequency = ref(false);
 
 const visibleBottomModal = ref(false);
-
-const frequencyDay = ref(null);
 
 const visibleBottomModalClick = () => {
   visibleBottomModal.value = true;

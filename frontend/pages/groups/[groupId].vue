@@ -46,7 +46,6 @@ const feedList = ref(null);
 onMounted(() => {
   fetchGroupFeeds(groupId).then((response) => {
     feedList.value = response.content;
-    // 공지사항 작성 테스트를 위해 임의로 선언
   });
 
   fetchGroupHome(groupId, memberId).then((response) => {
