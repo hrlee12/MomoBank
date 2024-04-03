@@ -6,6 +6,10 @@ import { useGroupApi } from "~/api/groups";
 
 const groupStore = useGroupStore();
 
+const remitStore = useRemitStore();
+
+const memberId = remitStore.memberId;
+
 const { groupId } = useRoute().params;
 
 const { getGroupDetail } = useGroupApi();
@@ -20,9 +24,6 @@ const fetchGroupDetail = async (groupId, memberId) => {
 };
 
 const groupDetailData = ref({});
-
-// TODO: 나중에 동적으로 변경해주자(로그인 API 안돼서 보류)
-const memberId = 2;
 
 onMounted(() => {
   fetchGroupDetail(groupId, memberId).then((response) => {

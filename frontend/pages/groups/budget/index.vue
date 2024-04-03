@@ -4,6 +4,7 @@ import AccountInformation from "~/components/group/AccountInformation.vue";
 import { useGroupStore } from "@/stores/group";
 
 const groupStore = useGroupStore();
+const remitStore = useRemitStore();
 
 import { useGroupApi } from "~/api/groups";
 
@@ -11,7 +12,7 @@ const { getGroupBudget } = useGroupApi();
 
 const groupBudgetList = ref({});
 
-const memberId = 2;
+const memberId = remitStore.memberId;
 
 const groupId = groupStore.groupId;
 
