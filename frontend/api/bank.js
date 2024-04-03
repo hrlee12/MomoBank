@@ -73,6 +73,10 @@ export function useBankApi() {
       .catch(fail);
   };
 
+  const deleteBankAccount = (data) => {
+    return $axios.delete(`/user/bank/delete-account`, data);
+  };
+
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
     getMyAccountList,
@@ -85,5 +89,6 @@ export function useBankApi() {
     createBankAccount,
     confirmAccountPassword,
     getCardRecommendList,
+    deleteBankAccount,
   };
 }
