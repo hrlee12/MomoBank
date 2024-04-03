@@ -30,7 +30,7 @@ public class KafkaConsumerConfig {
         deserializer.setUseTypeMapperForKey(true);
 
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "community");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "group-member");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
 
