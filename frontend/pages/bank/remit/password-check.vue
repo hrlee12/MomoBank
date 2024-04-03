@@ -189,7 +189,7 @@ const requestPasswordConfirm = async () => {
         >
           <div v-if="index != keypadNumbers.length - 1">{{ number }}</div>
           <div v-else>
-            <div class="w-8 h-8" @click="backspace">
+            <div class="w-8 h-8" @click="backspace(0)">
               <img
                 :src="getImageUrl('back-number-icon.png', 0)"
                 alt="back-number"
@@ -245,7 +245,7 @@ const requestPasswordConfirm = async () => {
         >
           <div v-if="index != keypadNumbers.length - 1">{{ number }}</div>
           <div v-else>
-            <div class="w-8 h-8" @click="backspace">
+            <div class="w-8 h-8" @click="backspace(1)">
               <img
                 :src="getImageUrl('back-number-icon.png', 0)"
                 alt="back-number"
@@ -254,16 +254,6 @@ const requestPasswordConfirm = async () => {
           </div>
         </button>
       </div>
-    </div>
-  </div>
-  <div v-if="passValidation">
-    <div class="flex flex-col justify-between items-center pt-20">
-      <div class="w-14 h-14">
-        <img :src="getImageUrl('check-icon.png', 0)" />
-      </div>
-
-      <div class="pt-4 text-3xl font-bold">MOMO뱅크</div>
-      <div class="text-3xl font-bold">통장을 만들었어요</div>
     </div>
   </div>
 </template>

@@ -2,6 +2,9 @@
 import { ref } from "vue";
 import { useRouter } from "#vue-router";
 import SimpleRecommend from "~/components/bank/SimpleRecommend.vue";
+import { useBankApi } from "~/api/bank";
+
+const { getCardRecommendList } = useBankApi();
 
 definePageMeta({
   layout: "action",
@@ -75,6 +78,15 @@ const cardSelect = (id) => {
   console.log(id);
   router.push(`/bank/account-create/card-agree`);
 };
+
+// 카드 추천 리스트 조회
+onMounted(async () => {
+  try {
+    const response = await getCardRecommendList();
+  } catch (error) {
+    console.log("카드 조회 실패: ", error);
+  }
+});
 </script>
 
 <template>

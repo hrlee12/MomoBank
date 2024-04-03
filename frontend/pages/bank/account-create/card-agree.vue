@@ -60,7 +60,7 @@ const updateIndividualAgreement = () => {
 };
 
 const goNext = () => {
-  router.push("/groups"); // 로딩 완료 후 card-select 페이지로 이동
+  router.push("/bank"); // 로딩 완료 후 card-select 페이지로 이동
 };
 </script>
 
