@@ -169,9 +169,8 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     public Account findAccountByIdAndMemberId(int accountId, String memberId) {
         return queryFactory.select(account)
             .from(account)
-            .join(account.groupInfo, group)
-            .fetchJoin()
             .join(account.member, member)
+                .fetchJoin()
             .where(account.isDeleted.eq(false)
                 .and(account.accountId.eq(accountId).and(account.member.id.eq(memberId))))
             .fetchOne();
