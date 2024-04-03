@@ -12,9 +12,12 @@ const { getMyGroups } = useGroupApi();
 
 const myGroups = ref([]);
 
-const memberId = 2;
+// remitStore 사용
+const remitStore = useRemitStore();
 
-const fetchMyGroups = async (memberId) => {
+const memberId = remitStore.memberId;
+
+const fetchMyGroups = async () => {
   try {
     const response = await getMyGroups(memberId);
     return response.data;
@@ -49,9 +52,6 @@ const isLastSlide = ref(false);
 const goToGroup = (groupId) => {
   router.push(`/groups/` + groupId);
 };
-
-// remitStore 사용
-const remitStore = useRemitStore();
 
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {

@@ -26,7 +26,9 @@ const fetchGroupFeeds = async (groupId) => {
 
 const groupData = ref({});
 
-const memberId = 2;
+const remitStore = useRemitStore();
+
+const memberId = remitStore.memberId;
 
 const fetchGroupHome = async (groupId, memberId) => {
   try {
@@ -45,8 +47,6 @@ onMounted(() => {
   fetchGroupFeeds(groupId).then((response) => {
     feedList.value = response.content;
     // 공지사항 작성 테스트를 위해 임의로 선언
-    groupStore.updateGroupMemberId(4);
-    groupStore.updateGroupId(2);
   });
 
   fetchGroupHome(groupId, memberId).then((response) => {
