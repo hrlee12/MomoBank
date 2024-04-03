@@ -10,8 +10,10 @@ import com.ssafy.user.groupInfo.dto.response.GetFeesPerYearResponse;
 import com.ssafy.user.groupMember.domain.QGroupMember;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.QMember;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import com.querydsl.core.types.dsl.Expressions;
 import com.ssafy.user.budget.domain.QBudget;
@@ -38,19 +40,25 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
         QGroupInfo groupInfo = QGroupInfo.groupInfo;
         QGroupMember groupMember = QGroupMember.groupMember;
 
-        return queryFactory
+        List<GetMyGruopResponse> results = queryFactory
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
                 groupInfo.description,
                 budget.monthlyFee.sum(),
-                groupInfo.groupMembers.size(),
-                Expressions.constant(true)))
+                groupInfo.groupMembers.size()))
             .from(groupInfo)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
-            .where(groupInfo.member.memberId.eq(memberId))
+            .where(groupInfo.member.memberId.eq(memberId),
+                groupMember.groupInfo.groupInfoId.isNotNull()
+                    .or(budget.groupInfo.groupInfoId.isNotNull()))
             .fetch();
+
+        return results.stream()
+            .filter(r -> r.getMonthlyFee() > 0)
+            .filter(r -> r.getJoinMembers() > 0)
+            .collect(Collectors.toList());
     }
 
     public GroupResponse findGroupResponseByGroup(int groupId, int memberId) {

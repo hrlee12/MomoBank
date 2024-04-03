@@ -18,6 +18,7 @@ import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
 import com.ssafy.user.groupInfo.dto.response.GetFeesPerYearResponse;
 import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
 import com.ssafy.user.groupInfo.dto.response.GetMyGroupListResponse;
+import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.SplitBalanceResponse;
 import com.ssafy.user.groupMember.application.GroupMemberService;
@@ -28,6 +29,7 @@ import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +55,8 @@ public class GroupInfoService {
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
         Member member = memberCheck(memberId);
-        return new GetMyGroupListResponse(groupInfoRepository.findGroupInfoResponseByMember(memberId));
+        List<GetMyGruopResponse> list = groupInfoRepository.findGroupInfoResponseByMember(memberId);
+        return new GetMyGroupListResponse(list);
     }
 
     // 선택된 모임 상세 조회
