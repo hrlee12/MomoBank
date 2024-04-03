@@ -6,6 +6,46 @@ import { useBankApi } from "@/api/bank";
 
 const { getMyAccountList } = useBankApi();
 
+import { useGroupApi } from "~/api/groups";
+
+const { getMyGroups } = useGroupApi();
+
+const myGroups = ref([]);
+
+// remitStore 사용
+const remitStore = useRemitStore();
+
+const memberId = remitStore.memberId;
+
+const fetchMyGroups = async () => {
+  try {
+    const response = await getMyGroups(memberId);
+    return response.data;
+  } catch (error) {
+    console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
+
+import { useGroupApi } from "~/api/groups";
+
+const { getMyGroups } = useGroupApi();
+
+const myGroups = ref([]);
+
+// remitStore 사용
+const remitStore = useRemitStore();
+
+const memberId = remitStore.memberId;
+
+const fetchMyGroups = async () => {
+  try {
+    const response = await getMyGroups(memberId);
+    return response.data;
+  } catch (error) {
+    console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
+
 <<<<<<< Updated upstream
 =======
 import { useGroupApi } from "~/api/groups";
@@ -52,12 +92,9 @@ const myAccountList = ref([]);
 const isLastSlide = ref(false);
 
 // 각각의 그룹 페이지로 이동
-const goToGroup = (param) => {
-  router.push(`/groups`);
+const goToGroup = (groupId) => {
+  router.push(`/groups/` + groupId);
 };
-
-// remitStore 사용
-const remitStore = useRemitStore();
 
 // 전체 계좌 리스트 받는 함수
 onMounted(async () => {
@@ -69,6 +106,11 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
+
+  fetchMyGroups(memberId).then((response) => {
+    myGroups.value = response.data.groupList;
+    console.log(myGroups.value);
+  });
 });
 </script>
 
@@ -117,42 +159,25 @@ onMounted(async () => {
 
     <!-- 메인 모임 리스트 -->
     <div class="club-container content">
-      <div class="club-content" @click="goToGroup('5반 5린이들')">
+      <div
+        v-for="group in myGroups"
+        :key="group.id"
+        class="club-content"
+        @click="goToGroup(group.groupId)"
+      >
         <div class="club-item">
-          <h2>5반 5린이들</h2>
-          <h3>160,000원</h3>
+          <h2>{{ group.name }}</h2>
+
+          <h3 v-if="group.monthlyFee !== null">
+            {{ group.monthlyFee.toLocaleString("ko-KR") }}원
+          </h3>
+          <h3 v-else>{{ group.monthlyFee }}원</h3>
         </div>
         <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
+          <p>{{ group.description }}</p>
           <div class="icon-item">
             <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>달려라 자전거</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>자전거 스프린터들의 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>두근두근 여행모</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
+            <p>{{ group.joinMembers }}명</p>
           </div>
         </div>
       </div>

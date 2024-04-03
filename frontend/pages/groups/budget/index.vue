@@ -1,6 +1,37 @@
 <script setup>
 import AccountInformation from "~/components/group/AccountInformation.vue";
 
+import { useGroupStore } from "@/stores/group";
+
+const groupStore = useGroupStore();
+const remitStore = useRemitStore();
+
+import { useGroupApi } from "~/api/groups";
+
+const { getGroupBudget } = useGroupApi();
+
+const groupBudgetList = ref({});
+
+const memberId = remitStore.memberId;
+
+const groupId = groupStore.groupId;
+
+const fetchGroupBudgetList = async (groupId, memberId) => {
+  try {
+    const response = await getGroupBudget(groupId, memberId);
+    return response.data;
+  } catch (error) {
+    console.error("그룹 예산 데이터 리스트를 불러오는 데 실패했습니다.", error);
+  }
+};
+
+onMounted(() => {
+  fetchGroupBudgetList(groupId, memberId).then((response) => {
+    groupBudgetList.value = response.data;
+    console.log(groupBudgetList.value);
+  });
+});
+
 definePageMeta({
   layout: "groups",
 });
@@ -11,27 +42,6 @@ const getImageUrl = (imageName, idx) => {
   else if (idx == 1) return "/images/" + imageName;
   else console.log("Image code error");
 };
-
-const budgetList = [
-  {
-    goalDay: "3월 12일",
-    title: "해외 여행 구라야야야ㅑ양야ㅑ",
-    monthPayments: "160,000 원/월",
-    monthly: "매월 1일 입금",
-    status: "납부 완료",
-    goalBudget: 1000000,
-    curBudget: 700000,
-  },
-  {
-    goalDay: "6월 21일",
-    title: "일본 여행",
-    monthPayments: "160,000 원/월",
-    monthly: "매월 11일 입금",
-    status: "미납 1일",
-    goalBudget: 2000000,
-    curBudget: 700000,
-  },
-];
 
 const calPercentage = (goalBudget, curBudget) => {
   return (curBudget / goalBudget) * 100;
@@ -50,8 +60,20 @@ const calPercentage = (goalBudget, curBudget) => {
         </NuxtLink>
 
         <div class="items-center">
-          <p class="text-positive-color text-[13px]">납부 완료</p>
+          <p
+            v-if="groupStore.paymentStatus"
+            class="text-positive-color text-[13px]"
+          >
+            납부 완료
+          </p>
+          <p
+            v-if="!groupStore.paymentStatus"
+            class="text-negative-color text-[13px]"
+          >
+            납부 요망
+          </p>
         </div>
+
         <div class="w-8 h-6 mr-4"></div>
       </div>
 
@@ -96,17 +118,17 @@ const calPercentage = (goalBudget, curBudget) => {
     <div class="mr-3 text-sm font-semibold text-gray-color">전체보기</div>
   </div>
   <div class="mb-20">
-    <nuxt-link to="/groups/budget/detail">
-      <div
-        class="flex flex-col items-center"
-        v-for="item in budgetList"
-        :key="item.id"
-      >
+    <nuxt-link
+      v-for="budgetItem in groupBudgetList"
+      :key="budgetItem.id"
+      :to="`/groups/budget/${budgetItem.budgetId}`"
+    >
+      <div class="flex flex-col items-center">
         <div
           class="flex justify-center w-3/12 mt-5 rounded-lg bg-light-gray-color"
         >
           <div class="font-bold">
-            {{ item.goalDay }}
+            {{ budgetItem.finalDueDate }}
           </div>
         </div>
         <div
@@ -115,13 +137,24 @@ const calPercentage = (goalBudget, curBudget) => {
           <!-- setting icon -->
           <div class="flex justify-between">
             <div
-              class="overflow-hidden text-lg font-bold text-ellipsis w-60 whitespace-nowrap"
+              class="overflow-hidden text-base font-bold text-ellipsis w-52 whitespace-nowrap"
             >
-              {{ item.title }}
+              {{ budgetItem.name }}
             </div>
             <!-- TODO : 납부 완/미완을 데이터 넘어오면 그걸로 if문 넣고 색상 바꾸자. -->
-            <div class="text-positive-color text-[13px]">{{ item.status }}</div>
-            <div class="w-6 h-6">
+            <div
+              v-if="budgetItem.status"
+              class="text-positive-color text-[13px]"
+            >
+              납부 완료
+            </div>
+            <div
+              v-if="!budgetItem.status"
+              class="text-negative-color text-[13px]"
+            >
+              납부 요망
+            </div>
+            <div class="w-5 h-5">
               <img
                 :src="getImageUrl('setting-icon.png', 0)"
                 alt="setting icon"
@@ -130,8 +163,12 @@ const calPercentage = (goalBudget, curBudget) => {
           </div>
           <!-- 매월 x일 입금, 월마다 입금 금액 -->
           <div class="flex justify-between pt-2 mb-3">
-            <div class="font-bold">{{ item.monthly }}</div>
-            <div class="font-bold">{{ item.monthPayments }}</div>
+            <div class="text-sm font-bold">
+              매월 {{ budgetItem.monthlyDueDate }}일
+            </div>
+            <div class="text-sm font-bold">
+              {{ budgetItem.monthlyFee }}원/월
+            </div>
           </div>
           <!-- 납입 여부 -->
           <div class="flex items-center justify-between">
@@ -148,24 +185,28 @@ const calPercentage = (goalBudget, curBudget) => {
                 <div
                   class="h-full bg-main-color"
                   :style="{
-                    width: calPercentage(item.goalBudget, item.curBudget) + '%',
+                    width:
+                      calPercentage(
+                        budgetItem.finalFee,
+                        budgetItem.currentFee
+                      ) + '%',
                   }"
                 ></div>
               </div>
               <div
                 class="absolute flex items-center justify-center w-full h-full"
               >
-                <span class="font-bold">{{ item.curBudget }}원</span>
+                <span class="font-bold">{{ budgetItem.currentFee }}원</span>
               </div>
             </div>
-            <div class="text-xs w-7">{{ item.goalBudget / 10000 }}만원</div>
+            <div class="text-xs w-7">{{ budgetItem.finalFee / 10000 }}만원</div>
           </div>
         </div>
       </div>
     </nuxt-link>
 
     <!-- 예산 추가 -->
-    <nuxt-link to="/groups/budget/add">
+    <nuxt-link v-if="groupStore.groupRole === '모임장'" to="/groups/budget/add">
       <div
         class="flex items-center justify-center w-11/12 h-16 mx-auto mt-5 bg-light-gray-color rounded-xl"
       >

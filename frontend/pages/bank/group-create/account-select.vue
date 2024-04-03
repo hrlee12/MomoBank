@@ -3,9 +3,29 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SimpleAccount from "~/components/bank/SimpleAccount.vue";
 import Loading from "~/components/layout/Loading.vue";
+import { useBankApi } from "@/api/bank";
+
+const { getMyAccountList } = useBankApi();
+
+const remitStore = useRemitStore();
 
 definePageMeta({
   layout: "action",
+});
+
+// 슬라이드 데이터
+const myAccountList = ref([]);
+
+// 전체 계좌 리스트 받는 함수
+onMounted(async () => {
+  try {
+    const memberId = remitStore.memberId; // 예시 ID
+    const response = await getMyAccountList(memberId);
+    myAccountList.value = response.data.data.myAccountList;
+    console.log("사용자 전체 계좌 리스트: ", myAccountList.value);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // 이미지 불러오는 메소드
@@ -71,16 +91,16 @@ const makeGroup = () => {
   </div>
   <div v-else-if="method == 0" class="account-container">
     <div
-      v-for="(account, index) in accounts"
+      v-for="(account, index) in myAccountList"
       :key="index"
       @click="selectAccount(index)"
       class="account"
       :class="{ selected: selectedId == index }"
     >
       <SimpleAccount
-        :accountName="account.accountName"
+        :accountName="account.accountProductName"
         :accountNumber="account.accountNumber"
-        :money="account.money"
+        :money="account.balance"
         :status="false"
       />
     </div>
