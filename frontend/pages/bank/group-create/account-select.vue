@@ -16,18 +16,7 @@ const getImageUrl = (imageName, idx) => {
 };
 
 const accounts = ref([
-  { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
-  { accountName: "효리은행", accountNumber: "123-1234-12346", money: 2000000 },
-  { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
-  { accountName: "소이은행", accountNumber: "123-1234-12348", money: 100000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
-  { accountName: "준성은행", accountNumber: "123-1234-12349", money: 10000 },
-  {
-    accountName: "민우은행",
-    accountNumber: "123-1234-12349",
-    money: 100000000,
-  },
+  // { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
 ]);
 
 const isSelected = ref(false);
@@ -58,6 +47,10 @@ const loadData = async () => {
   }
 };
 
+const goCreateBankAccount = () => {
+  router.push("/bank/account-create");
+};
+
 const goNext = () => {
   loadData(); // goNext가 호출되면 loadData 함수 실행
 };
@@ -74,9 +67,9 @@ const goNext = () => {
         <img :src="getImageUrl('card-icon.png', 0)" alt="" />
         <h3>기존 계좌 연결</h3>
       </div>
-      <div class="method-content" @click="method = 1">
+      <div class="method-content" @click="goCreateBankAccount">
         <img :src="getImageUrl('logo-icon.png', 0)" alt="" />
-        <h3>신규 계좌 연결</h3>
+        <h3>신규 계좌 생성</h3>
       </div>
     </div>
   </div>

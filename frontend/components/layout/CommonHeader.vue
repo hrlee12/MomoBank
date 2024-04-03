@@ -45,7 +45,10 @@ const pageTitle = computed(() => {
       title: "약관동의",
       sideMenuActive: NO_SIDE_MENU,
     },
-
+    "bank-remit-password-check": {
+      title: "계좌 비밀번호",
+      sideMenuActive: NO_SIDE_MENU,
+    },
     "bank-group-list": { title: "전체모임", sideMenuActive: FULL_MENU },
     "bank-notice": { title: "알림", sideMenuActive: NO_SIDE_MENU },
     "bank-profile": { title: "마이페이지", sideMenuActive: FULL_MENU },

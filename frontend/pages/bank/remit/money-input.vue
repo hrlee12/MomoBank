@@ -17,7 +17,7 @@ const moneyInput = ref();
 
 const goNext = () => {
   remitInfo.remitAmount = moneyInput.value;
-  $router.push("/bank/remit/confirm-remit");
+  $router.push("/bank/remit/password-check");
 };
 </script>
 
