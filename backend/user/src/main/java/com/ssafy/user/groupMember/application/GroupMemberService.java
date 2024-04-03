@@ -155,6 +155,8 @@ public class GroupMemberService {
     public void joinGroup(String authToken, int groupId, int accountId, String memberId)
         throws Exception {
 
+        System.out.println(accountId);
+
         // 초대코드 인증토큰 검증
         // 토큰 인증 실패
         if (!redisUtil.existKey(authToken)) {
