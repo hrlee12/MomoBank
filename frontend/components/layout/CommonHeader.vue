@@ -45,6 +45,10 @@ const pageTitle = computed(() => {
       title: "약관동의",
       sideMenuActive: NO_SIDE_MENU,
     },
+    "bank-account-create-password-check": {
+      title: "계좌 비밀번호 입력",
+      sideMenuActive: NO_SIDE_MENU,
+    },
     "bank-account-create-card-select": {
       title: "카드선택",
       sideMenuActive: NO_SIDE_MENU,

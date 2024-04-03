@@ -143,8 +143,8 @@ const requestCreateBankAccount = async () => {
 };
 
 const goNext = async () => {
-  // 카드 추천 페이지 이동
-  router.push("/bank/account-create/card-select");
+  // 카드 설문 페이지 이동
+  router.push("/bank/account-create/survey");
 };
 </script>
 
