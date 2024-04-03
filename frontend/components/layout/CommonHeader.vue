@@ -45,6 +45,14 @@ const pageTitle = computed(() => {
       title: "약관동의",
       sideMenuActive: NO_SIDE_MENU,
     },
+    "bank-account-create-card-select": {
+      title: "카드선택",
+      sideMenuActive: NO_SIDE_MENU,
+    },
+    "bank-account-create-card-agree": {
+      title: "약관동의",
+      sideMenuActive: NO_SIDE_MENU,
+    },
     "bank-remit-password-check": {
       title: "계좌 비밀번호",
       sideMenuActive: NO_SIDE_MENU,
@@ -69,10 +77,6 @@ const pageTitle = computed(() => {
     "bank-group-create": { title: "모임생성", sideMenuActive: NO_SIDE_MENU },
     "bank-group-create-account-select": {
       title: "계좌선택",
-      sideMenuActive: NO_SIDE_MENU,
-    },
-    "bank-group-create-card-select": {
-      title: "카드선택",
       sideMenuActive: NO_SIDE_MENU,
     },
     "bank-account-create-password-check": {

@@ -20,7 +20,7 @@ const getImageUrl = (imageName, idx) => {
 const name = ref("");
 
 // 비밀번호 숫자를 저장할 배열
-const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "-"];
+const keypadNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, ""];
 
 // 입력 패스워드
 const inputPasswordArray = ref(["", "", "", ""]);
@@ -80,18 +80,33 @@ const checkEnterNumber = (number) => {
   }
 };
 
-const backspace = () => {
-  // 입력된 마지막 인덱스를 찾습니다.
-  const lastIndex = inputPasswordArray.value.lastIndexOf(
-    inputPasswordArray.value
-      .slice()
-      .reverse()
-      .find((value) => value !== "")
-  );
+const backspace = (menu) => {
+  if (menu == 0) {
+    // 입력된 마지막 인덱스를 찾습니다.
+    const lastIndex = inputPasswordArray.value.lastIndexOf(
+      inputPasswordArray.value
+        .slice()
+        .reverse()
+        .find((value) => value !== "")
+    );
 
-  // 입력된 마지막 인덱스의 값을 지웁니다.
-  if (lastIndex !== -1) {
-    inputPasswordArray.value[lastIndex] = "";
+    // 입력된 마지막 인덱스의 값을 지웁니다.
+    if (lastIndex !== -1) {
+      inputPasswordArray.value[lastIndex] = "";
+    }
+  } else if (menu == 1) {
+    // 입력된 마지막 인덱스를 찾습니다.
+    const lastIndex = checkPassword.value.lastIndexOf(
+      checkPassword.value
+        .slice()
+        .reverse()
+        .find((value) => value !== "")
+    );
+
+    // 입력된 마지막 인덱스의 값을 지웁니다.
+    if (lastIndex !== -1) {
+      checkPassword.value[lastIndex] = "";
+    }
   }
 };
 
@@ -128,8 +143,8 @@ const requestCreateBankAccount = async () => {
 };
 
 const goNext = async () => {
-  // 메인 페이지 이동
-  router.push("/bank");
+  // 카드 추천 페이지 이동
+  router.push("/bank/account-create/card-select");
 };
 </script>
 
@@ -169,14 +184,14 @@ const goNext = async () => {
       </div>
       <div class="grid grid-cols-3 gap-[2rem]">
         <button
-          v-for="number in keypadNumbers"
+          v-for="(number, index) in keypadNumbers"
           :key="number"
           @click="enterNumber(number)"
           class="flex items-center justify-center w-12 h-12 text-3xl font-bold text-gray-color"
         >
-          <div v-if="number != '-'">{{ number }}</div>
+          <div v-if="index != keypadNumbers.length - 1">{{ number }}</div>
           <div v-else>
-            <div class="w-8 h-8" @click="backspace">
+            <div class="w-8 h-8" @click="backspace(0)">
               <img
                 :src="getImageUrl('back-number-icon.png', 0)"
                 alt="back-number"
@@ -225,14 +240,14 @@ const goNext = async () => {
       </div>
       <div class="grid grid-cols-3 gap-[2rem]">
         <button
-          v-for="number in keypadNumbers"
+          v-for="(number, index) in keypadNumbers"
           :key="number"
           @click="checkEnterNumber(number)"
           class="flex items-center justify-center w-12 h-12 text-3xl font-bold text-gray-color"
         >
-          <div v-if="number != '-'">{{ number }}</div>
+          <div v-if="index != keypadNumbers.length - 1">{{ number }}</div>
           <div v-else>
-            <div class="w-8 h-8" @click="backspace">
+            <div class="w-8 h-8" @click="backspace(1)">
               <img
                 :src="getImageUrl('back-number-icon.png', 0)"
                 alt="back-number"

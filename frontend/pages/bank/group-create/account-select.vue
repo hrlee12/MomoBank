@@ -51,17 +51,13 @@ const goCreateBankAccount = () => {
   router.push("/bank/account-create");
 };
 
-const goNext = () => {
-  loadData(); // goNext가 호출되면 loadData 함수 실행
+const makeGroup = () => {
+  // group 생성 api 호출
 };
 </script>
 
 <template>
-  <div v-if="isLoading">
-    <Loading />
-  </div>
-
-  <div v-else-if="method == -1" class="account-container">
+  <div v-if="method == -1" class="account-container">
     <div class="method-container">
       <div class="method-content" @click="method = 0">
         <img :src="getImageUrl('card-icon.png', 0)" alt="" />
@@ -89,7 +85,7 @@ const goNext = () => {
       />
     </div>
     <button v-if="!isSelected" class="second-btn">다음</button>
-    <button v-else class="prime-btn" @click="goNext()">다음</button>
+    <button v-else class="prime-btn" @click="makeGroup">다음</button>
   </div>
 </template>
 
