@@ -93,10 +93,10 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
                 long amount = queryFactory
                     .select(transfer.amount.sum().coalesce(0L))
                     .from(transfer)
-                    .groupBy(transfer.fromAccount.member)
                     .where(transfer.fromAccount.member.eq(member),
                         transfer.createdAt.month().eq(month),
-                        transfer.createdAt.year().eq(year)).fetchOne();
+                        transfer.createdAt.year().eq(year))
+                    .fetchOne();
 
                 GetFeesPerMonthResponse feesPerMonth = new GetFeesPerMonthResponse(month, amount);
                 feesPerMonthList.add(feesPerMonth);

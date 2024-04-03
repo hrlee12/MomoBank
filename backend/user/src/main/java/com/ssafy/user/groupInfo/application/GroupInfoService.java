@@ -12,6 +12,8 @@ import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
 import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupDescriptionRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupNameRequest;
+import com.ssafy.user.groupInfo.dto.response.CreateGroupKafkaResponse;
+import com.ssafy.user.groupInfo.dto.response.CreateGroupMemberKafkaResponse;
 import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
 import com.ssafy.user.groupInfo.dto.response.GetFeesPerYearResponse;
 import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
@@ -28,6 +30,7 @@ import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,6 +45,8 @@ public class GroupInfoService {
 
     private final GroupMemberService groupMemberService;
     private final BankCallService bankCallService;
+
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
@@ -79,6 +84,17 @@ public class GroupInfoService {
             .account(account)
             .build();
 
+        groupInfoRepository.save(groupInfo);
+
+        CreateGroupKafkaResponse groupResponse = new CreateGroupKafkaResponse(
+            groupInfo.getGroupInfoId(),
+            groupInfo.getMember().getMemberId(),
+            groupInfo.getDescription(),
+            groupInfo.getGroupName()
+        );
+
+        kafkaTemplate.send("createGroup", groupResponse);
+
         GroupMember groupMember = GroupMember.builder()
             .name(member.getName())
             .role(memberType.모임장)
@@ -87,8 +103,20 @@ public class GroupInfoService {
             .account(myAccount)
             .build();
 
-        groupInfoRepository.save(groupInfo);
+
         groupMemberRepository.save(groupMember);
+
+
+        CreateGroupMemberKafkaResponse groupMemberRessponse = new CreateGroupMemberKafkaResponse(
+            groupMember.getGroupMemberId(),
+            groupMember.getGroupInfo().getGroupInfoId(),
+            groupMember.getMember().getMemberId(),
+            String.valueOf(groupMember.getTotalFee()),
+            groupMember.getName(),
+            groupMember.getRole().toString()
+        );
+
+        kafkaTemplate.send("createGroupMemberAsGroupCreated", groupMemberRessponse);
 
         return CreateNewGroupResponse.from(groupInfo);
     }
