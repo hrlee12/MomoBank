@@ -8,6 +8,7 @@ import com.ssafy.user.common.util.RedisUtil;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import com.ssafy.user.member.dto.request.LoginRequest;
+import com.ssafy.user.member.dto.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,7 +32,7 @@ public class AuthService {
     private final RedisUtil redisUtil;
 
 
-    public Map<String, String> login(LoginRequest request) throws Exception {
+    public Map<String, Object> login(LoginRequest request) throws Exception {
         Member member = memberRepository.findByIdAndIsDeletedFalse(request.getId())
                             .orElseThrow(()-> new CustomException(ErrorCode.NO_MEMBER_INFO));
 
@@ -42,8 +43,11 @@ public class AuthService {
             throw new CustomException(ErrorCode.NO_MEMBER_INFO);
         }
 
+        Map<String, Object> data = new HashMap<>();
+        data.put("jwtTokens", makeJwtTokens(request.getId()));
+        data.put("member", new LoginResponse(member.getMemberId(), member.getId(), member.getName()));
 
-        return makeJwtTokens(request.getId());
+        return data;
     }
 
     public Map<String, String> regenerateToken(String refreshToken) throws Exception {
