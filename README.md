@@ -1,7 +1,3 @@
-# readme.md
-
-체크박스: No
-
 # 모두가 모이는 뱅킹, 모모뱅크
 
 ![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled.png?ref_type=heads)
