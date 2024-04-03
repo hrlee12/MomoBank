@@ -14,6 +14,8 @@ export const useGroupStore = defineStore("group", {
     groupRole: null,
     createGroupName: "",
     createGroupDesc: "",
+    inviteCodeGroupId: null,
+    inviteStatus: false,
   }),
   actions: {
     updateGroupHeaderName(newName) {
@@ -42,6 +44,12 @@ export const useGroupStore = defineStore("group", {
     },
     createGroupDesc(newGroupDesc) {
       this.createGroupDesc = newGroupDesc;
+    },
+    updateInviteGroupId(newInviteGroupId) {
+      this.inviteCodeGroupId = newInviteGroupId;
+    },
+    updateInviteStatus(newInviteStatus) {
+      this.inviteStatus = newInviteStatus;
     },
   },
 });

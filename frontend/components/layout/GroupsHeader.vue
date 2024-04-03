@@ -74,9 +74,6 @@ const pageTitle = computed(() => {
   } else if (route.name === "groups-menu") {
     noSideMenu.value = true;
     return "추가 메뉴";
-  } else if (route.name === "groups-invite-ok") {
-    noSideMenu.value = true;
-    return "모임 연결";
   }
 });
 </script>

@@ -8,6 +8,7 @@ const { loginRequest } = useUserApi();
 
 const router = useRouter(); // useRouter 인스턴스 생성
 const remitStore = useRemitStore();
+const groupStore = useGroupStore();
 
 definePageMeta({
   layout: "user",
@@ -54,6 +55,11 @@ const login = async () => {
       remitStore.memberId = data.data.data.memberId;
       remitStore.memberName = data.data.data.name;
       remitStore.memberLoginId = data.data.data.id;
+      // 만약 초대코드를 받고 로그인 창으로 이동한 경우에는 로그인 했을 떄 바로 로그인 홈으로 이동한다.
+      //TODO : 해당하는 모임에 가입하고, router로 이동시키면 될 것 같음.
+      if (groupStore.inviteStatus) {
+        router.push(`/groups/${groupStore.inviteCodeGroupId}`);
+      }
       router.push(`/bank`);
     },
     // 로그인 실패시

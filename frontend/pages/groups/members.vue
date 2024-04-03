@@ -3,7 +3,7 @@ import { useGroupApi } from "~/api/groups";
 import { useGroupStore } from "@/stores/group";
 
 const groupStore = useGroupStore();
-const { getGroupMembers } = useGroupApi();
+const { getGroupMembers, createInviteCode } = useGroupApi();
 
 const groupMembers = ref([]);
 
@@ -17,8 +17,10 @@ const fetchGroupMembers = async (groupId) => {
     console.error("모임 인원 목록을 불러오는 데 실패했습니다.", error);
   }
 };
+const inviteBoolean = ref(false);
 
 onMounted(() => {
+  inviteBoolean.value = false;
   fetchGroupMembers(groupId).then((response) => {
     groupMembers.value = response.data;
     console.log(groupMembers.value);
@@ -28,6 +30,21 @@ onMounted(() => {
 definePageMeta({
   layout: "groups",
 });
+
+const inviteCode = ref("");
+
+const invite = async () => {
+  try {
+    const response = await createInviteCode(groupId);
+    if (response.status === 200) {
+      inviteBoolean.value = true;
+      inviteCode.value = response.data.data.inviteLink;
+      await navigator.clipboard.writeText(inviteCode.value); // 클립보드에 초대코드 자동으로 복사
+    }
+  } catch (error) {
+    console.error(error); // 오류 처리
+  }
+};
 
 const getImageUrl = (imageName, idx) => {
   // Note: You might need to adjust the path depending on your project structure
@@ -43,7 +60,7 @@ const getImageUrl = (imageName, idx) => {
     <!-- 플러스 아이콘 -->
     <div class="flex justify-between">
       <div></div>
-      <div class="w-6 h-6 mt-4 mr-4">
+      <div class="w-6 h-6 mt-4 mr-4" @click="invite">
         <img :src="getImageUrl('add-icon2.png', 0)" alt="add-icon" />
       </div>
     </div>
@@ -74,6 +91,13 @@ const getImageUrl = (imageName, idx) => {
           <div class="pl-1 basis-4/12">{{ member.sincerity }}점</div>
         </div>
       </div>
+    </div>
+  </div>
+  <div v-if="inviteBoolean" class="relative flex justify-center">
+    <div
+      class="absolute w-10/12 px-1 py-1 text-center rounded-lg bg-light-gray-color bottom-40"
+    >
+      초대코드가 클립보드에 복사되었습니다
     </div>
   </div>
 </template>
