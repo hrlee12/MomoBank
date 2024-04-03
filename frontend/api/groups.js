@@ -74,7 +74,10 @@ export function useGroupApi() {
 
   const createNewGroup = async (data, success, fail) => {
     console.log("in axios");
-    return await $axios.post(`/user/groups/new-group`, data);
+    return await $axios
+      .post(`/user/groups/new-group`, data)
+      .then(success)
+      .catch(fail);
   };
 
   const createInviteCode = async (groupId) => {
