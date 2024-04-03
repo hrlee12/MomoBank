@@ -76,6 +76,10 @@ export function useGroupApi() {
     return await $axios.post(`/user/groups/new-group`, data);
   };
 
+  const createInviteCode = async (groupId) => {
+    return await $axios.post(`/user/groups/${groupId}/invite`);
+  };
+
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
   return {
     getGroupFeedList,
@@ -92,5 +96,6 @@ export function useGroupApi() {
     getTransactionHistory,
     getMyFeed,
     createNewGroup,
+    createInviteCode,
   };
 }
