@@ -158,7 +158,13 @@ public class GroupInfoService {
         Account account = groupInfo.getAccount();
         List<GroupMemberDTO> list = groupMemberService.getAllGroupMembers(groupInfoId);
 
+
         long amount = account.getBalance()/list.size();
+
+        System.out.println("멤버 수 : " + list.size());
+        System.out.println("잔액 : " + account.getBalance());
+        System.out.println("멤버 리스트 : " + list.toString);
+        System.out.println("나눠주는 금액 : " + amount);
 
         for(GroupMemberDTO groupMember : list){
             Member toMember = memberCheck(groupMember.getId());
