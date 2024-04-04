@@ -60,6 +60,7 @@ const updateIndividualAgreement = () => {
 };
 
 const goNext = () => {
+  alert("카드가 성공적으로 생성되었습니다.");
   router.push("/bank"); // 로딩 완료 후 card-select 페이지로 이동
 };
 </script>
