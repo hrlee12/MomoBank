@@ -55,7 +55,7 @@ public class GroupInfoService {
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
         Member member = memberCheck(memberId);
-        List<GetMyGruopResponse> list = groupInfoRepository.findGroupInfoResponseByMember(memberId);
+        List<GetMyGruopResponse> list = groupInfoRepository.findGroupInfoResponseByMember(member);
         return new GetMyGroupListResponse(list);
     }
 
