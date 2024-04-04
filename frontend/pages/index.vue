@@ -11,7 +11,7 @@ setTimeout(() => {
   <Loading />
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 /* 수평 스크롤 바 감추기 */
 body::-webkit-scrollbar {
   display: none;
