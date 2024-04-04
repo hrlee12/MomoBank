@@ -9,7 +9,9 @@ const groupStore = useGroupStore();
 if (inviteCode !== null) {
   // console.log(inviteCode.inviteCode.slice(0, 1));
   groupStore.inviteCode = inviteCode.inviteCode;
-  groupStore.updateInviteGroupId(inviteCode.inviteCode.slice(0, 1));
+  groupStore.groupId = inviteCode.inviteCode.slice(0, 2);
+  console.log("그룹아이디는 과연?", inviteCode.inviteCode.slice(0, 2));
+  groupStore.updateInviteGroupId(inviteCode.inviteCode.slice(0, 2));
   groupStore.updateInviteStatus(true); // 초대코드를 받은 상태임
   router.push("/user");
 } else {

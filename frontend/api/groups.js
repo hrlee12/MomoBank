@@ -93,6 +93,7 @@ export function useGroupApi() {
   };
 
   const groupJoinWithInviteCode = async (data, success, fail) => {
+    console.log("inAXIOS: ", data);
     return await $axios
       .post(`/user/groups/invite/accounts`, data)
       .then(success)

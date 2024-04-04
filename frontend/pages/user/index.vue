@@ -29,12 +29,13 @@ const joinWithInviteCode = async () => {
   await groupJoinWithInviteCode(
     {
       groupId: groupStore.groupId,
-      memberId: remitStore.memberId,
+      memberId: remitStore.memberLoginId,
       accountId: 21,
-      authToken: groupStore.authToken,
+      authToken: groupStore.inviteAuthCode,
     },
     (data) => {
       console.log("모임 가입 완료", data);
+      router.push(`/groups/${groupStore.groupId}`);
     },
     (error) => {
       console.log("모임 가입 실패", error);
@@ -95,7 +96,6 @@ const login = async () => {
       if (groupStore.inviteStatus) {
         // auth코드 생성
         createAuthCode(groupStore.inviteCode, remitStore.memberLoginId);
-        router.push(`/groups/${groupStore.inviteCodeGroupId}`);
       }
       router.push(`/bank`);
     },
