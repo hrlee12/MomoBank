@@ -415,7 +415,7 @@ public class FeedService {
     }
 
 
-
+    @Transactional
     @KafkaListener(topics = "createGroupAndGroupMember", groupId = "community")
     public void createGroupAndGroupMember(Object data) {
         Map<String, Object> info = kafkaUtil.dataToMap(data);
@@ -432,6 +432,7 @@ public class FeedService {
                 .member(member)
                 .groupName((String) info.get("groupName"))
                 .description((String) info.get("description"))
+                .groupMembers(null)
                 .build();
 
 
