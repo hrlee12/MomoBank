@@ -19,9 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -30,20 +27,6 @@ public class TransferService {
     private final TransferRepository transferRepository;
     private final AccountRepository accountRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-
-
-    public void sendDelayedMessage(TransferKafkaResponse response) {
-        // CompletableFuture를 사용해 2초 후에 메시지 전송 작업을 비동기적으로 실행
-        CompletableFuture.runAsync(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(3); // 3초 동안 대기
-                kafkaTemplate.send("transfer", response); // 메시지 전송
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                // 에러 핸들링 (예: 로깅)
-            }
-        });
-    }
 
     public TransferResponse transfer(TransferRequest request) {
 
@@ -104,7 +87,7 @@ public class TransferService {
             toAccount.getAccountId()
         );
 
-        sendDelayedMessage(response);
+        kafkaTemplate.send("transfer", response);
 
         return new TransferResponse(
             fromAccount.getAccountNumber(),
