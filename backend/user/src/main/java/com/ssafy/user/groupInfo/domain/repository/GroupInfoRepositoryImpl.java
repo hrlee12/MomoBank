@@ -53,10 +53,11 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .where(groupInfo.member.eq(member))
             .fetch();
 
-        return results.stream()
-            .filter(r -> r.getMonthlyFee() > 0)
-            .filter(r -> r.getJoinMembers() > 0)
-            .collect(Collectors.toList());
+        // return results.stream()
+        //     .filter(r -> r.getMonthlyFee() > 0)
+        //     .filter(r -> r.getJoinMembers() > 0)
+        //     .collect(Collectors.toList());
+        return results;
     }
 
     public GroupResponse findGroupResponseByGroup(int groupId, int memberId) {
