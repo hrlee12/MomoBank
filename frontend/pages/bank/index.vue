@@ -86,10 +86,9 @@ onMounted(async () => {
 
         <NuxtLink to="/bank/account-list" class="list-link">전체계좌</NuxtLink>
       </div>
-      <NuxtLink to="/bank/notice">
-        <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt=""
-        visiblity: hidden /></NuxtLink
-      >
+      <NuxtLink to="/">
+        <img :src="getImageUrl ? getImageUrl('logout-icon.png', 0) : ''" alt=""
+      /></NuxtLink>
     </nav>
   </header>
 
@@ -149,6 +148,10 @@ onMounted(async () => {
 @import "@/assets/css/main.scss";
 @import "@/assets/css/content.scss";
 
+.logout {
+  min-width: 50px !important;
+}
+
 .account-content {
   border: 1px solid #a3a3a3;
 }
@@ -178,7 +181,7 @@ header {
 
     .menu {
       display: flex;
-      min-width: 90%;
+      min-width: 80%;
 
       a {
         display: flex;
