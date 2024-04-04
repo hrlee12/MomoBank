@@ -11,4 +11,14 @@ setTimeout(() => {
   <Loading />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+/* 수평 스크롤 바 감추기 */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* 수직 스크롤 바 감추기 */
+body::-webkit-scrollbar-thumb {
+  display: none;
+}
+</style>
