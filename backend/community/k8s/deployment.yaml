@@ -18,3 +18,10 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8083
+          volumeMounts:
+          - name: community-volume
+            mountPath: "/uploads"
+      volumes:
+      - name: community-volume
+        persistentVolumeClaim:
+          claimName: community-pvc

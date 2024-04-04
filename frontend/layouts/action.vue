@@ -1,5 +1,16 @@
 <script setup>
 import CommonHeader from "~/components/layout/CommonHeader.vue";
+import BankFooter from "~/components/layout/BankFooter.vue";
+import { useRoute } from "#vue-router";
+import { ref } from "vue";
+
+const router = useRoute();
+
+const footerActive = ref(false);
+const id = router.params.id;
+if (id && router.name.startsWith("bank-")) {
+  footerActive.value = true;
+}
 </script>
 
 <template>
@@ -8,6 +19,7 @@ import CommonHeader from "~/components/layout/CommonHeader.vue";
   <div class="layout-container">
     <NuxtPage />
   </div>
+  <BankFooter v-if="footerActive" />
 </template>
 
 <style lang="scss" scoped>

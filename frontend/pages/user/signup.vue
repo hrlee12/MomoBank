@@ -1,8 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router"; // useRouter 추가
+import { useUserApi } from "~/api/user"; // api 추가
 
 const router = useRouter(); // useRouter 인스턴스 생성
+const { userJoinRequest } = useUserApi();
+const userStore = useUserStore();
 
 const signUpInfo = ref({
   userName: "",
@@ -55,8 +58,24 @@ const signUpRequest = () => {
 
   // 모든 검증을 통과했을 때
   console.log(signUpInfo.value);
-  alert("회원가입이 완료되었습니다.");
-  router.push(`/user`);
+  // 회원가입 axios
+  userJoinRequest(
+    {
+      name: signUpInfo.value.userName,
+      id: signUpInfo.value.userId,
+      password: signUpInfo.value.password,
+      birthdate: signUpInfo.value.userBirth,
+      phoneNumber: userStore.userPhoneNumber,
+      authToken: userStore.messageVerifyAuthToken,
+    },
+    (data) => {
+      alert("모모뱅크에 오신것을 환영합니다.");
+      router.push(`/user`);
+    },
+    (error) => {
+      alert("회원가입 실패!");
+    }
+  );
 };
 
 definePageMeta({

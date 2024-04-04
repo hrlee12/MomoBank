@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
+    "axios": "^1.6.8",
     "chart.js": "^4.4.2",
     "marked": "^12.0.1",
     "nuxt": "^3.10.3",

@@ -1,17 +1,44 @@
 <script setup>
 import AccountInformation from "~/components/group/AccountInformation.vue";
+import AccountHistory from "~/components/bank/AccountHistory.vue";
+
+import { useGroupStore } from "@/stores/group";
+
+const groupStore = useGroupStore();
+const remitStore = useRemitStore();
+
+import { useGroupApi } from "~/api/groups";
+
+const { getTransactionHistory } = useGroupApi();
+
+const memberId = remitStore.memberId;
+
+const fetchTransactionHistory = async () => {
+  try {
+    const response = await getTransactionHistory(
+      memberId,
+      groupStore.accountId
+    );
+    return response.data;
+  } catch (error) {
+    console.error("거래내역 데이터를 불러오는 데 실패했습니다.", error);
+  }
+};
+
+const accountList = ref([]);
+
+onMounted(() => {
+  fetchTransactionHistory(groupStore.groupId, groupStore.accountId).then(
+    (response) => {
+      accountList.value = response.data.totalTransferList;
+      console.log(accountList.value);
+    }
+  );
+});
 
 definePageMeta({
   layout: "groups",
 });
-
-// Define a method to dynamically require images
-const getImageUrl = (imageName, idx) => {
-  // Note: You might need to adjust the path depending on your project structure
-  if (idx == 0) return "/icon/" + imageName;
-  else if (idx == 1) return "/images/" + imageName;
-  else console.log("Image code error");
-};
 
 // TODO : 일단 API 안나와서 패스
 //
@@ -29,7 +56,18 @@ const getImageUrl = (imageName, idx) => {
         </NuxtLink>
 
         <div class="items-center">
-          <p class="text-positive-color text-[13px]">납부 완료</p>
+          <p
+            v-if="groupStore.paymentStatus"
+            class="text-positive-color text-[13px]"
+          >
+            납부 완료
+          </p>
+          <p
+            v-if="!groupStore.paymentStatus"
+            class="text-negative-color text-[13px]"
+          >
+            납부 요망
+          </p>
         </div>
         <div class="w-8 h-6 mr-4"></div>
       </div>
@@ -62,9 +100,25 @@ const getImageUrl = (imageName, idx) => {
     </div>
   </div>
 
-  <div class="mt-2 bg-white rounded-xl">
-    <div class="px-6 py-6">
-      <div>2월 29일</div>
+  <div class="px-4">
+    <div
+      v-if="accountList.length == 0 || accountList == undefined"
+      class="mt-[2%] mb-[2%] bg-white rounded-[15px] pt-[3vh] pr-[5vw] pb-[10vh] pl-[5vh] min-h-[60vh] text-center"
+    >
+      조회된 기록이 없습니다.
+    </div>
+    <div v-else class="history-container">
+      <AccountHistory
+        v-for="(history, index) in accountList"
+        :key="index"
+        :history="history"
+      />
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import "~/assets/css/main.scss";
+@import "~/assets/css/content.scss";
+@import "~/assets/css/tailwind.css";
+</style>

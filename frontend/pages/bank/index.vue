@@ -2,6 +2,29 @@
 import BankAccount from "@/components/bank/BankAccount.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useRouter } from "vue-router";
+import { useBankApi } from "@/api/bank";
+
+const { getMyAccountList } = useBankApi();
+
+import { useGroupApi } from "~/api/groups";
+
+const { getMyGroups } = useGroupApi();
+
+const myGroups = ref([]);
+
+// remitStore 사용
+const remitStore = useRemitStore();
+
+const memberId = remitStore.memberId;
+
+const fetchMyGroups = async () => {
+  try {
+    const response = await getMyGroups(memberId);
+    return response.data;
+  } catch (error) {
+    console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
 
 const router = useRouter();
 
@@ -22,16 +45,30 @@ function onSlideChange(swiper) {
 }
 
 // 슬라이드 데이터
-const accounts = ref([
-  { accountName: "저축은행", accountNumber: "123-1234-12345", money: 1000000 },
-  { accountName: "효리은행", accountNumber: "123-1234-12346", money: 2000000 },
-  { accountName: "성수은행", accountNumber: "123-1234-12347", money: 1000 },
-]);
+const myAccountList = ref([]);
 const isLastSlide = ref(false);
 
-const goToGroup = (param) => {
-  router.push(`/groups`);
+// 각각의 그룹 페이지로 이동
+const goToGroup = (groupId) => {
+  router.push(`/groups/` + groupId);
 };
+
+// 전체 계좌 리스트 받는 함수
+onMounted(async () => {
+  try {
+    const memberId = remitStore.memberId; // 예시 ID
+    const response = await getMyAccountList(memberId);
+    myAccountList.value = response.data.data.myAccountList;
+    console.log("사용자 전체 계좌 리스트: ", myAccountList.value);
+  } catch (error) {
+    console.error(error);
+  }
+
+  fetchMyGroups(memberId).then((response) => {
+    myGroups.value = response.data.groupList;
+    console.log(myGroups.value);
+  });
+});
 </script>
 
 <template>
@@ -45,14 +82,15 @@ const goToGroup = (param) => {
             :src="getImageUrl ? getImageUrl('user-icon.png', 0) : ''"
             alt=""
           />
-          <h1>엄세현</h1></NuxtLink
+          <h1>{{ remitStore.memberName }}</h1></NuxtLink
         >
 
         <NuxtLink to="/bank/account-list" class="list-link">전체계좌</NuxtLink>
       </div>
       <NuxtLink to="/bank/notice">
         <img :src="getImageUrl ? getImageUrl('bell-icon.png', 0) : ''" alt=""
-      /></NuxtLink>
+        visiblity: hidden /></NuxtLink
+      >
     </nav>
   </header>
 
@@ -67,12 +105,8 @@ const goToGroup = (param) => {
       @slideChange="onSlideChange"
       class="mySwiper"
     >
-      <SwiperSlide v-for="(account, index) in accounts" :key="index">
-        <BankAccount
-          :accountName="account.accountName"
-          :accountNumber="account.accountNumber"
-          :money="account.money"
-        />
+      <SwiperSlide v-for="(account, index) in myAccountList" :key="index">
+        <BankAccount :accountInfo="account" />
       </SwiperSlide>
 
       <SwiperSlide>
@@ -82,42 +116,25 @@ const goToGroup = (param) => {
 
     <!-- 메인 모임 리스트 -->
     <div class="club-container content">
-      <div class="club-content" @click="goToGroup('5반 5린이들')">
+      <div
+        v-for="group in myGroups"
+        :key="group.id"
+        class="club-content"
+        @click="goToGroup(group.groupId)"
+      >
         <div class="club-item">
-          <h2>5반 5린이들</h2>
-          <h3>160,000원</h3>
+          <h2>{{ group.name }}</h2>
+
+          <h3 v-if="group.monthlyFee !== null">
+            {{ group.monthlyFee.toLocaleString("ko-KR") }}원
+          </h3>
+          <h3 v-else>{{ group.monthlyFee }}원</h3>
         </div>
         <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
+          <p>{{ group.description }}</p>
           <div class="icon-item">
             <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>달려라 자전거</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>자전거 스프린터들의 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
-          </div>
-        </div>
-      </div>
-      <div class="club-content">
-        <div class="club-item">
-          <h2>두근두근 여행모</h2>
-          <h3>160,000원</h3>
-        </div>
-        <div class="club-item">
-          <p>5반 5린이들과 함께하는 모임</p>
-          <div class="icon-item">
-            <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
-            <p>6명</p>
+            <p>{{ group.joinMembers }}명</p>
           </div>
         </div>
       </div>
@@ -132,6 +149,10 @@ const goToGroup = (param) => {
 <style lang="scss" scoped>
 @import "@/assets/css/main.scss";
 @import "@/assets/css/content.scss";
+
+.account-content {
+  border: 1px solid #a3a3a3;
+}
 
 h1 {
   padding-top: 0.5vh;
@@ -158,7 +179,7 @@ header {
 
     .menu {
       display: flex;
-      min-width: 80%;
+      min-width: 90%;
 
       a {
         display: flex;

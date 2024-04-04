@@ -22,6 +22,7 @@ import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,17 +44,21 @@ public class GroupInfoService {
     private final BankCallService bankCallService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
         Member member = memberCheck(memberId);
-        return new GetMyGroupListResponse(groupInfoRepository.findGroupInfoResponseByMember(memberId));
+        List<GetMyGruopResponse> list = groupInfoRepository.findGroupInfoResponseByMember(member);
+        return new GetMyGroupListResponse(list);
     }
 
     // 선택된 모임 상세 조회
     public GetGroupDetailsResponse getGroupDetails(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-        return GetGroupDetailsResponse.from(groupInfo);
+        GroupMember groupMember = groupMemberRepository.findGroupMemberByMemberAndGroupInfo(member, groupInfo);
+        return GetGroupDetailsResponse.from(groupInfo, groupMember);
     }
 
     // 각 모임원이 달마다 납입한 금액 조회
@@ -178,7 +183,12 @@ public class GroupInfoService {
         Account account = groupInfo.getAccount();
         List<GroupMemberDTO> list = groupMemberService.getAllGroupMembers(groupInfoId);
 
+
         long amount = account.getBalance()/list.size();
+
+        System.out.println("멤버 수 : " + list.size());
+        System.out.println("잔액 : " + account.getBalance());
+        System.out.println("나눠주는 금액 : " + amount);
 
         for(GroupMemberDTO groupMember : list){
             Member toMember = memberCheck(groupMember.getId());

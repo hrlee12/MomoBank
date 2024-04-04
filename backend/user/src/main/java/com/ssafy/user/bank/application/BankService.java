@@ -14,7 +14,10 @@ import com.ssafy.user.bank.dto.response.SearchToAccountResponse;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
 import com.ssafy.user.common.util.KafkaUtil;
+import com.ssafy.user.member.domain.Member;
+import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +33,24 @@ public class BankService {
     private final AccountRepository accountRepository;
     private final TransferRepository transferRepository;
     private final KafkaUtil kafkaUtil;
+    private final MemberRepository memberRepository;
 
     @KafkaListener(topics = "createAccount", groupId = "user")
     public void createAccount(Object data) {
         Map<String, Object> accountInfo =  kafkaUtil.dataToMap(data);
+        Member member = memberRepository.findById((int)accountInfo.get("member"))
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
 
         Account account = Account.builder()
             .accountId((int)accountInfo.get("accountId"))
             .accountNumber((String)accountInfo.get("accountNumber"))
             .accountProductName((String)accountInfo.get("accountProductName"))
-            .accountType((AccountType) accountInfo.get("accountType"))
+            .accountType(accountInfo.get("accountType").equals("입출금자유예금")? AccountType.입출금 : accountInfo.get("accountType").equals("정기예금")? AccountType.정기예금 : AccountType.적금)
             .bankName((String)accountInfo.get("bankName"))
-            .interestRate((float)accountInfo.get("interestRate"))
-            .balance((long)accountInfo.get("balance"))
+            .accountProductName((String) accountInfo.get("accountProductName"))
+            .interestRate(Float.parseFloat(accountInfo.get("interestRate").toString()))
+            .balance(Long.parseLong(accountInfo.get("balance").toString()))
+            .member(member)
             .build();
 
         accountRepository.save(account);
@@ -61,14 +69,19 @@ public class BankService {
     public void transfer(Object data) {
         Map<String, Object> transferInfo =  kafkaUtil.dataToMap(data);
 
+        Account fromAccount = accountRepository.findById((int)transferInfo.get("fromAccount"))
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+        Account toAccount = accountRepository.findById((int)transferInfo.get("toAccount"))
+            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_ACCOUNT));
+
         Transfer transfer = Transfer.builder()
             .transferId((int) transferInfo.get("transferId"))
-            .amount((long) transferInfo.get("amount"))
+            .amount(Long.parseLong(transferInfo.get("amount").toString()))
             .description((String) transferInfo.get("description"))
-            .fromBalance((long) transferInfo.get("fromBalance"))
-            .toBalance((long) transferInfo.get("toBalance"))
-            .fromAccount((Account) transferInfo.get("fromAccount"))
-            .toAccount((Account) transferInfo.get("toAccount"))
+            .fromBalance(Long.parseLong(transferInfo.get("fromBalance").toString()))
+            .toBalance(Long.parseLong(transferInfo.get("toBalance").toString()))
+            .fromAccount(fromAccount)
+            .toAccount(toAccount)
             .build();
 
         transferRepository.save(transfer);
@@ -95,6 +108,7 @@ public class BankService {
     public SearchAccountResponse searchAccount(int accountId, String bankName, String accountNumber) {
         SearchFromAccountResponse from = accountRepository.findFromAccountByBankAndAccount(accountId);
         SearchToAccountResponse to = accountRepository.findToAccountByBankAndAccount(bankName, accountNumber);
+        if(accountId == to.getAccountId()) throw new CustomException(ErrorCode.SAME_ACCOUNT);
         return new SearchAccountResponse(from, to);
     }
 

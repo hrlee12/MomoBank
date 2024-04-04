@@ -18,10 +18,11 @@ public class GroupResponse {
     private long monthlyFee;
     private long totalBalance;
     private int members;
+    private int groupMemberId;
 
     @QueryProjection
     public GroupResponse(String name, String description, long availableBalance, long totalFee,
-        long monthlyDueDate, long totalBalance, int members) {
+        long monthlyDueDate, long totalBalance, int members, int groupMemberId) {
         this.name = name;
         this.description = description;
         this.availableBalance = availableBalance;
@@ -29,5 +30,6 @@ public class GroupResponse {
         this.monthlyFee = monthlyFee;
         this.totalBalance = totalBalance;
         this.members = members;
+        this.groupMemberId = groupMemberId;
     }
 }

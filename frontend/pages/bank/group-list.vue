@@ -2,6 +2,42 @@
 import SimpleGroup from "~/components/bank/SimpleGroup.vue";
 import AddBox from "~/components/bank/AddBox.vue";
 
+import { useGroupApi } from "~/api/groups";
+
+const { getMyGroups } = useGroupApi();
+
+const myGroups = ref([]);
+
+const memberId = 2;
+
+const fetchMyGroups = async (memberId) => {
+  try {
+    const response = await getMyGroups(memberId);
+    return response.data;
+  } catch (error) {
+    console.error("나의 모임 목록을 불러오는 데 실패했습니다.", error);
+  }
+};
+
+const router = useRouter();
+
+definePageMeta({
+  layout: "bank-home",
+});
+
+// 각각의 그룹 페이지로 이동
+const goToGroup = (groupId) => {
+  router.push(`/groups/` + groupId);
+};
+
+// 전체 계좌 리스트 받는 함수
+onMounted(async () => {
+  fetchMyGroups(memberId).then((response) => {
+    myGroups.value = response.data.groupList;
+    console.log(myGroups.value);
+  });
+});
+
 definePageMeta({
   layout: "bank",
 });
@@ -49,14 +85,15 @@ const groups = ref([
 
 <template>
   <div class="account-container">
-    <div v-for="(group, index) in groups" :key="index">
+    <div v-for="(group, index) in myGroups" :key="index">
       <SimpleGroup
-        :groupName="group.groupName"
-        :groupMoney="group.groupMoney"
-        :state="group.state"
-        :delayDate="group.delayDate"
-        :groupDescription="group.groupDescription"
-        :groupMemberCount="group.groupMemberCount"
+        :groupId="group.groupId"
+        :groupName="group.name"
+        :groupMoney="group.monthlyFee"
+        :state="group.status"
+        :delayDate="group.monthlyFee"
+        :groupDescription="group.description"
+        :groupMemberCount="group.joinMembers"
       />
     </div>
     <AddBox to="/bank/group-create" />
