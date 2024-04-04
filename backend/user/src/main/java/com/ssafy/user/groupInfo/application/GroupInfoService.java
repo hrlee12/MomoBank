@@ -78,6 +78,7 @@ public class GroupInfoService {
 
     // 새 모임 생성
     public CreateNewGroupResponse createNewGroup(int memberId, CreateNewGroupRequest request) {
+        System.out.println(request.accountId());
         Member member = memberCheck(memberId);
         Account account = accountCheck(request.accountId());
         Account myAccount = accountCheck(request.myAccountId());
