@@ -35,7 +35,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
     private QAccount account = QAccount.account;
 
 
-    public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId) {
+    public List<GetMyGruopResponse> findGroupInfoResponseByMember(Member member) {
         QBudget budget = QBudget.budget;
         QGroupInfo groupInfo = QGroupInfo.groupInfo;
         QGroupMember groupMember = QGroupMember.groupMember;
@@ -50,9 +50,13 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .from(groupInfo)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
+<<<<<<< Updated upstream
             .where(groupInfo.member.memberId.eq(memberId),
                 groupMember.groupInfo.groupInfoId.isNotNull()
                     .or(budget.groupInfo.groupInfoId.isNotNull()))
+=======
+            .where(groupInfo.member.eq(member))
+>>>>>>> Stashed changes
             .fetch();
 
         return results.stream()

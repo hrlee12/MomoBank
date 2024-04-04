@@ -10,7 +10,7 @@ import java.util.List;
 import com.ssafy.user.groupInfo.domain.GroupInfo;
 
 public interface GroupInfoRepositoryCustom {
-    public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId);
+    public List<GetMyGruopResponse> findGroupInfoResponseByMember(Member member);
     public GroupResponse findGroupResponseByGroup(int groupId, int memberId);
     public List<GetFeesPerYearResponse> GetFeesPerYear(Member member);
 
