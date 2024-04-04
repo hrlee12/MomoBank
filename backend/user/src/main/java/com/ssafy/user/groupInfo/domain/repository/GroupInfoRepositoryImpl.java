@@ -35,12 +35,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
     private QAccount account = QAccount.account;
 
 
-    public List<GetMyGruopResponse> findGroupInfoResponseByMember(Member member) {
-        QBudget budget = QBudget.budget;
-        QGroupInfo groupInfo = QGroupInfo.groupInfo;
-        QGroupMember groupMember = QGroupMember.groupMember;
-
-        List<GetMyGruopResponse> results = queryFactory
+    List<GetMyGruopResponse> results = queryFactory
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
@@ -48,6 +43,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
                 budget.monthlyFee.sum(),
                 groupInfo.groupMembers.size()))
             .from(groupInfo)
+            .groupBy(groupInfo.groupInfoId)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
             .where(groupInfo.member.eq(member))
