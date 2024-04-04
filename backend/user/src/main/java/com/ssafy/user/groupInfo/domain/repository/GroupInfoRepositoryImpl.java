@@ -50,13 +50,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .from(groupInfo)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
-<<<<<<< Updated upstream
-            .where(groupInfo.member.memberId.eq(memberId),
-                groupMember.groupInfo.groupInfoId.isNotNull()
-                    .or(budget.groupInfo.groupInfoId.isNotNull()))
-=======
             .where(groupInfo.member.eq(member))
->>>>>>> Stashed changes
             .fetch();
 
         return results.stream()
