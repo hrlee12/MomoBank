@@ -4,12 +4,12 @@ import com.ssafy.bank.account.domain.Account;
 
 public record TransferKafkaResponse(
     int transferId,
-    long amount,
+    String amount,
     String description,
-    long fromBalance,
-    long toBalance,
-    Account fromAccount,
-    Account toAccount
+    String fromBalance,
+    String toBalance,
+    int fromAccount,
+    int toAccount
 ) {
 
 }

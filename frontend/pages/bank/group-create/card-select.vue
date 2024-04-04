@@ -73,7 +73,7 @@ const cardList = ref([
 const router = useRouter();
 const cardSelect = (id) => {
   console.log(id);
-  router.push(`/bank/account-create/agree`);
+  router.push(`/bank/account-create/card-agree`);
 };
 </script>
 
@@ -100,7 +100,7 @@ const cardSelect = (id) => {
       </div>
     </div>
     <div class="content">
-      <p class="left">그 외</p>
+      <p class="left-aligin">그 외</p>
       <div class="content">
         <div
           v-for="(card, index) in cardList"
@@ -170,7 +170,7 @@ const cardSelect = (id) => {
   text-align: center;
 }
 
-.left {
+.left-aligin {
   padding-left: 5%;
   color: black;
   font-weight: bold;

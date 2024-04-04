@@ -33,7 +33,7 @@ defineProps({
 button {
   border: 1px solid $primary-color;
   border-radius: 20px;
-  padding: 0 4%;
+  padding: 0 3%;
   color: $primary-color;
   font-weight: bold;
 }

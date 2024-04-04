@@ -1,8 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router"; // useRouter 추가
+import { useUserApi } from "@/api/user";
+import { useRemitStore } from "~/stores/remitStore";
+
+const { loginRequest } = useUserApi();
 
 const router = useRouter(); // useRouter 인스턴스 생성
+const remitStore = useRemitStore();
 
 definePageMeta({
   layout: "user",
@@ -21,7 +26,8 @@ const loginInfo = ref({
 });
 
 // 로그인 요청시 재확인
-const loginRequest = () => {
+
+const login = async () => {
   // 아이디 입력란 확인
   if (!loginInfo.value.userId) {
     alert("아이디를 입력해주세요.");
@@ -36,10 +42,25 @@ const loginRequest = () => {
 
   // axios로 사용자 유무 확인
   // 실패시 alert("입력된 정보에 해당하는 유저를 찾지 못하였습니다.");
-
-  // 모든 검증을 통과했을 때
-  console.log(loginInfo.value);
-  router.push(`/bank`);
+  await loginRequest(
+    //
+    {
+      id: loginInfo.value.userId,
+      password: loginInfo.value.userPassword,
+    },
+    (data) => {
+      console.log(data);
+      // 모든 검증을 통과했을 때
+      remitStore.memberId = data.data.data.memberId;
+      remitStore.memberName = data.data.data.name;
+      remitStore.memberLoginId = data.data.data.id;
+      router.push(`/bank`);
+    },
+    // 로그인 실패시
+    (error) => {
+      console.log(error);
+    }
+  );
 };
 </script>
 
@@ -54,11 +75,11 @@ const loginRequest = () => {
       />
       <input
         class="login-item"
-        type="text"
+        type="password"
         placeholder="비밀번호"
         v-model="loginInfo.userPassword"
       />
-      <button class="prime-btn login-item" @click="loginRequest">로그인</button>
+      <button class="prime-btn login-item" @click="login">로그인</button>
       <NuxtLink to="/user/find-password"
         ><p class="font-small">비밀번호를 잊으셨나요?</p></NuxtLink
       >
@@ -67,14 +88,6 @@ const loginRequest = () => {
       <NuxtLink to="/user/authenicate">
         <button class="second-btn login-item">새 계정 만들기</button></NuxtLink
       >
-      <div class="icon-item">
-        <p class="login-item">간편 로그인</p>
-        <img
-          class="login-item"
-          :src="getImageUrl('kakako-icon.png', 0)"
-          alt=""
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -96,6 +109,7 @@ const loginRequest = () => {
 
   p {
     font-size: 1.8vh;
+    margin-top: 5%;
   }
 }
 

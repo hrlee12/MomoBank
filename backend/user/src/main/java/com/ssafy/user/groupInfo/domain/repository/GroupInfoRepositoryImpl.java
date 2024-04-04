@@ -10,8 +10,10 @@ import com.ssafy.user.groupInfo.dto.response.GetFeesPerYearResponse;
 import com.ssafy.user.groupMember.domain.QGroupMember;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.QMember;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import com.querydsl.core.types.dsl.Expressions;
 import com.ssafy.user.budget.domain.QBudget;
@@ -29,30 +31,35 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     private QGroupInfo group = QGroupInfo.groupInfo;
-    private QGroupMember groupMember = QGroupMember.groupMember;
-    private QMember member = new QMember("member");
     private QMember accountMember = new QMember("accountMember");
     private QAccount account = QAccount.account;
-    private QTransfer fromTransfer = new QTransfer("fromTransfer");
-    private QTransfer toTransfer = new QTransfer("toTransfer");
 
 
-    public List<GetMyGruopResponse> findGroupInfoResponseByMember(int memberId) {
+    public List<GetMyGruopResponse> findGroupInfoResponseByMember(Member member) {
         QBudget budget = QBudget.budget;
         QGroupInfo groupInfo = QGroupInfo.groupInfo;
         QGroupMember groupMember = QGroupMember.groupMember;
 
-        return queryFactory
+        List<GetMyGruopResponse> results = queryFactory
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
+                groupInfo.description,
                 budget.monthlyFee.sum(),
-                groupInfo.groupMembers.size(),
-                Expressions.constant(true)))
+                groupInfo.groupMembers.size()))
             .from(groupInfo)
+            .groupBy(groupInfo.groupInfoId)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
+            .where(groupInfo.member.eq(member))
             .fetch();
+
+//        return results.stream()
+//            .filter(r -> r.getMonthlyFee() > 0)
+//            .filter(r -> r.getJoinMembers() > 0)
+//            .collect(Collectors.toList());
+
+        return results;
     }
 
     public GroupResponse findGroupResponseByGroup(int groupId, int memberId) {
@@ -91,11 +98,15 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             List<GetFeesPerMonthResponse> feesPerMonthList = new ArrayList<>();
             long total = 0;
             for(int month = 1; month <= 12; month++){
-                long amount = queryFactory.select(transfer.amount.sum().coalesce(0L))
+                if(year == start.getYear() && month < start.getMonthValue()) continue;
+                if(year == LocalDateTime.now().getYear() && month > LocalDateTime.now().getMonthValue()) break;
+                long amount = queryFactory
+                    .select(transfer.amount.sum().coalesce(0L))
                     .from(transfer)
                     .where(transfer.fromAccount.member.eq(member),
                         transfer.createdAt.month().eq(month),
-                        transfer.createdAt.year().eq(year)).fetchOne();
+                        transfer.createdAt.year().eq(year))
+                    .fetchOne();
 
                 GetFeesPerMonthResponse feesPerMonth = new GetFeesPerMonthResponse(month, amount);
                 feesPerMonthList.add(feesPerMonth);

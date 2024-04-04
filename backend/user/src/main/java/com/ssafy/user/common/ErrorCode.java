@@ -49,7 +49,8 @@ public enum ErrorCode {
     NO_AUTHENTICATION(UNAUTHORIZED, "로그인이 필요한 작업입니다."),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "만료된 리프레쉬 토큰입니다."),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "유효하지 않은 리프레쉬 토큰입니다."),
-    CONVERTER_ERROR(BAD_REQUEST, "컨버터 에러~");
+    INSUFFICIENT_FUNDS(BAD_REQUEST, "잔액이 부족합니다."),
+    SAME_ACCOUNT(BAD_REQUEST, "같은 계좌로는 송금할 수 없습니다.");
     private final HttpStatus status;
     private final String message;
 

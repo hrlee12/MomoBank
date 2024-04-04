@@ -41,6 +41,10 @@ p {
   color: $gray-color;
 }
 
+a {
+  font-size: 2vh;
+}
+
 .icon-item {
   display: flex;
   justify-content: space-around;
@@ -74,4 +78,18 @@ button {
   box-shadow: 3px 3px 10px -3px $primary-color;
   outline: 3px solid $primary-color;
   transition-duration: 0.2s;
+}
+
+.emphasize {
+  color: $primary-color !important;
+}
+.emphasize-warning {
+  color: $negative-color !important;
+}
+
+// input type number 오른쪽 화살표 제거
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

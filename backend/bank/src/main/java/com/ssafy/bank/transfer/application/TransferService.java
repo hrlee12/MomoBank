@@ -2,12 +2,15 @@ package com.ssafy.bank.transfer.application;
 
 import com.ssafy.bank.account.domain.Account;
 import com.ssafy.bank.account.domain.repository.AccountRepository;
+import com.ssafy.bank.account.dto.response.AccountKafkaResponse;
+import com.ssafy.bank.account.dto.response.MemberForKafkaResponse;
 import com.ssafy.bank.common.ErrorCode;
 import com.ssafy.bank.common.exception.CustomException;
 import com.ssafy.bank.transfer.domain.Transfer;
 import com.ssafy.bank.transfer.domain.repository.TransferRepository;
 import com.ssafy.bank.transfer.dto.request.PasswordConfirmRequest;
 import com.ssafy.bank.transfer.dto.request.TransferRequest;
+import com.ssafy.bank.transfer.dto.response.AccountForKafkaResponse;
 import com.ssafy.bank.transfer.dto.response.PasswordConfirmResponse;
 import com.ssafy.bank.transfer.dto.response.TransferKafkaResponse;
 import com.ssafy.bank.transfer.dto.response.TransferResponse;
@@ -15,6 +18,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +30,20 @@ public class TransferService {
     private final TransferRepository transferRepository;
     private final AccountRepository accountRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+
+
+    public void sendDelayedMessage(TransferKafkaResponse response) {
+        // CompletableFuture를 사용해 2초 후에 메시지 전송 작업을 비동기적으로 실행
+        CompletableFuture.runAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3); // 3초 동안 대기
+                kafkaTemplate.send("transfer", response); // 메시지 전송
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                // 에러 핸들링 (예: 로깅)
+            }
+        });
+    }
 
     public TransferResponse transfer(TransferRequest request) {
 
@@ -51,17 +71,40 @@ public class TransferService {
 
         transferRepository.save(transfer);
 
-        TransferKafkaResponse response = new TransferKafkaResponse(
-            transfer.getTransferId(),
-            transfer.getAmount(),
-            transfer.getDescription(),
-            transfer.getFromBalance(),
-            transfer.getToBalance(),
-            transfer.getFromAccount(),
-            transfer.getToAccount()
+
+
+        AccountForKafkaResponse fromAccountKafka = new AccountForKafkaResponse(
+            fromAccount.getAccountId(),
+            fromAccount.getAccountNumber(),
+            fromAccount.getAccountProduct().getName(),
+            fromAccount.getAccountProduct().getAccountType(),
+            fromAccount.getAccountProduct().getBank().getBankName(),
+            String.valueOf(fromAccount.getAccountProduct().getInterestRate()),
+            String.valueOf(fromAccount.getBalance()),
+            new MemberForKafkaResponse(fromAccount.getMember())
+        );
+        AccountForKafkaResponse toAccountKafka = new AccountForKafkaResponse(
+            toAccount.getAccountId(),
+            toAccount.getAccountNumber(),
+            toAccount.getAccountProduct().getName(),
+            toAccount.getAccountProduct().getAccountType(),
+            toAccount.getAccountProduct().getBank().getBankName(),
+            String.valueOf(toAccount.getAccountProduct().getInterestRate()),
+            String.valueOf(toAccount.getBalance()),
+            new MemberForKafkaResponse(toAccount.getMember())
         );
 
-        kafkaTemplate.send("transfer", response);
+        TransferKafkaResponse response = new TransferKafkaResponse(
+            transfer.getTransferId(),
+            String.valueOf(transfer.getAmount()),
+            transfer.getDescription(),
+            String.valueOf(transfer.getFromBalance()),
+            String.valueOf(transfer.getToBalance()),
+            fromAccount.getAccountId(),
+            toAccount.getAccountId()
+        );
+
+        sendDelayedMessage(response);
 
         return new TransferResponse(
             fromAccount.getAccountNumber(),

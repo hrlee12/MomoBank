@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 public class GroupInfo extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_info_id")
     private int groupInfoId;
 

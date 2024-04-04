@@ -68,9 +68,10 @@ public class AccountService {
             account.getAccountNumber(),
             accountProduct.getAccountType(),
             accountProduct.getBank().getBankName(),
-            accountProduct.getInterestRate(),
-            account.getBalance(),
-            memberKafka
+            accountProduct.getName(),
+            String.valueOf(accountProduct.getInterestRate()),
+            String.valueOf(account.getBalance()),
+            member.getMemberId()
         );
 
         log.info("AccountKafkaResponse : {}", response);
@@ -109,9 +110,10 @@ public class AccountService {
             account.getAccountNumber(),
             accountProduct.getAccountType(),
             accountProduct.getBank().getBankName(),
-            accountProduct.getInterestRate(),
-            account.getBalance(),
-            memberKafka
+            accountProduct.getName(),
+            String.valueOf(accountProduct.getInterestRate()),
+            String.valueOf(account.getBalance()),
+            member.getMemberId()
         );
 
         kafkaTemplate.send("deleteAccount", response);
