@@ -51,7 +51,7 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .groupBy(groupInfo.groupInfoId)
             .leftJoin(groupInfo.groupMembers, groupMember)
             .leftJoin(groupInfo.budgets, budget)
-            .where(groupInfo.member.eq(member))
+            .where(groupMember.groupInfo.eq(groupInfo))
             .fetch();
 
 //        return results.stream()
