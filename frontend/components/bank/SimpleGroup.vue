@@ -28,7 +28,7 @@ const getImageUrl = (imageName, idx) => {
       <p v-else class="not-ok bold">납부 요망</p>
     </div>
     <div class="item">
-      <p class="description">{{ groupDescription }}</p>
+      <p class="desc">{{ groupDescription }}</p>
       <div class="icon-item">
         <img :src="getImageUrl('user-icon-1.png', 0)" alt="" />
         <p>{{ groupMemberCount }}</p>
@@ -49,7 +49,7 @@ const getImageUrl = (imageName, idx) => {
     justify-content: space-between;
     margin: 2% 0;
 
-    .description {
+    .desc {
       width: 70%;
       max-width: 70vw;
       overflow: hidden;
