@@ -1,0 +1,19 @@
+.content {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 20px;
+  border: 1.5px solid $light-gray-color;
+  box-shadow: 3px 3px 10px -3px $light-gray-color;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+
+  p {
+    align-self: center;
+  }
+}

@@ -1,0 +1,95 @@
+$primary-color: #0064e0;
+$secondary-color: #007af5;
+$background-color: #f7fbff;
+$positive-color: #4cb944;
+$negative-color: #dc3039;
+$gray-color: #7c7c7c;
+$deep-gray-color: #757575;
+$light-gray-color: #eae9ee;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.layout-container {
+  min-height: 100%;
+  background-color: $background-color;
+  padding-bottom: 70px; /* 푸터 높이보다 조금 더 큰 값 */
+}
+
+h1 {
+  font-size: 2.6vh;
+  font-weight: bold;
+  align-self: center;
+}
+
+h2 {
+  font-size: 2.3vh;
+  font-weight: bold;
+  align-self: center;
+}
+
+h3 {
+  font-size: 2.1vh;
+  font-weight: bold;
+}
+
+p {
+  font-size: 2vh;
+  color: $gray-color;
+}
+
+a {
+  font-size: 2vh;
+}
+
+.icon-item {
+  display: flex;
+  justify-content: space-around;
+  min-width: 45px;
+
+  img {
+    height: 3vh;
+  }
+}
+
+button {
+  border-radius: 20px;
+  height: 4.5vh;
+  align-self: center;
+}
+
+.prime-btn {
+  background-color: $primary-color;
+  color: white;
+  width: 100%;
+}
+
+.second-btn {
+  border: 1px solid $primary-color;
+  color: $primary-color;
+  width: 100%;
+  background-color: rgba($secondary-color, $alpha: 0.05);
+}
+
+.selected {
+  box-shadow: 3px 3px 10px -3px $primary-color;
+  outline: 3px solid $primary-color;
+  transition-duration: 0.2s;
+}
+
+.emphasize {
+  color: $primary-color !important;
+}
+.emphasize-warning {
+  color: $negative-color !important;
+}
+
+// input type number 오른쪽 화살표 제거
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -5,11 +5,16 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
 server:
   port: 8083
   servlet:
     context-path: /api/community
 
+
+openapi:
+  service:
+    url: http://j10a505.p.ssafy.io/api/community
 spring:
   kafka:
     producer:
@@ -19,7 +24,7 @@ spring:
     consumer:
       bootstrap-servers: my-kafka.default.svc.cluster.local:9092
       group-id: community
-      auto-offset-reset: earliest
+      # auto-offset-reset: earliest
 #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 #      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   profiles:
