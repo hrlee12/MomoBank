@@ -74,7 +74,10 @@ export function useGroupApi() {
 
   const createNewGroup = async (data, success, fail) => {
     console.log("in axios");
-    return await $axios.post(`/user/groups/new-group`, data);
+    return await $axios
+      .post(`/user/groups/new-group`, data)
+      .then(success)
+      .catch(fail);
   };
 
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함

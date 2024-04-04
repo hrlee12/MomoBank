@@ -25,7 +25,7 @@ function rotateAndPause() {
   // 회전 후 1초 대기하고 다시 rotateAndPause 함수 호출
   timeoutId.value = setTimeout(() => {
     rotateAndPause(); // 재귀 호출
-  }, 1); // 90도 회전 후 1초 대기 (총 대기 시간을 4초로 하여 5초마다 반복)
+  }, 1000); // 90도 회전 후 1초 대기 (총 대기 시간을 4초로 하여 5초마다 반복)
 }
 
 onMounted(() => {

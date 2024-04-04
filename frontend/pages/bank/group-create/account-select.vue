@@ -75,7 +75,7 @@ const goCreateBankAccount = () => {
 };
 
 const requestCreateNewGroup = async () => {
-  const response = await createNewGroup(
+  await createNewGroup(
     {
       memberId: remitStore.memberId,
       description: groupStore.createGroupDesc,
@@ -85,7 +85,8 @@ const requestCreateNewGroup = async () => {
     },
     (data) => {
       alert("모임이 성공적으로 생성되었습니다.");
-      console.log(response.data);
+      console.log(data.data.data.groupId);
+      router.push(`/groups/${data.data.data.groupId}`);
     },
     (error) => {
       alert("모임을 생성하는데 실패했습니다.");
