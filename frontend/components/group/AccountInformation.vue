@@ -4,12 +4,24 @@ import { useGroupStore } from "@/stores/group";
 const groupStore = useGroupStore();
 
 const accountNumber = computed(() => groupStore.accountNumber);
+
+const copyTextToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    alert(`클립보드에 복사되었습니다! text-${text}`);
+  } catch (err) {
+    console.error("클립보드 복사 실패:", err);
+  }
+};
 </script>
 
 <template>
   <!-- 계좌 번호, 담긴 금액, 숨김 버튼 -->
   <div class="flex justify-center mt-4">
-    <div class="text-gray-color border-b-2 border-b-gray-color-500 text-[15px]">
+    <div
+      class="text-gray-color border-b-2 border-b-gray-color-500 text-[15px]"
+      @click="copyTextToClipboard(accountNumber)"
+    >
       {{ accountNumber }}
     </div>
   </div>
