@@ -23,10 +23,10 @@ public class KafkaTestController {
     public String sendText() {
         return "this is text!!!!";
     }
-    @GetMapping("/kill")
-    public String kill() {
-        System.exit(1);
-        return "Server is shutting down...";
-    }
+//    @GetMapping("/kill")
+//    public String kill() {
+//        System.exit(1);
+//        return "Server is shutting down...";
+//    }
 
 }
