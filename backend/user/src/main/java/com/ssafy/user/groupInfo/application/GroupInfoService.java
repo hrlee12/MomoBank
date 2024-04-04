@@ -1,7 +1,9 @@
 package com.ssafy.user.groupInfo.application;
 
+import com.ssafy.user.bank.application.BankCallService;
 import com.ssafy.user.bank.domain.Account;
 import com.ssafy.user.bank.domain.repository.AccountRepository;
+import com.ssafy.user.bank.dto.request.TransferRequest;
 import com.ssafy.user.budget.domain.Budget;
 import com.ssafy.user.common.ErrorCode;
 import com.ssafy.user.common.exception.CustomException;
@@ -10,26 +12,34 @@ import com.ssafy.user.groupInfo.domain.repository.GroupInfoRepository;
 import com.ssafy.user.groupInfo.dto.request.CreateNewGroupRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupDescriptionRequest;
 import com.ssafy.user.groupInfo.dto.request.UpdateGroupNameRequest;
+import com.ssafy.user.groupInfo.dto.response.CreateGroupKafkaResponse;
+import com.ssafy.user.groupInfo.dto.response.CreateGroupMemberKafkaResponse;
 import com.ssafy.user.groupInfo.dto.response.CreateNewGroupResponse;
-import com.ssafy.user.groupInfo.dto.response.GetFeesListResponse;
+import com.ssafy.user.groupInfo.dto.response.GetFeesPerYearResponse;
 import com.ssafy.user.groupInfo.dto.response.GetGroupDetailsResponse;
 import com.ssafy.user.groupInfo.dto.response.GetMyGroupListResponse;
 import com.ssafy.user.groupInfo.dto.response.GetMyGruopResponse;
 import com.ssafy.user.groupInfo.dto.response.GroupResponse;
 import com.ssafy.user.groupInfo.dto.response.SplitBalanceResponse;
+import com.ssafy.user.groupMember.application.GroupMemberService;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.groupMember.domain.GroupMember.memberType;
 import com.ssafy.user.groupMember.domain.repository.GroupMemberRepository;
+import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
 import com.ssafy.user.member.domain.Member;
 import com.ssafy.user.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class GroupInfoService {
 
     private final GroupInfoRepository groupInfoRepository;
@@ -37,25 +47,33 @@ public class GroupInfoService {
     private final GroupMemberRepository groupMemberRepository;
     private final AccountRepository accountRepository;
 
+    private final GroupMemberService groupMemberService;
+    private final BankCallService bankCallService;
+
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
     // 참여중인 모든 모임 조회
     public GetMyGroupListResponse getMyGroups(int memberId) {
         Member member = memberCheck(memberId);
-        return new GetMyGroupListResponse(groupInfoRepository.findGroupInfoResponseByMember(memberId));
+        List<GetMyGruopResponse> list = groupInfoRepository.findGroupInfoResponseByMember(member);
+        return new GetMyGroupListResponse(list);
     }
 
     // 선택된 모임 상세 조회
     public GetGroupDetailsResponse getGroupDetails(int memberId, int groupInfoId) {
         Member member = memberCheck(memberId);
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
-        return GetGroupDetailsResponse.from(groupInfo);
+        GroupMember groupMember = groupMemberRepository.findGroupMemberByMemberAndGroupInfo(member, groupInfo);
+        return GetGroupDetailsResponse.from(groupInfo, groupMember);
     }
 
     // 각 모임원이 달마다 납입한 금액 조회
-    public GetFeesListResponse getFeesPerMonth(int memberId, int groupInfoId) {
-        Member member = memberCheck(memberId);
+    public List<GetFeesPerYearResponse> getFeesPerMonth(int memberId, int groupInfoId) {
+        Member member = memberCheck(memberId); // 선택된 모임원
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
+        Account account = groupInfo.getAccount();
 
-        return new GetFeesListResponse();
+        return groupInfoRepository.GetFeesPerYear(member);
     }
 
     // 새 모임 생성
@@ -71,6 +89,19 @@ public class GroupInfoService {
             .account(account)
             .build();
 
+        groupInfoRepository.save(groupInfo);
+
+        CreateGroupKafkaResponse groupResponse = new CreateGroupKafkaResponse(
+            groupInfo.getGroupInfoId(),
+            groupInfo.getMember().getMemberId(),
+            groupInfo.getDescription(),
+            groupInfo.getGroupName()
+        );
+
+        log.info("CreateGroupKafkaResponse : {}", groupResponse);
+
+        kafkaTemplate.send("createGroup", groupResponse);
+
         GroupMember groupMember = GroupMember.builder()
             .name(member.getName())
             .role(memberType.모임장)
@@ -79,8 +110,23 @@ public class GroupInfoService {
             .account(myAccount)
             .build();
 
-        groupInfoRepository.save(groupInfo);
+
         groupMemberRepository.save(groupMember);
+
+
+        CreateGroupMemberKafkaResponse groupMemberRessponse = new CreateGroupMemberKafkaResponse(
+            groupMember.getGroupMemberId(),
+            groupMember.getGroupInfo().getGroupInfoId(),
+            groupMember.getMember().getMemberId(),
+            String.valueOf(groupMember.getTotalFee()),
+            groupMember.getName(),
+            groupMember.getRole().toString()
+        );
+
+        kafkaTemplate.send("createGroupMemberAsGroupCreated", groupMemberRessponse);
+
+        log.info("CreateGroupMemberKafkaResponse : {}", groupMemberRessponse);
+
         return CreateNewGroupResponse.from(groupInfo);
     }
 
@@ -110,13 +156,30 @@ public class GroupInfoService {
 
     // 모임 회비 분배
     public SplitBalanceResponse splitBalance(int memberId, int groupInfoId) {
-        Member member = memberCheck(memberId);
+        Member member = memberCheck(memberId); // 모임장 권환
         GroupInfo groupInfo = groupInfoCheck(groupInfoId);
+        Account account = groupInfo.getAccount();
+        List<GroupMemberDTO> list = groupMemberService.getAllGroupMembers(groupInfoId);
 
-        // groupmember 조회
-        // 송금
 
-        return new SplitBalanceResponse();
+        long amount = account.getBalance()/list.size();
+
+        System.out.println("멤버 수 : " + list.size());
+        System.out.println("잔액 : " + account.getBalance());
+        System.out.println("나눠주는 금액 : " + amount);
+
+        for(GroupMemberDTO groupMember : list){
+            Member toMember = memberCheck(groupMember.getId());
+            Account personalAccount = groupMemberRepository.findAccountFromGroupMemberByMember(toMember, groupInfo);
+            TransferRequest request = new TransferRequest(
+                groupInfo.getAccount().getAccountId(),
+                personalAccount.getAccountId(),
+                amount
+            );
+            bankCallService.transfer(request);
+        }
+
+        return new SplitBalanceResponse(amount, list.size());
     }
 
     // 모임 삭제

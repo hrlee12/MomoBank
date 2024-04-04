@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class AccountResponse {
 
     private int accountId;
-    private AccountType accountType;
-    private String accountName;
+    private AccountType accountProductType;
+    private String accountProductName;
     private String accountNumber;
     private long balance;
 
@@ -19,8 +19,8 @@ public class AccountResponse {
     public AccountResponse(int accountId, AccountType productType, String productName,
         String accountNumber, long balance) {
         this.accountId = accountId;
-        this.accountType = productType;
-        this.accountName = productName;
+        this.accountProductType = productType;
+        this.accountProductName = productName;
         this.accountNumber = accountNumber;
         this.balance = balance;
     }

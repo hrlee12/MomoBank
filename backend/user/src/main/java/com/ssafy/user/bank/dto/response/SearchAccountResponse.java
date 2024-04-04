@@ -7,13 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class SearchAccountResponse {
-    private int accountId;
-    private String name;
-
-    @QueryProjection
-    public SearchAccountResponse(int accountId, String name) {
-        this.accountId = accountId;
-        this.name = name;
-    }
+    private SearchFromAccountResponse from;
+    private SearchToAccountResponse to;
 }

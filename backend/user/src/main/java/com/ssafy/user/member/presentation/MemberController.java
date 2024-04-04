@@ -2,6 +2,7 @@ package com.ssafy.user.member.presentation;
 
 
 import com.ssafy.user.common.CommonResponse;
+import com.ssafy.user.member.application.PreLoginService;
 import com.ssafy.user.member.dto.response.*;
 import com.ssafy.user.member.dto.request.*;
 import com.ssafy.user.member.domain.repository.MemberRepository;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,13 +31,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final PreLoginService preLoginService;
     private final MemberService memberService;
-    private final MemberRepositoryCustom memberRepositoryCustom;
-    private final MemberRepository memberRepository;
 
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/phone-verification/code")
-    @Operation(summary = "휴대폰 인증번호 요청", description = "회원가입, 회원정보 수정 둘다 동일한 api 사용. 인증번호는 3분 후에 만료됨")
+    @Operation(summary = "휴대폰 인증번호 요청", description = "전화번호 수정 시, 인증 api. 인증번호는 3분 후에 만료됨")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증코드 보내기 성공"),
             @ApiResponse(responseCode = "409", description = "이미 가입된 전화번호"),
@@ -42,7 +45,7 @@ public class MemberController {
     })
     public ResponseEntity makeVerificationCode(@RequestBody MakeVerificationCodeRequest request) throws Exception {
 
-        memberService.makeVerificationCode(request.getPhoneNumber());
+        preLoginService.makeVerificationCode(request.getPhoneNumber());
 
 
 
@@ -50,24 +53,7 @@ public class MemberController {
     }
 
 
-
-    @PostMapping("/phone-verification/verify")
-    @Operation(summary = "휴대폰 인증번호 검증", description = "인증이 완료되면 휴대폰 인증이 됐음을 증명하는 토큰 발급.토큰은 30분 후에 만료됨.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증번호 일치. 토큰 발급",
-                    content = {@Content(schema = @Schema(implementation=VerificationTokenResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "인증번호 불일치")
-    })
-    public ResponseEntity getVerificationToken(@RequestBody VerificationTokenRequest request) throws Exception {
-
-        String token = memberService.getVerificationToken(request.getCode(), request.getPhoneNumber());
-
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "인증번호 일치. 토큰 발급", new VerificationTokenResponse(token));
-
-    }
-
-
-
+    @SecurityRequirement(name = "Bearer Authentication")
     @PatchMapping("/phone-verification/phone-numbers")
     @Operation(summary = "휴대폰 인증번호 검증 및 수정")
     @ApiResponses(value = {
@@ -84,39 +70,25 @@ public class MemberController {
 
 
 
-    @PostMapping("/join")
-    @Operation(summary = "회원가입", responses = {
-            @ApiResponse(responseCode = "200", description = "회원가입 완료"),
-            @ApiResponse(responseCode = "409", description = "중복되는 아이디"),
-            @ApiResponse(responseCode = "401", description = "전화번호 인증 토큰 유효하지 않음")
-    })
-    public ResponseEntity join(@RequestBody JoinRequest request) throws Exception {
-
-        memberService.join(request);
-
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "회원가입 성공", null);
-    }
 
 
 
-
-
-    @PostMapping("/login")
-    @Operation(summary = "로그인", responses = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공",
-                    content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = BankHomeResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "아이디 또는 비밀번호 불일치")
-    })
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-
-// 로직 구현
-        return ResponseEntity.ok().build();
-    }
-
+//    @PostMapping("/login")
+//    @Operation(summary = "로그인", responses = {
+//            @ApiResponse(responseCode = "200", description = "로그인 성공",
+//                    content = {@Content(mediaType = "application/json",
+//                    schema = @Schema(implementation = BankHomeResponse.class))}),
+//            @ApiResponse(responseCode = "400", description = "아이디 또는 비밀번호 불일치")
+//    })
+//    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+//
+//// 로직 구현
+//        return ResponseEntity.ok().build();
+//    }
 
 
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "마이페이지 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "마이페이지 조회 성공",
@@ -135,7 +107,7 @@ public class MemberController {
 
 
 
-
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "비밀번호 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
@@ -152,23 +124,8 @@ public class MemberController {
 
 
 
-    @Operation(summary = "임시 비밀번호 발급")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "전화번호로 임시비밀번호 전송"),
-            @ApiResponse(responseCode = "404", description = "제공된 정보와 일치하는 회원 정보 없음"),
-            @ApiResponse(responseCode = "502", description = "sms를 보내는 과정에서 문제 발생")
-    })
-    @PatchMapping("/temporary-passwords")
-    public ResponseEntity sendNewPassword(@RequestBody SendNewPasswordRequest request) {
 
-        memberService.sendNewPassword(request);
-
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "전화번호로 임시비밀번호 전송", null);
-    }
-
-
-
-
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "fcm 토큰 갱신")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "fcm 토큰 갱신 성공"),
@@ -183,6 +140,15 @@ public class MemberController {
         return CommonResponse.toResponseEntity(HttpStatus.OK, "fcm 토큰 갱신 성공", null);
     }
 
+
+    @ApiResponse(responseCode = "200", description = "로그아웃 완료")
+    @DeleteMapping("/logout")
+    public ResponseEntity logout(@RequestHeader("X-Authorization-Id") String memberId) throws Exception {
+
+        memberService.logout(memberId);
+
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "로그아웃 완료", null);
+    }
 
 
 }

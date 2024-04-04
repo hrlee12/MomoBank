@@ -37,7 +37,8 @@ public class BudgetRepositoryImpl implements BudgetRepositoryCustom {
                 Expressions.constant(true)))
             .from(budget)
             .leftJoin(budget.groupInfo, groupInfo)
-            .where(groupInfo.groupInfoId.eq(groupInfoId))
+            .where(groupInfo.groupInfoId.eq(groupInfoId),
+                groupInfo.isDeleted.eq(false))
             .fetch();
     }
 }

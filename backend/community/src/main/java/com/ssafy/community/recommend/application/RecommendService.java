@@ -48,13 +48,13 @@ public class RecommendService {
     }
 
 
-    public void recommendCard(UserSelectionDto userSelectionDto,List<CardDto> cards, CardsCategoryDto cardsCategoryDto) {
+    public List<CardDto> recommendCard(UserSelectionDto userSelectionDto,List<CardDto> cards, CardsCategoryDto cardsCategoryDto) {
         Map<String, List<String>> dataMap = new HashMap<>();
 
         dataMap.put("1", Arrays.asList("kb국민카드", "삼성카드", "롯데카드", "BC 바로카드", "신한카드", "현대카드", "우리카드", "NH농협카드", "하나카드", "IBK기업은행", ""));
         dataMap.put("2", Arrays.asList("통신+공과금 혜택", "주유+차량정비 혜택", "쇼핑 혜택", "항공마일리지 혜택", "점심+교통 혜택", "무실적+모든가맹점 혜택", "구독/스트리밍 혜택", "해외직구 혜택", "배달앱+간편결제 혜택", "편의점+카페 혜택", "마트+교육비 혜택", "여행+바우처 혜택", "제휴/PLCC 혜택", "증권사CMA 혜택", ""));
         dataMap.put("3", Arrays.asList("할인형", "포인트형", "마일리지형", ""));
-        dataMap.put("4", Arrays.asList("예측 불가능", "30만원 이하", "30만원 이상"));
+        dataMap.put("4", Arrays.asList("없음", "30만원 이하", "30만원 초과"));
 
         Map<String, Integer> cardPoint = new HashMap<>();
 
@@ -98,6 +98,7 @@ public class RecommendService {
                 System.out.println(card);
             }
         }
+        return recommendedCards;
         // System.out.println(recommendedCards);
 
 

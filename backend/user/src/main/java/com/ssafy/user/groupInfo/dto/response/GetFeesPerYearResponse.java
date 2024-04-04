@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetFeesPerYearResponse {
     private List<GetFeesPerMonthResponse> feesPerMonthList;
-    private int totalAmmount;
+    private long totalAmmount;
+    private int year;
 }

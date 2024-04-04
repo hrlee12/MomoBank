@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 public class Account extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
     private int accountId;
 
@@ -60,6 +59,10 @@ public class Account extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void updateBalance(long balance){
+        this.balance = balance;
+    }
 
     public enum AccountType{
         입출금, 정기예금, 적금

@@ -1,4 +1,4 @@
-package com.ssafy.user.member.dto.kafka;
+package com.ssafy.user.groupMember.dto.kafka;
 
 import lombok.*;
 
@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 public class InsertGroupMemberVO {
+    private int groupMemberId;
     private String memberId;
     private int groupId;
 }

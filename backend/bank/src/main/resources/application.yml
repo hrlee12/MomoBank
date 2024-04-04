@@ -1,5 +1,3 @@
-
-
 springdoc:
   api-docs:
     enabled: true
@@ -7,20 +5,21 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-
 server:
   port: 8084
   servlet:
     context-path: /api/bank
-
 
 openapi:
   service:
     url: http://j10a505.p.ssafy.io/api/bank
 
 spring:
-  config:
-    import: classpath:application-bank-priavte.yml
+#  config:
+#    import: classpath:application-bank-private.yml
+  profiles:
+    active: private
+
   jpa:
     hibernate:
       ddl-auto: update

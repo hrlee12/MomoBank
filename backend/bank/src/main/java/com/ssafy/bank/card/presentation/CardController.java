@@ -25,16 +25,15 @@ public class CardController {
     @Operation(summary = "당행 카드 생성", description = "모모뱅크의 카드를 생성합니다.")
     @PostMapping("/create-card")
     public ResponseEntity<?> createCard(@RequestBody CreateCardInfoRequest request) {
-        CardInfoResponse response = cardInfoService.createCardInfo(
-            request.memberId(), request.cardProductId(), request.accountId());
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 생성했습니다.", response);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 생성했습니다.",
+            cardInfoService.createCardInfo(request.memberId(), request.cardProductId(), request.accountId()));
     }
 
     @Operation(summary = "카드 삭제", description = "사용자의 카드를 삭제합니다.")
     @DeleteMapping("/delete-card")
     public ResponseEntity<?> deleteCard(@RequestBody DeleteCardInfoRequest request) {
-        CardInfoResponse response = cardInfoService.deleteCardInfo(request.cardId());
-        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 삭제했습니다.", response);
+        return CommonResponse.toResponseEntity(HttpStatus.OK, "성공적으로 카드를 삭제했습니다.",
+            cardInfoService.deleteCardInfo(request.cardId()));
     }
 
 }

@@ -2,11 +2,13 @@ package com.ssafy.community.notice.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.ToString;
 
 @Schema(description = "공지사항 생성 요청")
 @Getter
+@ToString
 public class NoticeCreationRequest {
-    private Integer memberId;
+    private Integer groupMemberId;
 
     @Schema(description = "공지사항 제목", example = "새로운 기능 업데이트 안내")
     private String title;

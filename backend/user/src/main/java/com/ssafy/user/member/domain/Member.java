@@ -27,7 +27,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
 
     @Size(min = 0, max = 100)
@@ -74,6 +73,8 @@ public class Member extends BaseEntity {
         this.provider = "kakao";
     }
 
+    public void changePhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+
 
     public void changePassword(String password) {
         this.password = password;
@@ -85,8 +86,9 @@ public class Member extends BaseEntity {
 
 
     @Builder
-    public Member(String id, String name, String password, String phoneNumber,
+    public Member(int memberId, String id, String name, String password, String phoneNumber,
         LocalDateTime birthDate) {
+        this.memberId = memberId;
         this.id = id;
         this.name = name;
         this.password = password;

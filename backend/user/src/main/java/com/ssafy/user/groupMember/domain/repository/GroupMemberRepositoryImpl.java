@@ -1,9 +1,12 @@
 package com.ssafy.user.groupMember.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.user.bank.domain.Account;
+import com.ssafy.user.groupInfo.domain.GroupInfo;
 import com.ssafy.user.groupInfo.domain.QGroupInfo;
 import com.ssafy.user.groupMember.domain.GroupMember;
 import com.ssafy.user.groupMember.domain.QGroupMember;
+import com.ssafy.user.member.domain.Member;
 import java.util.List;
 
 import com.ssafy.user.groupMember.dto.response.GroupMemberDTO;
@@ -25,7 +28,9 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
     public List<GroupMemberDTO> getAllGroupMemberDTO(int groupId) {
         return queryFactory.select(new QGroupMemberDTO(groupMember.groupMemberId,
                                                 groupMember.name,
-                                                groupMember.member.sincerity))
+                                                groupMember.member.sincerity,
+                                                groupMember.role
+                                                ))
                 .from(groupMember)
                 .join(groupMember.member, member)
                 .where(group.groupInfoId.eq(groupId)
@@ -35,5 +40,25 @@ public class GroupMemberRepositoryImpl implements  GroupMemberRepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public Account findAccountFromGroupMemberByMember(Member member, GroupInfo groupInfo){
+        QGroupMember qGroupMember = QGroupMember.groupMember;
+        return queryFactory
+            .select(qGroupMember.account)
+            .from(groupMember)
+            .where(groupMember.member.eq(member),
+                groupMember.groupInfo.eq(groupInfo))
+            .fetchOne();
+    }
+
+    @Override
+    public GroupMember findGroupMemberByMemberAndGroupInfo(Member member, GroupInfo groupInfo){
+        QGroupMember groupMember = QGroupMember.groupMember;
+        return queryFactory
+            .selectFrom(groupMember)
+            .where(groupMember.member.eq(member),
+                groupMember.groupInfo.eq(groupInfo))
+            .fetchOne();
+    }
 
 }

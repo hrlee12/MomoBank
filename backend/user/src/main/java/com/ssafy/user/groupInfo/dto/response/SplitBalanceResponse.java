@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SplitBalanceResponse {
-    private int balance;
+    private long balance;
     private int totalPeople;
 }

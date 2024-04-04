@@ -10,22 +10,24 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class GetMyGruopResponse {
 
     private int groupId;
     private String name;
+    private String description;
     private long monthlyFee;
     private int joinMembers;
     private Boolean status;
 
     @QueryProjection
-    public GetMyGruopResponse(int groupId, String name, long monthlyFee,
-        int joinMembers,
-        Boolean status) {
+    public GetMyGruopResponse(int groupId, String name, String description,
+        long monthlyFee, int joinMembers) {
         this.groupId = groupId;
         this.name = name;
+        this.description = description;
         this.monthlyFee = monthlyFee;
         this.joinMembers = joinMembers;
-        this.status = status;
+        this.status = true;
     }
 }

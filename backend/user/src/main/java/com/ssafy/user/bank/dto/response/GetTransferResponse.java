@@ -1,16 +1,27 @@
 package com.ssafy.user.bank.dto.response;
 
-import java.util.Date;
-import lombok.AllArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class GetTransferResponse {
-    private String description;
-    private Date date;
-    private long ammount;
-    private long transferType;
+
+    private String name;
+    private LocalDateTime date;
+    private long amount;
+    private boolean transferType;
+    private long balance;
+
+    @QueryProjection
+    public GetTransferResponse
+        (String name, LocalDateTime date, long amount, boolean transferType, long balance) {
+        this.name = name;
+        this.date = date;
+        this.amount = amount;
+        this.transferType = transferType;
+        this.balance = balance;
+    }
 }

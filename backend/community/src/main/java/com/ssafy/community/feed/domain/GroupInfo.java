@@ -19,9 +19,8 @@ import lombok.NoArgsConstructor;
 public class GroupInfo extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_info_id")
-    private int groupId;
+    private int groupInfoId;
 
     @Column(length = 255, name = "group_name")
     private String groupName;
@@ -29,9 +28,22 @@ public class GroupInfo extends BaseEntity {
     @Column(length = 500, name = "description")
     private String description;
 
-    @Column(name = "created_by")
-    private int createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private Member member;
+
+
 
     @OneToMany(mappedBy = "groupInfo", cascade = CascadeType.REFRESH)
     private List<GroupMember> groupMembers;
+
+    public void updateGroupName(String groupName){
+        this.groupName = groupName;
+    }
+
+    public void updateDescription(String description){
+        this.description = description;
+    }
+
+
 }
