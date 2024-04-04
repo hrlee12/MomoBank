@@ -4,9 +4,11 @@ import { useRouter } from "vue-router"; // useRouter 추가
 import { useUserApi } from "@/api/user";
 import { useGroupApi } from "@/api/groups";
 import { useRemitStore } from "~/stores/remitStore";
+import { useBankApi } from "@/api/bank";
 
+const { getMyAccountList } = useBankApi();
 const { loginRequest } = useUserApi();
-const { createInviteAuthCode } = useGroupApi();
+const { createInviteAuthCode, groupJoinWithInviteCode } = useGroupApi();
 
 const router = useRouter(); // useRouter 인스턴스 생성
 const remitStore = useRemitStore();
@@ -16,19 +18,29 @@ definePageMeta({
   layout: "user",
 });
 
-// 이미지 불러오는 메소드
-const getImageUrl = (imageName, idx) => {
-  if (idx == 0) return "/icon/" + imageName;
-  else if (idx === 1) return "/images/" + imageName;
-  else console.log("Image code error");
-};
-
 const loginInfo = ref({
   userId: "",
   userPassword: "",
 });
 
 // 로그인 요청시 재확인
+
+const joinWithInviteCode = async () => {
+  await groupJoinWithInviteCode(
+    {
+      groupId: groupStore.groupId,
+      memberId: remitStore.memberId,
+      accountId: 21,
+      authToken: groupStore.authToken,
+    },
+    (data) => {
+      console.log("모임 가입 완료", data);
+    },
+    (error) => {
+      console.log("모임 가입 실패", error);
+    }
+  );
+};
 
 const createAuthCode = async () => {
   try {
@@ -37,7 +49,11 @@ const createAuthCode = async () => {
       remitStore.memberLoginId
     );
     if (response.status === 200) {
-      console.log(response);
+      console.log(response.data.data.authToken);
+      groupStore.inviteAuthCode = response.data.data.authToken;
+
+      // 모임 가입
+      joinWithInviteCode();
     }
   } catch (error) {
     console.error(error); // 오류 처리
@@ -73,14 +89,15 @@ const login = async () => {
       remitStore.memberLoginId = data.data.data.id;
       console.log(remitStore.memberLoginId);
       console.log(groupStore.inviteCode);
-      // auth코드 생성
-      createAuthCode(groupStore.inviteCode, remitStore.memberLoginId);
+
       // 만약 초대코드를 받고 로그인 창으로 이동한 경우에는 로그인 했을 떄 바로 로그인 홈으로 이동한다.
       //TODO : 해당하는 모임에 가입하고, router로 이동시키면 될 것 같음.
       if (groupStore.inviteStatus) {
-        // router.push(`/groups/${groupStore.inviteCodeGroupId}`);
+        // auth코드 생성
+        createAuthCode(groupStore.inviteCode, remitStore.memberLoginId);
+        router.push(`/groups/${groupStore.inviteCodeGroupId}`);
       }
-      // router.push(`/bank`);
+      router.push(`/bank`);
     },
     // 로그인 실패시
     (error) => {

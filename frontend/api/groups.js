@@ -80,12 +80,23 @@ export function useGroupApi() {
       .catch(fail);
   };
 
+  const createInviteCode = async (groupId) => {
+    return await $axios.post(`/user/groups/${groupId}/invite`);
+  };
+
   const createInviteAuthCode = async (inviteCode, memberId) => {
     return await $axios.post(
       `/user/groups/invite/${inviteCode}
       `,
-      memberId
+      { memberId: memberId }
     );
+  };
+
+  const groupJoinWithInviteCode = async (data, success, fail) => {
+    return await $axios
+      .post(`/user/groups/invite/accounts`, data)
+      .then(success)
+      .catch(fail);
   };
 
   // 모든 함수를 반환하여 외부에서 사용할 수 있게 함
@@ -104,6 +115,8 @@ export function useGroupApi() {
     getTransactionHistory,
     getMyFeed,
     createNewGroup,
+    createInviteCode,
     createInviteAuthCode,
+    groupJoinWithInviteCode,
   };
 }

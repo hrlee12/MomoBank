@@ -64,7 +64,7 @@ onMounted(async () => {
   }
 
   fetchMyGroups(memberId).then((response) => {
-    myGroups.value = response.data.groupList;
+    myGroups.value = response.data.groupList.slice(0, 3);
     console.log(myGroups.value);
   });
 });
@@ -116,8 +116,8 @@ onMounted(async () => {
     <!-- 메인 모임 리스트 -->
     <div class="club-container content">
       <div
-        v-for="group in myGroups"
-        :key="group.id"
+        v-for="(group, index) in myGroups"
+        :key="index"
         class="club-content"
         @click="goToGroup(group.groupId)"
       >

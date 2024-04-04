@@ -17,6 +17,7 @@ export const useGroupStore = defineStore("group", {
     inviteCodeGroupId: null,
     inviteStatus: false,
     inviteCode: null,
+    inviteAuthCode: null,
   }),
   actions: {
     updateGroupHeaderName(newName) {
