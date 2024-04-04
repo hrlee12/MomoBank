@@ -2,9 +2,11 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router"; // useRouter 추가
 import { useUserApi } from "@/api/user";
+import { useGroupApi } from "@/api/groups";
 import { useRemitStore } from "~/stores/remitStore";
 
 const { loginRequest } = useUserApi();
+const { createInviteAuthCode } = useGroupApi();
 
 const router = useRouter(); // useRouter 인스턴스 생성
 const remitStore = useRemitStore();
@@ -28,6 +30,20 @@ const loginInfo = ref({
 
 // 로그인 요청시 재확인
 
+const createAuthCode = async () => {
+  try {
+    const response = await createInviteAuthCode(
+      groupStore.inviteCode,
+      remitStore.memberLoginId
+    );
+    if (response.status === 200) {
+      console.log(response);
+    }
+  } catch (error) {
+    console.error(error); // 오류 처리
+  }
+};
+
 const login = async () => {
   // 아이디 입력란 확인
   if (!loginInfo.value.userId) {
@@ -50,17 +66,21 @@ const login = async () => {
       password: loginInfo.value.userPassword,
     },
     (data) => {
-      console.log(data);
+      // console.log(data);
       // 모든 검증을 통과했을 때
       remitStore.memberId = data.data.data.memberId;
       remitStore.memberName = data.data.data.name;
       remitStore.memberLoginId = data.data.data.id;
+      console.log(remitStore.memberLoginId);
+      console.log(groupStore.inviteCode);
+      // auth코드 생성
+      createAuthCode(groupStore.inviteCode, remitStore.memberLoginId);
       // 만약 초대코드를 받고 로그인 창으로 이동한 경우에는 로그인 했을 떄 바로 로그인 홈으로 이동한다.
       //TODO : 해당하는 모임에 가입하고, router로 이동시키면 될 것 같음.
       if (groupStore.inviteStatus) {
-        router.push(`/groups/${groupStore.inviteCodeGroupId}`);
+        // router.push(`/groups/${groupStore.inviteCodeGroupId}`);
       }
-      router.push(`/bank`);
+      // router.push(`/bank`);
     },
     // 로그인 실패시
     (error) => {
