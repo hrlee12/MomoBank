@@ -163,12 +163,5 @@ const getImageUrl = (imageName, idx) => {
         </div>
       </div>
     </div>
-
-    <!-- 입금 내역 년도별 더보기 버튼 -->
-    <div
-      class="flex items-center justify-center w-5/12 mx-auto mt-8 rounded-lg h-11 bg-light-gray-color"
-    >
-      <div class="mx-auto font-bold">2023년 더보기</div>
-    </div>
   </div>
 </template>

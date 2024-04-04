@@ -67,6 +67,7 @@ export function useBankApi() {
 
   // 카드 추천 리스트 조회
   const getCardRecommendList = async (data, success, fail) => {
+    JSON.stringify(data);
     return await $axios
       .post(`community/recommend/recommend-card`, data)
       .then(success)

@@ -1,14 +1,13 @@
 <script setup>
 import SimpleGroup from "~/components/bank/SimpleGroup.vue";
 import AddBox from "~/components/bank/AddBox.vue";
-
 import { useGroupApi } from "~/api/groups";
 
 const { getMyGroups } = useGroupApi();
 
 const myGroups = ref([]);
-
-const memberId = 2;
+const remitStore = useRemitStore();
+const memberId = remitStore.memberId;
 
 const fetchMyGroups = async (memberId) => {
   try {
