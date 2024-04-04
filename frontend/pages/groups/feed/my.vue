@@ -57,7 +57,7 @@ const getImageUrl = (imageName, idx) => {
         />
       </div>
       <!-- 이름 -->
-      <div class="font-bold">김성수</div>
+      <div class="font-bold">싸피</div>
     </div>
     <!-- 가입 날짜, 피드 등록 아이콘 -->
     <div class="flex items-center justify-between">

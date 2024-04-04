@@ -194,7 +194,7 @@ const toggleText = () => {
               alt="user-icon"
             />
           </div>
-          <div class="ml-2">{{ item.groupMemberName }}</div>
+          <div class="ml-2">싸피</div>
           <div class="ml-2 text-sm text-gray-color">
             {{ item.createdAt.slice(0, 10) }}
           </div>
