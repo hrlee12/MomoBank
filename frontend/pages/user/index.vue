@@ -30,7 +30,7 @@ const joinWithInviteCode = async () => {
     {
       groupId: groupStore.groupId,
       memberId: remitStore.memberLoginId,
-      accountId: 46,
+      accountId: 76,
       authToken: groupStore.inviteAuthCode,
     },
     (data) => {
