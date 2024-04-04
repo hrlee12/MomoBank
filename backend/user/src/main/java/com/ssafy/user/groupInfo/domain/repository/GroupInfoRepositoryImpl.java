@@ -35,7 +35,12 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
     private QAccount account = QAccount.account;
 
 
-    List<GetMyGruopResponse> results = queryFactory
+    public List<GetMyGruopResponse> findGroupInfoResponseByMember(Member member) {
+        QBudget budget = QBudget.budget;
+        QGroupInfo groupInfo = QGroupInfo.groupInfo;
+        QGroupMember groupMember = QGroupMember.groupMember;
+
+        List<GetMyGruopResponse> results = queryFactory
             .select(new QGetMyGruopResponse(
                 groupInfo.groupInfoId,
                 groupInfo.groupName,
@@ -49,10 +54,11 @@ public class GroupInfoRepositoryImpl implements GroupInfoRepositoryCustom {
             .where(groupInfo.member.eq(member))
             .fetch();
 
-        // return results.stream()
-        //     .filter(r -> r.getMonthlyFee() > 0)
-        //     .filter(r -> r.getJoinMembers() > 0)
-        //     .collect(Collectors.toList());
+//        return results.stream()
+//            .filter(r -> r.getMonthlyFee() > 0)
+//            .filter(r -> r.getJoinMembers() > 0)
+//            .collect(Collectors.toList());
+
         return results;
     }
 
