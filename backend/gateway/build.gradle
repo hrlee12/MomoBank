@@ -1,3 +1,11 @@
+buildscript {
+	ext {
+		querydslVer = '5.0.0'
+		querydslPluginVer = '1.0.10'
+	}
+}
+
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.3'
@@ -32,10 +40,20 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
 	testImplementation 'io.projectreactor:reactor-test'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	compileOnly 'org.projectlombok:lombok'
+
+
+	// querydsl
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	implementation "com.querydsl:querydsl-jpa:${querydslVer}:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:${querydslVer}:jakarta"
 }
 
 dependencyManagement {

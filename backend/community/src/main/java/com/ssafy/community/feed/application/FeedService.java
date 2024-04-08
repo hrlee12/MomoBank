@@ -337,8 +337,11 @@ public class FeedService {
 
     @KafkaListener(topics = "createGroup", groupId = "community")
     public void createGroup(Object data) {
+
+        System.out.println("createGroup start");
         Map<String, Object> groupInfoInfo = kafkaUtil.dataToMap(data);
 
+        groupInfoInfo.get("createdBy");
 //        Member member = memberRepository.findById((int) groupInfoInfo.get("createdBy"))
 //            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_MEMBER));
 
@@ -356,11 +359,25 @@ public class FeedService {
             .description((String) groupInfoInfo.get("description"))
             .build();
 
-        groupInfoRepository.save(groupInfo);
+
+        System.out.println("createGroup ing...");
+        System.out.println(groupInfo.getGroupInfoId());
+
+        GroupInfo result = groupInfoRepository.save(groupInfo);
+
+
+        if (result == null) {
+            System.out.println("result null");
+        } else {
+            System.out.println("result not null");
+            System.out.println(result.getGroupInfoId());
+        }
+        System.out.println("create done");
     }
 
     @KafkaListener(topics = "createGroupMemberAsGroupCreated", groupId = "community")
     public void createGroupMemberAsGroupCreated(Object data) {
+        System.out.println("그룹멤버 시작");
         Map<String, Object> groupMemberInfo = kafkaUtil.dataToMap(data);
 
 //        Member member = memberRepository.findById((int) groupMemberInfo.get("memberId"))
@@ -393,5 +410,74 @@ public class FeedService {
             .build();
 
         groupMemberRepository.save(groupMember);
+
+        System.out.println("그룹멤버 끝");
+    }
+
+
+    @Transactional
+    @KafkaListener(topics = "createGroupAndGroupMember", groupId = "community")
+    public void createGroupAndGroupMember(Object data) {
+        Map<String, Object> info = kafkaUtil.dataToMap(data);
+
+        Member member = memberRepository.findById((int) info.get("createdBy"))
+                .orElse(null);
+
+        if (member == null) {
+            log.info("member null : {}", member);
+        }
+
+        GroupInfo groupInfo = GroupInfo.builder()
+                .groupInfoId((int)info.get("groupInfoId"))
+                .member(member)
+                .groupName((String) info.get("groupName"))
+                .description((String) info.get("description"))
+                .groupMembers(null)
+                .build();
+
+
+
+//        System.out.println("createGroup ing...");
+//        System.out.println(groupInfo.getGroupInfoId());
+
+        GroupInfo result = groupInfoRepository.save(groupInfo);
+
+
+
+        if (result == null) {
+            System.out.println("result null");
+        } else {
+            System.out.println("result not null");
+            System.out.println(result.getGroupInfoId());
+        }
+//        System.out.println("create done");
+//        System.out.println("그룹 멤버 시작");
+
+
+
+        Member member2 = memberRepository.findById((int) info.get("memberId"))
+                .orElse(null);
+
+        if (member2 == null) {
+            log.info("member : {}", member);
+        }
+
+//        GroupInfo groupInfo = groupInfoRepository.findById((int) groupMemberInfo.get("groupInfoId"))
+//            .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_GROUP_INFO));
+
+
+
+        GroupMember groupMember = GroupMember.builder()
+                .groupMemberId((int)info.get("groupMemberId") )
+                .name((String)info.get("name"))
+                .role(GroupMember.memberType.모임원)
+                .totalFee(Long.parseLong(info.get("totalFee").toString()))
+                .groupInfo(groupInfo)
+                .member(member)
+                .build();
+
+        groupMemberRepository.save(groupMember);
+
+//        System.out.println("그룹멤버 끝");
     }
 }
