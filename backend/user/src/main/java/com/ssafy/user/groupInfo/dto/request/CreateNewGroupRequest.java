@@ -4,7 +4,7 @@ public record CreateNewGroupRequest(
     int memberId,
     String description,
     String groupName,
-
+    int myAccountId,
     int accountId
 ) {
 

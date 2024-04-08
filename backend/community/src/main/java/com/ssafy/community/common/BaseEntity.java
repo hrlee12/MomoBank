@@ -1,10 +1,11 @@
-package com.ssafy.user.common;
+package com.ssafy.community.common;
 
 
 
 
 import java.time.LocalDateTime;
 
+import com.ssafy.user.common.ErrorCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -39,7 +40,7 @@ public abstract class BaseEntity {
 
     public boolean softDelete() {
         if (isDeleted)
-            throw new IllegalStateException(ErrorCode.ALREADY_DELETED.getMessage());
+            throw new IllegalStateException(com.ssafy.user.common.ErrorCode.ALREADY_DELETED.getMessage());
         this.isDeleted = true;
         return true;
     }
