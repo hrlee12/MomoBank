@@ -32,6 +32,238 @@ openapi:
     url: http://localhost:8081
 
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    url: jdbc:mariadb://j10a505.p.ssafy.io:3306/momo
+    username: root
+    password: MARholywater1357
+    driver-class-name: org.mariadb.jdbc.Driver
   config:
     import: classpath:application-private.yml
-#    import: classpath:application-user-private-aws.yml
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+
+        # 스웨거
+        - id: user-swagger
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/swagger-ui/**
+
+        - id: community-swagger
+          uri: http://community.default.svc.cluster.local:8083
+          predicates:
+            - Path=/api/community/swagger-ui/**
+
+        - id: bank-swagger
+          uri: http://bank.default.svc.cluster.local:8084
+          predicates:
+            - Path=/api/bank/swagger-ui/**
+
+        # 로그인이 필요없는 서비스
+        - id: auth-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/auth/**
+
+
+
+        # 로그인이 필요한 서비스
+        # 모임장/모임원 확인 X 서비스
+        - id: no-authorization-service-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/invite/**
+          filters:
+            - AuthorizationHeaderFilter
+
+        - id: no-authorization-service-2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/new-group
+          filters:
+            - AuthorizationHeaderFilter
+
+        - id: no-authorization-service-3
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/my-groups
+          filters:
+            - AuthorizationHeaderFilter
+
+
+        # 로그인이 필요한 서비스
+        # 모임장 권한 서비스
+        - id: group-leader-authorization-service-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{groupId}/invite
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+        - id: group-leader-authorization-service-2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{groupId}/members/{groupMemberId}
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+        - id: group-leader-authorization-service-3
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/budgets/{budget_id}
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+        - id: group-leader-authorization-service-4
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/budgets/new-budget
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+        - id: group-leader-authorization-service-5
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/split-balance
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+
+        - id: group-leader-authorization-service-6
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/name
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+        - id: group-leader-authorization-service-7
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/description
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+
+        - id: group-leader-authorization-service-8
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}
+            - Method=DELETE
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupLeaderFilter
+
+
+
+
+
+
+        # 로그인이 필요한 서비스
+        # 해당 모임원만 접근 가능한 서비스
+        - id: group-member-authorization-service-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}
+            - Method=GET
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupFilter
+
+
+        - id: group-member-authorization-service-2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/fees-per-month
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupFilter
+
+
+        - id: group-member-authorization-service-3
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/detail
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupFilter
+
+        - id: group-member-authorization-service-4
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{id}/budgets/budgets-list
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupFilter
+
+
+        - id: group-member-authorization-service-5
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/user/groups/{groupId}/members
+          filters:
+            - AuthorizationHeaderFilter
+            - GroupFilter
+
+#
+#
+#        - id: group-service
+#          uri: http://localhost:8082
+#          predicates:
+#            - Path=/api/user/groups/**
+#          filters:
+#                    - AuthorizationHeaderFilter
+#        #            - GroupFilter
+#
+#
+#        - id: user-service
+#          #          uri: http://10.43.229.25:8082
+#          uri: http://localhost:8082
+#          predicates:
+#            - Path=/api/user/**
+#          filters:
+#            - AuthorizationHeaderFilter
+
+
+        - id: community-service
+          #          uri: http://10.43.116.89:8083
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/community/**
+          filters:
+            - AuthorizationHeaderFilter
+        #            - GroupFilter
+
+
+#        - id: bank-service
+#          #          uri: http://10.43.68.76:8084
+#          uri: http://localhost:8084
+#          predicates:
+#            - Path=/api/bank/**
+#          filters:
+#            - AuthorizationHeaderFilter
+
+
+
+
+
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: trace

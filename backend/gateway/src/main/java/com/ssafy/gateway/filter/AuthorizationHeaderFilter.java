@@ -9,7 +9,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +32,8 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     // application.yml 파일에서 지정한 filter의 Argument값을 받는 부분
     }
     @Override
-    public GatewayFilter apply(Config config) {
-        return (exchange, chain) -> {
+    public OrderedGatewayFilter apply(Config config) {
+        return new OrderedGatewayFilter((exchange, chain) -> {
 
             String token = null;
             log.info("Hello");
@@ -54,7 +56,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             addAuthorizationHeaders(exchange.getRequest(), memberId);
 
             return chain.filter(exchange);
-        };
+        }, Ordered.HIGHEST_PRECEDENCE) ;
     }
 
 
