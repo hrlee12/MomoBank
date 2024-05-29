@@ -1,6 +1,6 @@
 # 모두가 모이는 뱅킹, 모모뱅크
 <p align="center">
-  <img src="https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled.png?ref_type=heads" alt="Untitled">
+  <img src="./momobank_title.png" alt="Untitled">
 </p>
 
 ## 개요
