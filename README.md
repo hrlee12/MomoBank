@@ -49,8 +49,7 @@
 
 ## 시스템 구성도
 
-![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%201.png?ref_type=heads)
-
+  <img src="./architecture.png" alt="Untitled">
 ```jsx
 [ 클라이언트 ]
    │
@@ -121,13 +120,13 @@
 MSA구조로 다음과같이 세 개의 ERD가 존재합니다.
 
 - **User**: MariaDB
-
-  ![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%202.png?ref_type=heads)
+  
+  <img src="./db_user.png" alt="Untitled">
 
 - **Bank**: Oracle DB
 
-![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%203.png?ref_type=heads)
+  <img src="./db_bank.png" alt="Untitled">
 
 - **Community**: MariaDB
 
-![Untitled](https://lab.ssafy.com/s10-fintech-finance-sub2/S10P22A505/-/raw/develop/README/Untitled%204.png?ref_type=heads)
+  <img src="./db_community.png" alt="Untitled">
